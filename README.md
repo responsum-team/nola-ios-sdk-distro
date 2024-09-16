@@ -39,7 +39,7 @@ here's the example:
                          chatViewController: reschatui.ChatViewController,
                          chooserViewController: ResChatHouUIKit.AirportChooserViewController) {
 
-       // TODO: You can set current location if you want to!!!
+       // INFO: You can set current location if you want to!!!
        ResChatSocket.location = nil
 
        print("Airport selected: \(airport.name), Language selected: \(language.rawValue)")
