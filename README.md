@@ -18,10 +18,11 @@ Here's the example of creating it':
         return navigationController
     }
 ```
-- Upon choosing the airport and the language, it instantiates a new socket wit prepupilated connection params for the airport.
-- It also instantiates a UIKit View Contoller: `ChatViewController` for the chose language (to initi the speech recognizer with that language)
+- Upon choosing the airport and the language, it instantiates a new socket wit prepopilated connection params for the airport.
+- It also instantiates a UIKit View Contoller: `ChatViewController` for the chosen language (to init the speech recognizer with that language)
 
-It provides a `delegate` which returns all properties.
+It provides a `delegate` which returns all needed properties.
+
 You should then make an instance of `SocketProxy` from `reschatproxy` package.
  (The idea behind the proxy is the ability to use the socket with different UI framework such as AppKit or SwiftUI).
  
@@ -56,7 +57,7 @@ You should then make an instance of `SocketProxy` from `reschatproxy` package.
  
 
 ### Socket:
-- It is advisable to instantiate socket separately, like in this example (in `AppDelegate`, or some reliable host)
+- It is advisable to instantiate socket separately, like in this example (in `AppDelegate`, or some other reliable host)
 
 ```swift
     var socket: ResChatSocket? {
