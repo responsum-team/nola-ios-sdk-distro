@@ -32,10 +32,10 @@ public class AttributedTextCache {
         // Generate and cache the attributed string
         if let generatedText = Markdown2AttributedText.convertMarkdownToAttributedString(markdownText: text) {
             cache[key] = generatedText
-            print("DBGGGG: generate attributed string for: \(key): `\(Markdown2AttributedText.summarizeString(text, upTo: 20))`")
+//            print("DBGGGG: generate attributed string for: \(key): `\(Markdown2AttributedText.summarizeString(text, upTo: 20))`")
             return generatedText
         } else {
-            print("DBGGGG: error creating attributed string from: \(text)")
+//            print("DBGGGG: error creating attributed string from: \(text)")
             return NSAttributedString(string: text)
         }
     }

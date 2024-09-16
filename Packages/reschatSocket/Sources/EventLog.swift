@@ -58,44 +58,58 @@ struct EventLog {
     
     public static let shared = EventLog()
     
+    // MARK: Synchronization Queue -
+    private static let logQueue = DispatchQueue(label: "com.example.EventLogQueue", attributes: .concurrent)
+    
+    
     // MARK: Static -
     
     static func saveAsJSON() {
-        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let logFileURL = documentsPath.appendingPathComponent(Self.logFileName)
+        logQueue.async(flags: .barrier) {
+            let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            let logFileURL = documentsPath.appendingPathComponent(Self.logFileName)
+            
+            guard JSONSerialization.isValidJSONObject(log) else {
+                print("\(Self.logPrefix): Log is not a valid JSON object")
+                return
+            }
 
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: log, options: .prettyPrinted)
-            try jsonData.write(to: logFileURL)
-//            print("\(Self.logPrefix): Saved log to: \(logFileURL.absoluteString)")
-        } catch {
-            print("\(Self.logPrefix): Error saving log: \(error)")
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: log, options: .prettyPrinted)
+                try jsonData.write(to: logFileURL)
+            } catch {
+                print("\(Self.logPrefix): Error saving log: \(error)")
+            }
         }
     }
     
     static func append(_ logEntry: LogEntry) {
-        guard active else { return }
-        log.append(logEntry)
-        saveAsJSON()
+        logQueue.async(flags: .barrier) {
+            guard active else { return }
+            log.append(logEntry)
+            saveAsJSON()
+        }
     }
     
     static func deleteLog() {
-        // Clear the in-memory log
-        log.removeAll()
-        
-        // Delete the log file from the file system
-        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let logFileURL = documentsPath.appendingPathComponent(Self.logFileName)
-        
-        do {
-            if FileManager.default.fileExists(atPath: logFileURL.path) {
-                try FileManager.default.removeItem(at: logFileURL)
-                print("\(Self.logPrefix): Deleted log file at: \(logFileURL.absoluteString)")
-            } else {
-                print("\(Self.logPrefix): Log file does not exist at: \(logFileURL.absoluteString)")
+        logQueue.async(flags: .barrier) {
+            // Clear the in-memory log
+            log.removeAll()
+            
+            // Delete the log file from the file system
+            let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            let logFileURL = documentsPath.appendingPathComponent(Self.logFileName)
+            
+            do {
+                if FileManager.default.fileExists(atPath: logFileURL.path) {
+                    try FileManager.default.removeItem(at: logFileURL)
+                    print("\(Self.logPrefix): Deleted log file at: \(logFileURL.absoluteString)")
+                } else {
+                    print("\(Self.logPrefix): Log file does not exist at: \(logFileURL.absoluteString)")
+                }
+            } catch {
+                print("\(Self.logPrefix): Error deleting log file: \(error)")
             }
-        } catch {
-            print("\(Self.logPrefix): Error deleting log file: \(error)")
         }
     }
 }

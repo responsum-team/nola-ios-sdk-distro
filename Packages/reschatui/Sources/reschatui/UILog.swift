@@ -60,52 +60,62 @@ struct UILog {
     
     public static let shared = UILog()
     
+    // MARK: Synchronization Queue -
+    private static let logQueue = DispatchQueue(label: "com.example.UILogQueue", attributes: .concurrent)
+    
+    
     // MARK: Static -
     
     static func saveAsJSON() {
-        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let logFileURL = documentsPath.appendingPathComponent(Self.logFileName)
+        logQueue.async(flags: .barrier) {
+            let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            let logFileURL = documentsPath.appendingPathComponent(Self.logFileName)
 
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: log, options: .prettyPrinted)
-            try jsonData.write(to: logFileURL)
-//            print("\(Self.logPrefix): Saved log to: \(logFileURL.absoluteString)")
-        } catch {
-            print("\(Self.logPrefix): Error saving log: \(error)")
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: log, options: .prettyPrinted)
+                try jsonData.write(to: logFileURL)
+            } catch {
+                print("\(Self.logPrefix): Error saving log: \(error)")
+            }
         }
     }
     
     static func append(_ logEntry: LogEntry) {
-        guard active else { return }
-        // Create a mutable copy of the log entry and prepend the date
-        var modifiedLogEntry = logEntry
-        modifiedLogEntry["date"] = currentDate()
+        logQueue.async(flags: .barrier) {
+            guard active else { return }
+            // Create a mutable copy of the log entry and prepend the date
+            var modifiedLogEntry = logEntry
+            modifiedLogEntry["date"] = currentDate()
 
-        // Add the modified log entry at the beginning of the log (if order matters here)
-        log.insert(modifiedLogEntry, at: 0)
-        log.append(logEntry)
-        saveAsJSON()
-//        AttributedTextCache.shared.saveAttributedStringsToDisk()
-        AttributedTextCache.shared.saveToDisk()
+            // Add the modified log entry at the beginning of the log (if order matters)
+            log.insert(modifiedLogEntry, at: 0)
+            log.append(logEntry)
+            saveAsJSON()
+            
+            // Save attributed text to disk (if necessary)
+            AttributedTextCache.shared.saveToDisk()
+        }
     }
     
     static func deleteLog() {
-        // Clear the in-memory log
-        log.removeAll()
-        
-        // Delete the log file from the file system
-        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let logFileURL = documentsPath.appendingPathComponent(Self.logFileName)
-        
-        do {
-            if FileManager.default.fileExists(atPath: logFileURL.path) {
-                try FileManager.default.removeItem(at: logFileURL)
-                print("\(Self.logPrefix): Deleted log file at: \(logFileURL.absoluteString)")
-            } else {
-                print("\(Self.logPrefix): Log file does not exist at: \(logFileURL.absoluteString)")
+        logQueue.async(flags: .barrier) {
+            // Clear the in-memory log
+            log.removeAll()
+            
+            // Delete the log file from the file system
+            let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            let logFileURL = documentsPath.appendingPathComponent(Self.logFileName)
+            
+            do {
+                if FileManager.default.fileExists(atPath: logFileURL.path) {
+                    try FileManager.default.removeItem(at: logFileURL)
+                    print("\(Self.logPrefix): Deleted log file at: \(logFileURL.absoluteString)")
+                } else {
+                    print("\(Self.logPrefix): Log file does not exist at: \(logFileURL.absoluteString)")
+                }
+            } catch {
+                print("\(Self.logPrefix): Error deleting log file: \(error)")
             }
-        } catch {
-            print("\(Self.logPrefix): Error deleting log file: \(error)")
         }
     }
 }
