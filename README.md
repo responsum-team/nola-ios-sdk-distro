@@ -3,7 +3,7 @@ SDK for Responsum ChatBot
 
 ## Usage
 
-### Airport Chooser
+### Airport Chooser - starting point
 
 - `AirportChooserViewController` is a part of `ResChatHouUIKit`
 

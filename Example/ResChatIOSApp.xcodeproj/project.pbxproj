@@ -1,0 +1,656 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A957F1032C9739F7001C6A73 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A957F1022C9739F7001C6A73 /* AppDelegate.swift */; };
+		A957F10C2C9739F9001C6A73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A957F10B2C9739F9001C6A73 /* Assets.xcassets */; };
+		A957F10F2C9739F9001C6A73 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = A957F10E2C9739F9001C6A73 /* Base */; };
+		A957F11A2C9739F9001C6A73 /* ResChatIOSAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A957F1192C9739F9001C6A73 /* ResChatIOSAppTests.swift */; };
+		A957F1242C9739F9001C6A73 /* ResChatIOSAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A957F1232C9739F9001C6A73 /* ResChatIOSAppUITests.swift */; };
+		A957F1262C9739F9001C6A73 /* ResChatIOSAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A957F1252C9739F9001C6A73 /* ResChatIOSAppUITestsLaunchTests.swift */; };
+		A957F1382C974DEE001C6A73 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A957F1372C974DEE001C6A73 /* Localizable.xcstrings */; };
+		A9A042C62C977352004682C8 /* ResChatHouUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = A9A042C52C977352004682C8 /* ResChatHouUIKit */; };
+		A9A042CD2C97C8D4004682C8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A9A042CC2C97C8D4004682C8 /* README.md */; };
+		A9EB4BAE2C986D0D001C0ED7 /* reschatproxy in Frameworks */ = {isa = PBXBuildFile; productRef = A9EB4BAD2C986D0D001C0ED7 /* reschatproxy */; };
+		A9EB4BB02C986D1A001C0ED7 /* reschatui in Frameworks */ = {isa = PBXBuildFile; productRef = A9EB4BAF2C986D1A001C0ED7 /* reschatui */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A957F1162C9739F9001C6A73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A957F0F72C9739F7001C6A73 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A957F0FE2C9739F7001C6A73;
+			remoteInfo = ResChatIOSApp;
+		};
+		A957F1202C9739F9001C6A73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A957F0F72C9739F7001C6A73 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A957F0FE2C9739F7001C6A73;
+			remoteInfo = ResChatIOSApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A957F0FF2C9739F7001C6A73 /* ResChatIOSApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ResChatIOSApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A957F1022C9739F7001C6A73 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A957F10B2C9739F9001C6A73 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A957F10E2C9739F9001C6A73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A957F1102C9739F9001C6A73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A957F1152C9739F9001C6A73 /* ResChatIOSAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResChatIOSAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A957F1192C9739F9001C6A73 /* ResChatIOSAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResChatIOSAppTests.swift; sourceTree = "<group>"; };
+		A957F11F2C9739F9001C6A73 /* ResChatIOSAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResChatIOSAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A957F1232C9739F9001C6A73 /* ResChatIOSAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResChatIOSAppUITests.swift; sourceTree = "<group>"; };
+		A957F1252C9739F9001C6A73 /* ResChatIOSAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResChatIOSAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A957F1372C974DEE001C6A73 /* Localizable.xcstrings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		A9A042CC2C97C8D4004682C8 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A957F0FC2C9739F7001C6A73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9EB4BAE2C986D0D001C0ED7 /* reschatproxy in Frameworks */,
+				A9EB4BB02C986D1A001C0ED7 /* reschatui in Frameworks */,
+				A9A042C62C977352004682C8 /* ResChatHouUIKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A957F1122C9739F9001C6A73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A957F11C2C9739F9001C6A73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A957F0F62C9739F7001C6A73 = {
+			isa = PBXGroup;
+			children = (
+				A957F1012C9739F7001C6A73 /* ResChatIOSApp */,
+				A957F1182C9739F9001C6A73 /* ResChatIOSAppTests */,
+				A957F1222C9739F9001C6A73 /* ResChatIOSAppUITests */,
+				A957F1002C9739F7001C6A73 /* Products */,
+				A9A042C72C977495004682C8 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		A957F1002C9739F7001C6A73 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A957F0FF2C9739F7001C6A73 /* ResChatIOSApp.app */,
+				A957F1152C9739F9001C6A73 /* ResChatIOSAppTests.xctest */,
+				A957F11F2C9739F9001C6A73 /* ResChatIOSAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A957F1012C9739F7001C6A73 /* ResChatIOSApp */ = {
+			isa = PBXGroup;
+			children = (
+				A9A042CC2C97C8D4004682C8 /* README.md */,
+				A957F1022C9739F7001C6A73 /* AppDelegate.swift */,
+				A957F10B2C9739F9001C6A73 /* Assets.xcassets */,
+				A957F10D2C9739F9001C6A73 /* LaunchScreen.storyboard */,
+				A957F1102C9739F9001C6A73 /* Info.plist */,
+				A957F1372C974DEE001C6A73 /* Localizable.xcstrings */,
+			);
+			path = ResChatIOSApp;
+			sourceTree = "<group>";
+		};
+		A957F1182C9739F9001C6A73 /* ResChatIOSAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				A957F1192C9739F9001C6A73 /* ResChatIOSAppTests.swift */,
+			);
+			path = ResChatIOSAppTests;
+			sourceTree = "<group>";
+		};
+		A957F1222C9739F9001C6A73 /* ResChatIOSAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				A957F1232C9739F9001C6A73 /* ResChatIOSAppUITests.swift */,
+				A957F1252C9739F9001C6A73 /* ResChatIOSAppUITestsLaunchTests.swift */,
+			);
+			path = ResChatIOSAppUITests;
+			sourceTree = "<group>";
+		};
+		A9A042C72C977495004682C8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A957F0FE2C9739F7001C6A73 /* ResChatIOSApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A957F1292C9739F9001C6A73 /* Build configuration list for PBXNativeTarget "ResChatIOSApp" */;
+			buildPhases = (
+				A957F0FB2C9739F7001C6A73 /* Sources */,
+				A957F0FC2C9739F7001C6A73 /* Frameworks */,
+				A957F0FD2C9739F7001C6A73 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ResChatIOSApp;
+			packageProductDependencies = (
+				A9A042C52C977352004682C8 /* ResChatHouUIKit */,
+				A9EB4BAD2C986D0D001C0ED7 /* reschatproxy */,
+				A9EB4BAF2C986D1A001C0ED7 /* reschatui */,
+			);
+			productName = ResChatIOSApp;
+			productReference = A957F0FF2C9739F7001C6A73 /* ResChatIOSApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A957F1142C9739F9001C6A73 /* ResChatIOSAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A957F12C2C9739F9001C6A73 /* Build configuration list for PBXNativeTarget "ResChatIOSAppTests" */;
+			buildPhases = (
+				A957F1112C9739F9001C6A73 /* Sources */,
+				A957F1122C9739F9001C6A73 /* Frameworks */,
+				A957F1132C9739F9001C6A73 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A957F1172C9739F9001C6A73 /* PBXTargetDependency */,
+			);
+			name = ResChatIOSAppTests;
+			productName = ResChatIOSAppTests;
+			productReference = A957F1152C9739F9001C6A73 /* ResChatIOSAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A957F11E2C9739F9001C6A73 /* ResChatIOSAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A957F12F2C9739F9001C6A73 /* Build configuration list for PBXNativeTarget "ResChatIOSAppUITests" */;
+			buildPhases = (
+				A957F11B2C9739F9001C6A73 /* Sources */,
+				A957F11C2C9739F9001C6A73 /* Frameworks */,
+				A957F11D2C9739F9001C6A73 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A957F1212C9739F9001C6A73 /* PBXTargetDependency */,
+			);
+			name = ResChatIOSAppUITests;
+			productName = ResChatIOSAppUITests;
+			productReference = A957F11F2C9739F9001C6A73 /* ResChatIOSAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A957F0F72C9739F7001C6A73 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					A957F0FE2C9739F7001C6A73 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					A957F1142C9739F9001C6A73 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = A957F0FE2C9739F7001C6A73;
+					};
+					A957F11E2C9739F9001C6A73 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = A957F0FE2C9739F7001C6A73;
+					};
+				};
+			};
+			buildConfigurationList = A957F0FA2C9739F7001C6A73 /* Build configuration list for PBXProject "ResChatIOSApp" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A957F0F62C9739F7001C6A73;
+			packageReferences = (
+				A9EB4BAA2C986C40001C0ED7 /* XCLocalSwiftPackageReference "../Packages/reschatproxy" */,
+				A9EB4BAB2C986C55001C0ED7 /* XCLocalSwiftPackageReference "../Packages/reschatui" */,
+				A9EB4BAC2C986C66001C0ED7 /* XCLocalSwiftPackageReference "../Packages/ResChatHouUIKit" */,
+			);
+			productRefGroup = A957F1002C9739F7001C6A73 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A957F0FE2C9739F7001C6A73 /* ResChatIOSApp */,
+				A957F1142C9739F9001C6A73 /* ResChatIOSAppTests */,
+				A957F11E2C9739F9001C6A73 /* ResChatIOSAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A957F0FD2C9739F7001C6A73 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A957F10C2C9739F9001C6A73 /* Assets.xcassets in Resources */,
+				A957F10F2C9739F9001C6A73 /* Base in Resources */,
+				A9A042CD2C97C8D4004682C8 /* README.md in Resources */,
+				A957F1382C974DEE001C6A73 /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A957F1132C9739F9001C6A73 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A957F11D2C9739F9001C6A73 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A957F0FB2C9739F7001C6A73 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A957F1032C9739F7001C6A73 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A957F1112C9739F9001C6A73 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A957F11A2C9739F9001C6A73 /* ResChatIOSAppTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A957F11B2C9739F9001C6A73 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A957F1242C9739F9001C6A73 /* ResChatIOSAppUITests.swift in Sources */,
+				A957F1262C9739F9001C6A73 /* ResChatIOSAppUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A957F1172C9739F9001C6A73 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A957F0FE2C9739F7001C6A73 /* ResChatIOSApp */;
+			targetProxy = A957F1162C9739F9001C6A73 /* PBXContainerItemProxy */;
+		};
+		A957F1212C9739F9001C6A73 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A957F0FE2C9739F7001C6A73 /* ResChatIOSApp */;
+			targetProxy = A957F1202C9739F9001C6A73 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		A957F10D2C9739F9001C6A73 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A957F10E2C9739F9001C6A73 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A957F1272C9739F9001C6A73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A957F1282C9739F9001C6A73 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A957F12A2C9739F9001C6A73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SZ688Z6ZE4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ResChatIOSApp/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mm.testapp.ResChatIOSApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A957F12B2C9739F9001C6A73 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SZ688Z6ZE4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ResChatIOSApp/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mm.testapp.ResChatIOSApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A957F12D2C9739F9001C6A73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SZ688Z6ZE4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mm.testapp.ResChatIOSAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ResChatIOSApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ResChatIOSApp";
+			};
+			name = Debug;
+		};
+		A957F12E2C9739F9001C6A73 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SZ688Z6ZE4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mm.testapp.ResChatIOSAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ResChatIOSApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ResChatIOSApp";
+			};
+			name = Release;
+		};
+		A957F1302C9739F9001C6A73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SZ688Z6ZE4;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mm.testapp.ResChatIOSAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ResChatIOSApp;
+			};
+			name = Debug;
+		};
+		A957F1312C9739F9001C6A73 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SZ688Z6ZE4;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mm.testapp.ResChatIOSAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ResChatIOSApp;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A957F0FA2C9739F7001C6A73 /* Build configuration list for PBXProject "ResChatIOSApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A957F1272C9739F9001C6A73 /* Debug */,
+				A957F1282C9739F9001C6A73 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A957F1292C9739F9001C6A73 /* Build configuration list for PBXNativeTarget "ResChatIOSApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A957F12A2C9739F9001C6A73 /* Debug */,
+				A957F12B2C9739F9001C6A73 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A957F12C2C9739F9001C6A73 /* Build configuration list for PBXNativeTarget "ResChatIOSAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A957F12D2C9739F9001C6A73 /* Debug */,
+				A957F12E2C9739F9001C6A73 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A957F12F2C9739F9001C6A73 /* Build configuration list for PBXNativeTarget "ResChatIOSAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A957F1302C9739F9001C6A73 /* Debug */,
+				A957F1312C9739F9001C6A73 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A9EB4BAA2C986C40001C0ED7 /* XCLocalSwiftPackageReference "../Packages/reschatproxy" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../Packages/reschatproxy;
+		};
+		A9EB4BAB2C986C55001C0ED7 /* XCLocalSwiftPackageReference "../Packages/reschatui" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../Packages/reschatui;
+		};
+		A9EB4BAC2C986C66001C0ED7 /* XCLocalSwiftPackageReference "../Packages/ResChatHouUIKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../Packages/ResChatHouUIKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A9A042C52C977352004682C8 /* ResChatHouUIKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ResChatHouUIKit;
+		};
+		A9EB4BAD2C986D0D001C0ED7 /* reschatproxy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A9EB4BAA2C986C40001C0ED7 /* XCLocalSwiftPackageReference "../Packages/reschatproxy" */;
+			productName = reschatproxy;
+		};
+		A9EB4BAF2C986D1A001C0ED7 /* reschatui */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A9EB4BAB2C986C55001C0ED7 /* XCLocalSwiftPackageReference "../Packages/reschatui" */;
+			productName = reschatui;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A957F0F72C9739F7001C6A73 /* Project object */;
+}

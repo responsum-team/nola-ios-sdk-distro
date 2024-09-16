@@ -89,7 +89,7 @@ open class UserMessageCell: ProvidingTableViewCell {
     
     public func configure(with message: UIMessage) {
         messageLabel.attributedText = message.attributedText
-        UILog.shared.logMessageMarkdown(message: message)
+//        UILog.shared.logMessageMarkdown(message: message)
         configureForDebugging(with: message.type)
     }
 }
