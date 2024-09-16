@@ -44,7 +44,7 @@ extension ChatViewController {
         print("DBGG: \(title) messages: \(messages.count) are ranging from \(niceDateFrom(messages.first?.date)) to \(niceDateFrom(messages.last?.date))")
     }
     
-    func handleMessages(_ receivedMessages: [UIMessage]) {
+    func handleMessages(_ receivedMessages: [UIMessage]) {// agent_sends_history_snapshot
         
         if receivedMessages.isEmpty && didRequestToClearChat {
             didRequestToClearChat = false
@@ -125,12 +125,12 @@ extension ChatViewController {
         hideLoadingIndicator()
     }
     
-    func handleUpdatedMessage(_ updatedMessage: UIMessage) {
+    func handleUpdatedMessage(_ updatedMessage: UIMessage) { // agent_updates_history_item
         UILog.shared.logUpdatedMessage(updatedMessage)
         handleStreamingMessage(updatedMessage)
     }
     
-    func handleStreamingMessage(_ streamingMessage: UIMessage) {
+    func handleStreamingMessage(_ streamingMessage: UIMessage) { // agent_streams_message
         guard streamingMessage.isBot else { return }
         UILog.shared.logStreamingMessage(streamingMessage)
 
