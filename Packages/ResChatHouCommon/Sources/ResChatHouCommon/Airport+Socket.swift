@@ -1,5 +1,5 @@
 //
-//  Airport+Socket.swift // move to ResChatHouCommon -
+//  Airport+Socket.swift
 //  
 //
 //  Created by Mihaela MJ on 15.09.2024..
