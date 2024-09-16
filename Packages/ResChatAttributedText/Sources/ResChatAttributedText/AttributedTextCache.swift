@@ -15,8 +15,6 @@ public class AttributedTextCache {
     
     // Private cache storage
     private var cache: [String: NSAttributedString] = [:]
-    // FIXME: this is wrong,
-    // because during streaming we are getting new messages for the same timestamp!!!
     
     // Private initializer to restrict instantiation
     private init() {}
