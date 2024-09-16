@@ -8,7 +8,7 @@ SDK for Responsum ChatBot
 
 - `AirportChooserViewController` is a part of `ResChatHouUIKit`
 
-Here's the example of creating it':
+Here's the example of creating it:
 
 ```swift
     func makeChooserController() -> UIViewController {
@@ -20,13 +20,13 @@ Here's the example of creating it':
     }
 ```
 
-- Upon choosing the airport and the language, it instantiates a new socket wit repopulated connection params for the airport.
-- It also instantiates a UIKit View Controller: `ChatViewController` for the chosen language (to init the speech recognizer with that language)
+- Upon selecting the airport and the language, it instantiates a new socket with pre-populated connection parameters for the airport.
+- It also instantiates a UIKit view controller, ChatViewController, for the chosen language (to initialize the speech recognizer with that language).
 
-It provides a `delegate` which returns all needed properties.
+It provides a delegate that returns all the necessary properties.
 
-You should then make an instance of `SocketProxy` from `reschatproxy` package.
-(The idea behind the proxy is the ability to use the socket with different UI framework such as AppKit or SwiftUI).
+You should then create an instance of SocketProxy from the reschatproxy package.
+(The idea behind the proxy is to allow the socket to be used with different UI frameworks, such as AppKit or SwiftUI.)
 
 ### Putting it all together
 
@@ -55,11 +55,11 @@ here's the example:
    }
 ```
 
-`SocketProxy` is oblivious of the UI framework that utilizes it, and is ready to serve both SwiftUI and AppKit.
+SocketProxy is unaware of the UI framework that uses it and is designed to support both SwiftUI and AppKit.
 
 ### Socket:
 
-- It is advisable to instantiate socket separately, like in this example (in `AppDelegate`, or some other reliable host)
+- It is advisable to instantiate the socket separately, as shown in this example (in AppDelegate or another reliable host).
 
 ```swift
     var socket: ResChatSocket? {
