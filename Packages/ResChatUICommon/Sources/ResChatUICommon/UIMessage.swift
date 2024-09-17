@@ -256,20 +256,3 @@ public extension UIMessage {
 
 }
 
-public extension UIMessage {
-    
-    nonisolated(unsafe) static var current = [UIMessage]()
-    
-    static func processHistoryMessages(_ receivedMessages: [UIMessage], completion: @escaping (Bool) -> Void) {
-        
-    }
-    
-    static func processStreamingMessage(_ streamingMessage: UIMessage) {
-        
-    }
-    
-    static func processUpdatedMessage(_ updatedMessage: UIMessage) {
-        
-    }
-    
-}
