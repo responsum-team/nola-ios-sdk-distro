@@ -1,6 +1,6 @@
 //
-//  PlatformStuff.swift
-//  ResChatHouCommon
+//  PlatformViewController.swift
+//  ResChatProtocols
 //
 //  Created by Mihaela MJ on 17.09.2024..
 //
@@ -12,20 +12,6 @@ public typealias PlatformViewController = UIViewController
 import AppKit
 public typealias PlatformViewController = NSViewController
 #endif
-
-import reschatSocket
-import ResChatProtocols
-
-// Define the AirportChooserDelegate protocol
-public protocol AirportAndLanguageChooserDelegate: AnyObject {
-    func didSelectAirport(
-        _ airport: Airport,
-        language: Language,
-        socket: ResChatSocket,
-        chatViewController: PlatformChatViewController, // Now uses PlatformChatViewController
-        chooserViewController: PlatformViewController
-    )
-}
 
 // Define a protocol for the ChatViewController that both iOS and macOS versions will conform to
 public protocol PlatformChatViewController: AnyObject {
@@ -56,7 +42,7 @@ extension PlatformViewController: PlatformChatViewController {
     }
 
     // Define the required method to handle proxy subscriptions
-    public func subscribeToProxyPublishers() {
+    @objc open func subscribeToProxyPublishers() {
         // Add logic to subscribe to proxy-related publishers
         print("Subscribing to proxy publishers")
     }

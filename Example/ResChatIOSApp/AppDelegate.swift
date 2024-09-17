@@ -12,6 +12,7 @@ import ResChatHouCommon
 import reschatui
 import reschatSocket
 import reschatproxy
+import ResChatProtocols
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -58,28 +59,52 @@ private extension AppDelegate {
 }
 
 
-extension AppDelegate: AirportChooserDelegate {
-    
-    func didSelectAirport(_ airport: ResChatHouCommon.Airport, 
-                          language: ResChatHouCommon.Language,
-                          socket: reschatSocket.ResChatSocket,
-                          chatViewController: reschatui.ChatViewController,
-                          chooserViewController: ResChatHouUIKit.AirportChooserViewController) {
+extension AppDelegate: AirportAndLanguageChooserDelegate {
+    func didSelectAirport(_ airport: ResChatHouCommon.Airport, language: ResChatHouCommon.Language, socket: reschatSocket.ResChatSocket, chatViewController: any ResChatProtocols.PlatformChatViewController, chooserViewController: ResChatHouCommon.PlatformViewController) {
+        
         
         // TODO: You can set current location if you want to!!!
         ResChatSocket.location = nil
         
         print("Airport selected: \(airport.name), Language selected: \(language.rawValue)")
         
+        guard let uiProvidingController = chatViewController as? reschatui.ChatViewController else {
+            print("uiProvidingController is not `reschatui.ChatViewController`!!")
+            return
+        }
+        
         let proxy = reschatproxy.SocketProxy(socketProviding: socket,
-                                             uiProviding: chatViewController)
+                                             uiProviding: uiProvidingController)
         chatViewController.proxy = proxy
         
         self.socket = socket
         
         // INFO: insert it into navigation stack -
-        chooserViewController.navigationController?.pushViewController(chatViewController, animated: true)
+        chooserViewController.navigationController?.pushViewController(uiProvidingController, animated: true)
+        
     }
+    
+    
+//    func didSelectAirport(_ airport: ResChatHouCommon.Airport, 
+//                          language: ResChatHouCommon.Language,
+//                          socket: reschatSocket.ResChatSocket,
+//                          chatViewController: reschatui.ChatViewController,
+//                          chooserViewController: ResChatHouUIKit.AirportChooserViewController) {
+//        
+//        // TODO: You can set current location if you want to!!!
+//        ResChatSocket.location = nil
+//        
+//        print("Airport selected: \(airport.name), Language selected: \(language.rawValue)")
+//        
+//        let proxy = reschatproxy.SocketProxy(socketProviding: socket,
+//                                             uiProviding: chatViewController)
+//        chatViewController.proxy = proxy
+//        
+//        self.socket = socket
+//        
+//        // INFO: insert it into navigation stack -
+//        chooserViewController.navigationController?.pushViewController(chatViewController, animated: true)
+//    }
 }
 
 // MARK: Socket -

@@ -11,7 +11,7 @@ import ResChatAppearance
 import ResChatProtocols
 import ResChatAttributedText
 
-open class ChatViewController: UIViewController {
+open class ChatViewController: PlatformViewController {
     
     enum ScrollPosition {
         case top
@@ -20,11 +20,11 @@ open class ChatViewController: UIViewController {
     
     // MARK: Socket Proxy -
     
-    public var proxy: UIDataSource? {
-        didSet {
-            subscribeToProxyPublishers()
-        }
-    }
+//    public var proxy: UIDataSource? {
+//        didSet {
+//            subscribeToProxyPublishers()
+//        }
+//    }
     
     internal var cancellables = Set<AnyCancellable>()
         

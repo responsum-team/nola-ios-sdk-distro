@@ -9,9 +9,9 @@ import Combine
 import Foundation
 import ResChatProtocols
 
-internal extension ChatViewController {
+extension ChatViewController {
     
-    func subscribeToProxyPublishers() {
+    open override func subscribeToProxyPublishers() {
         // Ensure proxy is set before subscribing to publishers
         guard let proxy = proxy else {
             print("DBGG: Error-> No proxy provided. Skipping subscriptions.")
