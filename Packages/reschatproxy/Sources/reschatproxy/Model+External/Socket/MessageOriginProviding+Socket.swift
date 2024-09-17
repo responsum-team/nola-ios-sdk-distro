@@ -9,7 +9,7 @@ import Foundation
 import reschatSocket
 import ResChatProtocols
 
-extension reschatSocket.SocketMessageSource: MessageOriginProviding {
+extension reschatSocket.SocketMessageSource: @retroactive MessageOriginProviding {
     public var toMessageOrigin: MessageOrigin {
         switch self {
         case .history:

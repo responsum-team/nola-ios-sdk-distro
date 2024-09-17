@@ -9,7 +9,12 @@ import Foundation
 import reschatSocket
 import ResChatProtocols
 
-extension reschatSocket.SocketMessage: MessageProviding {
+extension reschatSocket.SocketMessage: @retroactive MessageProviding {
+    
+    public var messageOrigin: ResChatProtocols.MessageOrigin {
+        socketSource.toMessageOrigin
+    }
+    
     public var timestamp: String {
         messageTimestamp
     }
@@ -31,4 +36,5 @@ extension reschatSocket.SocketMessage {
     func toMessage() -> MessageProviding {
         self as MessageProviding
     }
+    
 }
