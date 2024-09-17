@@ -7,22 +7,37 @@
 
 import AppKit
 import ResChatHouCommon
+import ResChatProtocols
 
-public class AirportChooserViewController: NSViewController {
+public class AirportChooserViewController: PlatformViewController {
     
     // MARK: Properties -
     
     let scrollView = NSScrollView()
     let contentView = NSView()
     
-    let titleLabel = NSTextField(labelWithString: NSLocalizedString("configure_your_chat", value: "Configure your chat", comment: "Title for the chat configuration screen"))
-    let airportLabel = NSTextField(labelWithString: NSLocalizedString("choose_airport_prompt", value: "Which airport would you like assistance with?", comment: "Prompt asking the user to choose an airport"))
-    let airportSegmentedControl = NSSegmentedControl(labels: Airport.allCases.map { $0.name }, trackingMode: .selectOne, target: nil, action: nil)
-    let languageLabel = NSTextField(labelWithString: NSLocalizedString("select_language", value: "Select preferred language", comment: "Label for selecting preferred language"))
-    let languagePicker = NSPopUpButton()
-    let chooseButton = NSButton(title: NSLocalizedString("choose_button", value: "Choose", comment: "Button to confirm selection of airport and language"), target: nil, action: #selector(chooseButtonTapped))
+    let titleLabel = NSTextField(labelWithString: NSLocalizedString("configure_your_chat",
+                                                                    value: "Configure your chat",
+                                                                    comment: "Title for the chat configuration screen"))
+    let airportLabel = NSTextField(labelWithString: NSLocalizedString("choose_airport_prompt",
+                                                                      value: "Which airport would you like assistance with?",
+                                                                      comment: "Prompt asking the user to choose an airport"))
     
-    public weak var delegate: AirportChooserDelegate?
+    let airportSegmentedControl = NSSegmentedControl(labels: Airport.allCases.map { $0.name },
+                                                     trackingMode: .selectOne,
+                                                     target: nil,
+                                                     action: nil)
+    let languageLabel = NSTextField(labelWithString: NSLocalizedString("select_language",
+                                                                       value: "Select preferred language",
+                                                                       comment: "Label for selecting preferred language"))
+    let languagePicker = NSPopUpButton()
+    let chooseButton = NSButton(title: NSLocalizedString("choose_button",
+                                                         value: "Choose",
+                                                         comment: "Button to confirm selection of airport and language"),
+                                target: nil,
+                                action: #selector(chooseButtonTapped))
+    
+    public weak var delegate: AirportAndLanguageChooserDelegate?
     
     let airports: [Airport]
     let languages: [Language]

@@ -24,7 +24,6 @@ let package = Package(
         .target(
             name: "reschatui",
             dependencies: [
-
                 "ResChatAppearance",  // Specify ResChatAppearance as a dependency
                 "ResChatProtocols",   // Specify ResChatProtocols as a dependency
                 "ResChatAttributedText"  // Specify ResChatAttributedText as a dependency
