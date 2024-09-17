@@ -86,7 +86,12 @@ struct EventLog {
     static func append(_ logEntry: LogEntry) {
         logQueue.async(flags: .barrier) {
             guard active else { return }
-            log.append(logEntry)
+            // Create a mutable copy of the log entry and assign the index
+            var modifiedLogEntry = logEntry
+            modifiedLogEntry["index"] = log.count // Assign the index as the current size of the log
+            modifiedLogEntry["date"] = currentDate()
+            // Append the modified log entry
+            log.append(modifiedLogEntry)
             saveAsJSON()
         }
     }
@@ -128,7 +133,6 @@ extension EventLog {
         }
         
         var logEntry: LogEntry = [ "_Event" : name]
-        logEntry["date"] = Self.currentDate()
         
         if let newMessage = newMessage {
             logEntry["newMessage"] = newMessage.toDictionary()
@@ -145,7 +149,6 @@ extension EventLog {
     func logError(name: String,
                   error: Error? = nil) {
         var logEntry: LogEntry = [ "_Error" : name]
-        logEntry["date"] = Self.currentDate()
         
         if Self.active {
             print("\(Self.logPrefix): \(name)")
@@ -175,7 +178,6 @@ extension EventLog {
                                        newMessages: [SocketMessage]? = nil,
                                        myMessages: [SocketMessage]? = nil) {
         var logEntry: LogEntry = [ "_HandleEvent" : Self.nameReceivedConversations]
-        logEntry["date"] = Self.currentDate()
         
         if Self.active {
             print("\(Self.logPrefix): \(Self.nameReceivedStreamMessage): `\(snapshot.messages.count)`, messagesBefore = \(snapshot.messagesBefore)")
@@ -203,14 +205,11 @@ extension EventLog {
     func logEventReceivedStreamMessages(newMessage: SocketMessage? = nil, 
                                         newMessages: [SocketMessage]? = nil,
                                         myMessages: [SocketMessage]? = nil) {
-        return
         var logEntry: LogEntry = [ "_HandleEvent" : Self.nameReceivedStreamMessage]
         
         if Self.active {
             print("\(Self.logPrefix): \(Self.nameReceivedStreamMessage): (part: \(newMessage?.messagePartNumber)`\(Self.summarizeString(newMessage?.text, upTo: 8) ?? "")`")
         }
-        
-        logEntry["date"] = Self.currentDate()
         
         if let newMessage = newMessage {
             logEntry["streamMessage"] = newMessage.toDictionary()
@@ -239,8 +238,6 @@ extension EventLog {
         if Self.active {
             print("\(Self.logPrefix): \(Self.nameReceivedUpdateHistoryItems): `\(Self.summarizeString(newMessage?.text, upTo: 8) ?? "")`")
         }
-        
-        logEntry["date"] = Self.currentDate()
         
         if let newMessage = newMessage {
             logEntry["updatedMessage"] = newMessage.toDictionary()
