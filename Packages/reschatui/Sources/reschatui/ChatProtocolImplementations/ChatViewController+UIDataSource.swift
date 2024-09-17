@@ -33,7 +33,7 @@ internal extension ChatViewController {
             .receive(on: DispatchQueue.main)  // Ensures UI updates happen on the main thread
             .sink { [weak self] messages in
                 let myMessages = messages.map { $0.toUIMessage()}
-                self?.handleMessages(myMessages)
+                self?.processHistoryMessages(myMessages)
             }
             .store(in: &cancellables)
         
@@ -41,7 +41,7 @@ internal extension ChatViewController {
             .receive(on: DispatchQueue.main)  // Ensure that UI updates happen on the main thread
             .sink { [weak self] message in
                 let myMessage = message.toUIMessage()
-                self?.handleUpdatedMessage(myMessage) // sending to VC
+                self?.processUpdatedMessage(myMessage) // sending to VC
             }
             .store(in: &cancellables)
         
@@ -49,7 +49,7 @@ internal extension ChatViewController {
             .receive(on: DispatchQueue.main)  // Ensure that UI updates happen on the main thread
             .sink { [weak self] message in
                 let myMessage = message.toUIMessage()
-                self?.handleStreamingMessage(myMessage) // sending to VC
+                self?.processStreamingMessage(myMessage) // sending to VC
             }
             .store(in: &cancellables)
     }

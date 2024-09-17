@@ -59,6 +59,8 @@ open class ChatViewController: UIViewController {
             .store(in: &cancellables)
     }
     
+    var messageHandler: MessageHandlingAlgorithm = OptimizedStreamingAlgorithm()
+    
     // MARK: Cell Classes -
     
     open class var userMessageCellType: UserMessageCell.Type {

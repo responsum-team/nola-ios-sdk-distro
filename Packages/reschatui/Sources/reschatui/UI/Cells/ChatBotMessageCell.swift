@@ -153,6 +153,7 @@ open class ChatBotMessageCell: ProvidingTableViewCell {
         setupTapGesture()
     }
 
+    private var isAnimatingPlaceholder = false // Track if the animation is already running
     
     public func configure(with message: UIMessage) {
 
@@ -164,30 +165,33 @@ open class ChatBotMessageCell: ProvidingTableViewCell {
         messageLabel.alpha = 1.0 // Reset alpha
         
         if message.type == .placeholder(.forBot) && message.isBotWaiting {
-            // Create the SF Symbol for the animated placeholder
-            let symbolConfiguration = UIImage.SymbolConfiguration(scale: .large)
-            let symbolImage = UIImage(systemName: "ellipsis.circle.fill", withConfiguration: symbolConfiguration)?
-                .withTintColor(.systemGray, renderingMode: .alwaysOriginal)
-            
-            let attachment = NSTextAttachment()
-            attachment.image = symbolImage
-            
-            let attributedText = NSMutableAttributedString(string: "Bot is typing... ")
-            let symbolAttributedString = NSAttributedString(attachment: attachment)
-            
-            attributedText.append(symbolAttributedString)
-            messageLabel.attributedText = attributedText
-            
-            // Animate the symbol (optional)
-            UIView.animate(withDuration: 0.5, delay: 0, options: [.repeat, .autoreverse]) {
-                self.messageLabel.alpha = 0.5
-            } completion: { _ in
-                self.messageLabel.alpha = 1.0
+            if !isAnimatingPlaceholder {
+                // Create the SF Symbol for the animated placeholder
+                let symbolConfiguration = UIImage.SymbolConfiguration(scale: .large)
+                let symbolImage = UIImage(systemName: "ellipsis.circle.fill", withConfiguration: symbolConfiguration)?
+                    .withTintColor(.systemGray, renderingMode: .alwaysOriginal)
+                
+                let attachment = NSTextAttachment()
+                attachment.image = symbolImage
+                
+                let attributedText = NSMutableAttributedString(string: "Bot is typing... ")
+                let symbolAttributedString = NSAttributedString(attachment: attachment)
+                
+                attributedText.append(symbolAttributedString)
+                messageLabel.attributedText = attributedText
+                
+                // Animate the symbol (only once)
+                UIView.animate(withDuration: 0.5, delay: 0, options: [.repeat, .autoreverse]) {
+                    self.messageLabel.alpha = 0.5
+                } completion: { _ in
+                    self.messageLabel.alpha = 1.0
+                }
+                
+                isAnimatingPlaceholder = true // Set flag to true to indicate animation is running
             }
         } else {
+            isAnimatingPlaceholder = false // Reset the flag if we're no longer in the placeholder state
             messageLabel.attributedText = message.attributedText
-            
-            UILog.shared.logMessageMarkdown(message: message)
         }
     }
     

@@ -55,9 +55,7 @@ internal extension ChatViewController {
         UILog.shared.logSnapshotAction(name: "removeLoadingMessage", newMessage: nil, newMessages: nil, myMessages: snapshot.extractCurrentMessages())
         
         // Check if the snapshot contains any items before trying to remove
-        guard !snapshot.itemIdentifiers.isEmpty else {
-            return
-        }
+        guard !snapshot.itemIdentifiers.isEmpty else { return }
 
         // Find all loading messages in the snapshot
         let loadingMessages = snapshot.itemIdentifiers.filter { $0.type.isLoadingPlaceholder }
@@ -102,16 +100,6 @@ internal extension ChatViewController {
         scrollToBottom()
         
         notifyBotStartedTyping()
-    }
-    
-    func messagesNotInSnapshot(_ messages: [UIMessage]) -> [UIMessage] {
-        let snapshot = dataSource.snapshot()  // Get the current snapshot
-        let existingMessageIDs = Set(snapshot.itemIdentifiers.map { $0.id })  // Get a set of existing message IDs
-        
-        // Filter out messages whose IDs are not in the snapshot
-        let messagesNotInSnapshot = messages.filter { !existingMessageIDs.contains($0.id) }
-        
-        return messagesNotInSnapshot
     }
 
 }
