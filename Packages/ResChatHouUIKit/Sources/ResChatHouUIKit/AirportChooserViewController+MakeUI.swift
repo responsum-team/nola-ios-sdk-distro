@@ -24,8 +24,8 @@ public extension AirportChooserViewController {
         let chatViewController = airport.chatViewControllerForLanguage(language)
         
         // Call the delegate method
-        delegate?.didSelectAirport(selectedAirport,
-                                   language: selectedLanguage,
+        delegate?.didSelectAirport(airport,
+                                   language: language,
                                    socket: socket,
                                    chatViewController: chatViewController,
                                    chooserViewController: self)

@@ -39,6 +39,7 @@ class LanguagesPickerDelegate: NSObject, UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let selectedLanguage = languages[row]
         didSelectLanguage?(selectedLanguage)
+        print("selectedLanguage = \(selectedLanguage)")
     }
 }
 
@@ -68,5 +69,6 @@ class AirportsSegmentedControlDelegate: NSObject {
     
     @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         let selectedAirport = airports[sender.selectedSegmentIndex]
+        print("selectedAirport = \(selectedAirport), \(selectedAirport.name)")
     }
 }

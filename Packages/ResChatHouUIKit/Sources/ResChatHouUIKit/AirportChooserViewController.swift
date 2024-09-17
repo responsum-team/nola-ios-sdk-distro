@@ -48,14 +48,13 @@ public class AirportChooserViewController: UIViewController {
     init(airports: [Airport] = Airport.allCases, languages: [Language] = Language.allCases) {
         self.airports = airports
         self.languages = languages
+        
         self.languagesPickerDataSource = LanguagesPickerDataSource(languages: languages)
         self.languagesPickerDelegate = LanguagesPickerDelegate(languages: languages)
-        self.languagesPickerDelegate.didSelectLanguage = { selectedLanguage in
-            print("Language Selected: \(selectedLanguage.rawValue)")
-            // Add any additional logic you want to handle when a language is selected
-        }
+        
         self.airportsSegmentedControlDataSource = AirportsSegmentedControlDataSource(airports: airports)
         self.airportsSegmentedControlDelegate = AirportsSegmentedControlDelegate(airports: airports)
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -75,8 +74,9 @@ public class AirportChooserViewController: UIViewController {
         
         // Set up data sources and delegates
         airportsSegmentedControlDataSource.configureSegmentedControl(airportSegmentedControl)
+        
         airportSegmentedControl.addTarget(airportsSegmentedControlDelegate,
-                                          action: #selector(AirportsSegmentedControlDelegate.segmentedControlValueChanged(_:)),
+                                          action: #selector(airportsSegmentedControlDelegate.segmentedControlValueChanged(_:)),
                                           for: .valueChanged)
         languagePicker.dataSource = languagesPickerDataSource
         languagePicker.delegate = languagesPickerDelegate
@@ -127,7 +127,7 @@ public class AirportChooserViewController: UIViewController {
     // MARK: Actions -
     
     @objc func chooseButtonTapped() {
-        print("Selected Airport: \(selectedAirport), and Language: \(selectedLanguage)")
+        print("Selected Airport: \(selectedAirport), \(selectedAirport.name), and Language: \(selectedLanguage)")
         handleSelection(airport: selectedAirport, language: selectedLanguage)
     }
     

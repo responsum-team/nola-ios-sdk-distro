@@ -22,7 +22,7 @@ public protocol AirportAndLanguageChooserDelegate: AnyObject {
         _ airport: Airport,
         language: Language,
         socket: ResChatSocket,
-        chatViewController: PlatformChatViewController, // Now uses PlatformChatViewController
+        chatViewController: PlatformChatViewController, 
         chooserViewController: PlatformViewController
     )
 }
