@@ -126,7 +126,7 @@ extension UIMessageType: Hashable {
 extension UIMessageType {
     
     // Function to check if the message is a placeholder
-    var isPlaceholder: Bool {
+    public var isPlaceholder: Bool {
         if case .placeholder = self {
             return true
         }
@@ -134,7 +134,7 @@ extension UIMessageType {
     }
     
     // Computed property to check if the message is either a bot or a placeholder for a bot
-    var isBotOrBotPlaceholder: Bool {
+    public var isBotOrBotPlaceholder: Bool {
         switch self {
         case .bot:
             return true
@@ -145,7 +145,7 @@ extension UIMessageType {
         }
     }
     
-    var isUserOrUserPlaceholder: Bool {
+    public var isUserOrUserPlaceholder: Bool {
         switch self {
         case .user:
             return true
@@ -157,7 +157,7 @@ extension UIMessageType {
     }
     
     // Computed property to check if the message is a loading placeholder
-    var isLoadingPlaceholder: Bool {
+    public var isLoadingPlaceholder: Bool {
         if case .placeholder(let type) = self, type == .forLoading {
             return true
         }

@@ -7,6 +7,7 @@
 
 import Foundation
 import ResChatAttributedText
+import ResChatUICommon
 
 extension UIMessage {
     public func toDictionary() -> [String: Any] {

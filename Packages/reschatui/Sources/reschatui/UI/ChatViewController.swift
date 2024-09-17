@@ -10,6 +10,7 @@ import Combine
 import ResChatAppearance
 import ResChatProtocols
 import ResChatAttributedText
+import ResChatUICommon
 
 open class ChatViewController: PlatformViewController {
     
@@ -17,14 +18,6 @@ open class ChatViewController: PlatformViewController {
         case top
         case bottom
     }
-    
-    // MARK: Socket Proxy -
-    
-//    public var proxy: UIDataSource? {
-//        didSet {
-//            subscribeToProxyPublishers()
-//        }
-//    }
     
     internal var cancellables = Set<AnyCancellable>()
         

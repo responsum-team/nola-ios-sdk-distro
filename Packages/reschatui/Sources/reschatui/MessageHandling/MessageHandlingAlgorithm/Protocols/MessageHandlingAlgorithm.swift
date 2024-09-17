@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import UIKit
+import ResChatUICommon
 
 protocol MessageHandlingAlgorithm {
     func processHistoryMessages(_ receivedMessages: [UIMessage], dataSource: UIMessageDataSource, completion: @escaping (Bool) -> Void)

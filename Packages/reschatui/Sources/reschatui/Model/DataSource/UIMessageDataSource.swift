@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ResChatUICommon
 
 class UIMessageDataSource: UITableViewDiffableDataSource<ChatSection, UIMessage> {
     

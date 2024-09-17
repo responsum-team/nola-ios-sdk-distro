@@ -5,6 +5,7 @@
 //  Created by Mihaela MJ on 21.05.2024..
 //
 import UIKit
+import ResChatUICommon
 
 // TODO: Add `waiting for bot` progress bar at the bottom of the cell, if this cell holds a message that is a `.placeholder(.forUser)`
 

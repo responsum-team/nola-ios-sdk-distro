@@ -13,7 +13,7 @@ extension UIMessage: MessageProviding {
     public var isFromBot: Bool { isBot  }
 }
 
-extension ResChatProtocols.MessageType  {
+public extension ResChatProtocols.MessageType  {
     func toUIMessageType() -> UIMessageType {
         switch self {
         case .user:
@@ -23,7 +23,8 @@ extension ResChatProtocols.MessageType  {
         }
     }
 }
-extension MessageProviding {
+
+public extension MessageProviding {
     func toUIMessage() -> UIMessage {
         let uiType = messageType.toUIMessageType()
         

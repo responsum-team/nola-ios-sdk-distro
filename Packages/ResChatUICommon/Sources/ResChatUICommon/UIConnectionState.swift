@@ -16,7 +16,7 @@ public enum UIConnectionState {
     case loadedMore
     case error(Error?)
     
-    func toString() -> String {
+    public func toString() -> String {
         switch self {
         case .connected:
             return "connected"

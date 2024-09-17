@@ -7,9 +7,12 @@
 
 import Foundation
 import ResChatProtocols
+import ResChatUICommon
 import ResChatAttributedText
 
 extension UIMessage: AttributedTextProviding {}
+
+extension UIMessage: @unchecked Sendable {}
 
 public struct UIMessage: Hashable, Codable {
     
@@ -214,7 +217,7 @@ private extension UIMessage {
 }
 
 
-extension UIMessage {
+public extension UIMessage {
     mutating func update(with newMessage: UIMessage) {
         // Update the text and other relevant properties
         self.rawText = newMessage.rawText
@@ -230,7 +233,7 @@ extension UIMessage {
     }
 }
 
-extension UIMessage {
+public extension UIMessage {
     static func sortByDate(in messages: [UIMessage], ascending: Bool = true) -> [UIMessage] {
        // Sort the messages by their timestamp (converted to Date) in ascending order (oldest first)
        return messages.sorted(by: { firstMessage, secondMessage in

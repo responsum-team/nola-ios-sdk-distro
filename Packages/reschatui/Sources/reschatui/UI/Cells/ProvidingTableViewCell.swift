@@ -7,6 +7,7 @@
 
 import UIKit
 import ResChatAppearance
+import ResChatUICommon
 
 open class ProvidingTableViewCell: UITableViewCell {
     open class var identifier: String { "ProvidingTableViewCell" }

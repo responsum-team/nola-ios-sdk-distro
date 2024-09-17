@@ -15,18 +15,20 @@ let package = Package(
             targets: ["reschatui"]),
     ],
     dependencies: [
-        .package(name: "ResChatAppearance", path: "../ResChatAppearance"),  // Add ResChatAppearance as a local package
-        .package(name: "ResChatProtocols", path: "../ResChatProtocols"),   // Add ResChatProtocols as a local package
-        .package(name: "ResChatAttributedText", path: "../ResChatAttributedText")  // Add ResChatAttributedText as a local package
+        .package(name: "ResChatAppearance", path: "../ResChatAppearance"),
+        .package(name: "ResChatProtocols", path: "../ResChatProtocols"),
+        .package(name: "ResChatAttributedText", path: "../ResChatAttributedText"),
+        .package(name: "ResChatUICommon", path: "../ResChatUICommon")
     ],
     targets: [
         // Targets define the modules and test suites.
         .target(
             name: "reschatui",
             dependencies: [
-                "ResChatAppearance",  // Specify ResChatAppearance as a dependency
-                "ResChatProtocols",   // Specify ResChatProtocols as a dependency
-                "ResChatAttributedText"  // Specify ResChatAttributedText as a dependency
+                "ResChatAppearance",
+                "ResChatProtocols",
+                "ResChatAttributedText",
+                "ResChatUICommon"
             ]),
         .testTarget(
             name: "reschatuiTests",

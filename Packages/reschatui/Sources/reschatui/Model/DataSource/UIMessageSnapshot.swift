@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ResChatUICommon
 
 public enum ChatSection {
     case main

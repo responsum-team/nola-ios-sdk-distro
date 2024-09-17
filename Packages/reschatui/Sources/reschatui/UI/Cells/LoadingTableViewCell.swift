@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ResChatUICommon
 
 open class LoadingTableViewCell: ProvidingTableViewCell {
     override open class var identifier: String { "LoadingTableViewCell" }

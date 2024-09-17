@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ResChatUICommon
 
 extension ChatViewController {
     private func describeMessages(_ messages: [UIMessage], title: String) {
