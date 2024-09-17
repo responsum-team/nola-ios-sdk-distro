@@ -29,7 +29,7 @@ public protocol AirportAndLanguageChooserDelegate: AnyObject {
 
 extension PlatformAirportViewController {
     
-    func handleSelection(delegate: AirportAndLanguageChooserDelegate?,
+    public func handleSelection(delegate: AirportAndLanguageChooserDelegate?,
                          airport: Airport,
                          language: Language,
                          chatViewController: PlatformChatViewController) {
