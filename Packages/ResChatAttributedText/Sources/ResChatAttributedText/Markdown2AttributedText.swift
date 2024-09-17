@@ -10,7 +10,8 @@ import Down
 
 #if canImport(UIKit)
 import UIKit
-
+public typealias FontType = UIFont
+public typealias ColorType = UIColor
 extension UIColor {
     func toCSSColor() -> String {
         var red: CGFloat = 0
@@ -23,6 +24,8 @@ extension UIColor {
 }
 #elseif canImport(AppKit)
 import AppKit
+public typealias FontType = NSFont
+public typealias ColorType = NSColor
 
 extension NSColor {
     func toCSSColor() -> String {
@@ -77,11 +80,20 @@ private extension Markdown2AttributedText {
     static func convertMarkdownToAttributedStringStyled(markdownText: String) -> NSAttributedString? {
         do {
             let down = Down(markdownString: markdownText)
+            
+            #if os(iOS)
+            let fontSize = FontType.preferredFont(forTextStyle: .body).pointSize
+            let textColor = ColorType.label.toCSSColor()
+            #elseif os(macOS)
+            let fontSize = FontType.systemFontSize // macOS doesn't have preferredFont like iOS
+            let textColor = ColorType.textColor.toCSSColor() // Use textColor for label equivalent on macOS
+            #endif
+            
             let stylesheet = """
             body {
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-                font-size: \(UIFont.preferredFont(forTextStyle: .body).pointSize)px;
-                color: \(UIColor.label.toCSSColor());
+                font-size: \(fontSize)px;
+                color: \(textColor);
             }
             """
             let attributedString = try down.toAttributedString(.default, stylesheet: stylesheet)

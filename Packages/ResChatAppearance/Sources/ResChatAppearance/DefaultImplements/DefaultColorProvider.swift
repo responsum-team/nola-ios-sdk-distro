@@ -59,6 +59,14 @@ public struct DefaultColorProvider: ColorProviding {
     public init() {}
 }
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
+#if canImport(AppKit)
+import AppKit
+#endif
+
 public extension ColorProviding {
     // Helper to create adaptive colors for both iOS and macOS
     public static func adaptiveColor(light: ColorType, dark: ColorType) -> ColorType {
