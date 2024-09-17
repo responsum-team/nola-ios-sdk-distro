@@ -6,9 +6,9 @@
 //
 
 import UIKit
+import ResChatHouCommon
 import ResChatHouUIKit
 
-import ResChatHouCommon
 import reschatui
 import reschatSocket
 import reschatproxy
@@ -60,7 +60,11 @@ private extension AppDelegate {
 
 
 extension AppDelegate: AirportAndLanguageChooserDelegate {
-    func didSelectAirport(_ airport: ResChatHouCommon.Airport, language: ResChatHouCommon.Language, socket: reschatSocket.ResChatSocket, chatViewController: any ResChatProtocols.PlatformChatViewController, chooserViewController: ResChatHouCommon.PlatformViewController) {
+    func didSelectAirport(_ airport: ResChatHouCommon.Airport,
+                          language: ResChatHouCommon.Language,
+                          socket: reschatSocket.ResChatSocket,
+                          chatViewController: any ResChatProtocols.PlatformChatViewController,
+                          chooserViewController: ResChatProtocols.PlatformAirportViewController) {
         
         
         // TODO: You can set current location if you want to!!!
@@ -79,8 +83,14 @@ extension AppDelegate: AirportAndLanguageChooserDelegate {
         
         self.socket = socket
         
-        // INFO: insert it into navigation stack -
-        chooserViewController.navigationController?.pushViewController(uiProvidingController, animated: true)
+        if let airportChooserVC = chooserViewController as? ResChatHouUIKit.AirportChooserViewController {
+            // INFO: insert it into navigation stack -
+            airportChooserVC.navigationController?.pushViewController(uiProvidingController, animated: true)
+        } else {
+            print("Error: airportChooserVC is not `ResChatHouUIKit.AirportChooserViewController`!!")
+        }
+        
+
         
     }
 }

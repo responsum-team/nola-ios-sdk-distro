@@ -23,7 +23,31 @@ public protocol AirportAndLanguageChooserDelegate: AnyObject {
         language: Language,
         socket: ResChatSocket,
         chatViewController: PlatformChatViewController, 
-        chooserViewController: PlatformViewController
+        chooserViewController: PlatformAirportViewController
     )
 }
 
+extension PlatformAirportViewController {
+    
+    func handleSelection(delegate: AirportAndLanguageChooserDelegate?,
+                         airport: Airport,
+                         language: Language,
+                         chatViewController: PlatformChatViewController) {
+        
+        ResChatSocket.language = language.abbreviation
+        
+        if let location = location {
+            ResChatSocket.location = ResChatSocket.Location(latitude: location.coordinate.latitude,
+                                                            longitude: location.coordinate.longitude)
+        }
+
+        let socket = airport.socket
+        
+        // Call the delegate method
+        delegate?.didSelectAirport(airport,
+                                   language: language,
+                                   socket: socket,
+                                   chatViewController: chatViewController,
+                                   chooserViewController: self)
+    }
+}

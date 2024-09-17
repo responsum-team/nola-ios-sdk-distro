@@ -7,9 +7,10 @@
 
 import UIKit
 import ResChatHouCommon
+import ResChatProtocols
 
-public class AirportChooserViewController: UIViewController {
-    
+public class AirportChooserViewController: PlatformViewController {
+
     // MARK: Properties -
     
     let scrollView = UIScrollView()
@@ -22,7 +23,6 @@ public class AirportChooserViewController: UIViewController {
     let languagePicker = UIPickerView()
     let chooseButton = UIButton(type: .system)
     
-//    public weak var delegate: AirportChooserDelegate?
     public weak var delegate: AirportAndLanguageChooserDelegate?
     
     let airports: [Airport]
@@ -54,7 +54,6 @@ public class AirportChooserViewController: UIViewController {
         
         self.airportsSegmentedControlDataSource = AirportsSegmentedControlDataSource(airports: airports)
         self.airportsSegmentedControlDelegate = AirportsSegmentedControlDelegate(airports: airports)
-        
         super.init(nibName: nil, bundle: nil)
     }
     

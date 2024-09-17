@@ -13,15 +13,23 @@ import AppKit
 public typealias PlatformViewController = NSViewController
 #endif
 
+import CoreLocation
+
+
 // Define a protocol for the ChatViewController that both iOS and macOS versions will conform to
 public protocol PlatformChatViewController: AnyObject {
     var proxy: UIDataSource? { get set }
     func subscribeToProxyPublishers()
 }
 
+public protocol PlatformAirportViewController: AnyObject {
+    var location: CLLocation? { get set } // Add CLLocation property
+}
+
 // Associated keys for storing proxy values using Objective-C runtime
 private struct AssociatedKeys {
     static var proxy = "proxyKey"
+    static var location = "locationKey"
 }
 
 // swiftlint:disable unsafe_raw_pointer
@@ -40,48 +48,25 @@ extension PlatformViewController: PlatformChatViewController {
             subscribeToProxyPublishers() // Automatically subscribe when the proxy is set
         }
     }
-
+    
     // Define the required method to handle proxy subscriptions
     @objc open func subscribeToProxyPublishers() {
         // Add logic to subscribe to proxy-related publishers
         print("Subscribing to proxy publishers")
     }
 }
+
+
+extension PlatformViewController: PlatformAirportViewController {
+    // The location property, using Objective-C runtime to store the value
+    public var location: CLLocation? {
+        get {
+            return objc_getAssociatedObject(self, UnsafeRawPointer(&AssociatedKeys.location)) as? CLLocation
+        }
+        set {
+            objc_setAssociatedObject(self, UnsafeRawPointer(&AssociatedKeys.location), newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+}
 // swiftlint:enable unsafe_raw_pointer
 
-
-/**
- // Example implementation for iOS ChatViewController
- 
- import UIKit
- class MyiOSChatViewController: UIViewController, PlatformChatViewController {
-     // Implement the required method from PlatformChatViewController
-     public func subscribeToProxyPublishers() {
-         // Custom logic for proxy subscriptions
-         print("iOS: Subscribing to proxy publishers with proxy: \(String(describing: proxy))")
-     }
-
-     override func viewDidLoad() {
-         super.viewDidLoad()
-         // Set the proxy when the view loads
-         self.proxy = someProxyDataSource // Replace `someProxyDataSource` with your actual data source
-     }
- }
-
- // Example implementation for macOS ChatViewController
- 
- import AppKit
- class MyMacOSChatViewController: NSViewController, PlatformChatViewController {
-     // Implement the required method from PlatformChatViewController
-     public func subscribeToProxyPublishers() {
-         // Custom logic for proxy subscriptions
-         print("macOS: Subscribing to proxy publishers with proxy: \(String(describing: proxy))")
-     }
-
-     override func viewDidLoad() {
-         super.viewDidLoad()
-         // Set the proxy when the view loads
-         self.proxy = someProxyDataSource // Replace `someProxyDataSource` with your actual data source
-     }
- }
- */
