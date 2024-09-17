@@ -8,6 +8,7 @@
 import Combine
 import Foundation
 import ResChatProtocols
+import ResChatUICommon
 
 extension ChatViewController {
     
