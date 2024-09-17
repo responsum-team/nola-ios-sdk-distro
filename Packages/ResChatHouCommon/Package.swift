@@ -18,6 +18,7 @@ let package = Package(
     dependencies: [
         // Add reschatui, reschatSocket, and ResChatAppearance as local package dependencies
         .package(name: "ResChatAppearance", path: "../ResChatAppearance"),
+        .package(name: "ResChatProtocols", path: "../ResChatProtocols"),   // Add ResChatProtocols as a local package
         .package(name: "reschatSocket", path: "../reschatSocket"),
     ],
     targets: [
@@ -25,7 +26,7 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "ResChatHouCommon",
-            dependencies: ["ResChatAppearance", "reschatSocket"]),
+            dependencies: ["ResChatAppearance", "ResChatProtocols", "reschatSocket"]),
         .testTarget(
             name: "ResChatHouCommonuTests",
             dependencies: ["ResChatHouCommon"]),

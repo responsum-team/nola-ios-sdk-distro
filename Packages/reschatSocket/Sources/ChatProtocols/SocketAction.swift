@@ -7,6 +7,8 @@
 
 import Foundation
 
+// TODO: Refactor this to `ResChatProtocols` -
+
 public protocol SocketAction {
     
     // MARK: - Methods
