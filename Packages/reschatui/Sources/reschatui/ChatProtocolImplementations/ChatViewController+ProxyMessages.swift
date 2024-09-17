@@ -39,6 +39,7 @@ extension ChatViewController {
     
     func processHistoryMessages(_ receivedMessages: [UIMessage]) {
         
+        UILog.shared.logHandleMessages(newMessages: receivedMessages, myMessages: dataSource.snapshot().extractCurrentMessages())
         // Check for `clear chat` -
         if receivedMessages.isEmpty && didRequestToClearChat {
             didRequestToClearChat = false
@@ -48,28 +49,32 @@ extension ChatViewController {
         }
         
         showLoadingIndicator()
-
+        
         var receivedMessagesAreOlder = false
-        messageHandler.processHistoryMessages(receivedMessages, 
-                                              dataSource: dataSource, 
+        messageHandler.processHistoryMessages(receivedMessages,
+                                              dataSource: dataSource,
                                               completion: { older in receivedMessagesAreOlder = older })
         
         // Use the receivedMessagesAreOlder flag as needed
         receivedMessagesAreOlder ? scrollToTop() : scrollToBottom()
         
         hideLoadingIndicator()
+        UILog.shared.logHandleMessages(finalResult: dataSource.snapshot().extractCurrentMessages())
     }
-
+    
     func processStreamingMessage(_ streamingMessage: UIMessage) {
+        
         messageHandler.processStreamingMessage(streamingMessage, dataSource: dataSource)
         
         scrollToBottom()
         if streamingMessage.isFinished {
             notifyBotFinishedTyping()
         }
+        UILog.shared.logStreamingMessage(streamingMessage, myMessages: dataSource.snapshot().extractCurrentMessages())
     }
-
+    
     func processUpdatedMessage(_ updatedMessage: UIMessage) {
         messageHandler.processUpdatedMessage(updatedMessage, dataSource: dataSource)
+        UILog.shared.logUpdatedMessage(updatedMessage, myMessages: dataSource.snapshot().extractCurrentMessages())
     }
 }

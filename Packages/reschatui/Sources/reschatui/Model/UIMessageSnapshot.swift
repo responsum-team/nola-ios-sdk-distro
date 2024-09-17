@@ -58,9 +58,15 @@ extension UIMessageSnapshot {
             return nil
         }
         
-        // Delete the identified placeholder messages from the snapshot
-        if !placeholdersToDelete.isEmpty {
-            deleteItems(placeholdersToDelete)
+        // Ensure the section exists before deleting items
+        if !placeholdersToDelete.isEmpty, 
+            sectionIdentifiers.contains(.main) {
+            // Ensure that there are rows in the section before attempting deletion
+            let rowsInSection = itemIdentifiers(inSection: .main)
+            if !rowsInSection.isEmpty {
+                // Delete the identified placeholder messages from the snapshot
+                deleteItems(placeholdersToDelete)
+            }
         }
     }
     
@@ -68,8 +74,24 @@ extension UIMessageSnapshot {
     // need to add messageIndex to uniquely identify bot message
     mutating func sortMessagesByDate(andIndex: Bool = false) {
         let sortedMessages = sortMessagesByDate(messages: itemIdentifiers, andByIndex: andIndex)
-        deleteItems(itemIdentifiers)
-        appendItems(sortedMessages, toSection: .main)
+
+        // Check if there are any items before trying to delete them
+        if !itemIdentifiers.isEmpty {
+            deleteItems(itemIdentifiers)
+        }
+
+        // Ensure the section exists before appending sorted items
+        if !sectionIdentifiers.contains(.main) {
+            print("Section does not exist, creating section.")
+            appendSections([.main])
+        }
+
+        // Append sorted messages if there are any
+        if !sortedMessages.isEmpty {
+            appendItems(sortedMessages, toSection: .main)
+        } else {
+            print("No sorted messages to append.")
+        }
     }
     
     func sortMessagesByDate(messages: [UIMessage], andByIndex: Bool = false) -> [UIMessage] {

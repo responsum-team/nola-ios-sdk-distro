@@ -15,17 +15,29 @@ extension UIMessageSnapshot {
     mutating func applyMessagesUpdates(receivedMessages: [UIMessage], shouldReload: (UIMessage, UIMessage) -> Bool) {
         let existingMessageTimestamps = Set(itemIdentifiers.map { $0.timestamp })
 
+        // If both existing messages and received messages are empty, no need to continue
+        if existingMessageTimestamps.isEmpty && receivedMessages.isEmpty {
+            print("Both existing messages and received messages are empty. No updates applied.")
+            return
+        }
+
         // Identify new messages to append (not already in the snapshot)
         let messagesToAppend = receivedMessages.filter { !existingMessageTimestamps.contains($0.timestamp) }
 
+        // Ensure the section exists before appending any new messages
+        if !sectionIdentifiers.contains(.main) {
+            print("Section does not exist, creating section.")
+            appendSections([.main])
+        }
+
+        // Update existing messages if needed
         updateMessages(in: itemIdentifiers, with: receivedMessages, shouldReload: shouldReload)
 
-        // Append new messages
+        // Append new messages if there are any
         if !messagesToAppend.isEmpty {
             appendItems(messagesToAppend, toSection: .main)
         }
     }
-    
     // Update existing messages in the snapshot based on the reload condition
     mutating func updateMessages(in itemIdentifiers: [UIMessage],
                                  with receivedMessages: [UIMessage],
@@ -115,7 +127,17 @@ extension UIMessageSnapshot {
     
     // Delete all bot placeholders
     mutating func deleteAllBotPlaceholders() {
+        // Identify all bot placeholder messages
         let botPlaceholders = itemIdentifiers.filter { $0.isBot && $0.isPlaceholder }
-        deleteItems(botPlaceholders)
+        
+        // Ensure the section exists and contains valid items before attempting deletion
+        if !botPlaceholders.isEmpty, 
+            sectionIdentifiers.contains(.main) {
+            let rowsInSection = itemIdentifiers(inSection: .main)
+            if !rowsInSection.isEmpty {
+                // Delete the identified bot placeholder messages from the snapshot
+                deleteItems(botPlaceholders)
+            }
+        }
     }
 }

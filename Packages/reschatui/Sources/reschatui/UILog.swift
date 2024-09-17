@@ -53,7 +53,7 @@ struct UILog {
     static let logPrefix = "DBGG: UI_Event-> "
     
     #if DEBUG
-    private static var active = false
+    private static var active = true
     #else
     private static var active = false
     #endif
@@ -62,7 +62,6 @@ struct UILog {
     
     // MARK: Synchronization Queue -
     private static let logQueue = DispatchQueue(label: "com.example.UILogQueue", attributes: .concurrent)
-    
     
     // MARK: Static -
     
@@ -83,17 +82,13 @@ struct UILog {
     static func append(_ logEntry: LogEntry) {
         logQueue.async(flags: .barrier) {
             guard active else { return }
-            // Create a mutable copy of the log entry and prepend the date
+            // Create a mutable copy of the log entry and assign the index
             var modifiedLogEntry = logEntry
+            modifiedLogEntry["index"] = log.count // Assign the index as the current size of the log
             modifiedLogEntry["date"] = currentDate()
-
-            // Add the modified log entry at the beginning of the log (if order matters)
-            log.insert(modifiedLogEntry, at: 0)
-            log.append(logEntry)
+            // Append the modified log entry
+            log.append(modifiedLogEntry)
             saveAsJSON()
-            
-            // Save attributed text to disk (if necessary)
-            AttributedTextCache.shared.saveToDisk()
         }
     }
     
@@ -133,8 +128,6 @@ extension UILog {
         
         print("\(Self.logPrefix): \(name): `\(Self.summarizeString(newMessage?.text, upTo: 8) ?? "")`")
         
-        logEntry["date"] = Self.currentDate()
-        
         if let newMessage = newMessage {
             logEntry["newMessage"] = newMessage.toDictionary()
         }
@@ -159,8 +152,6 @@ extension UILog {
         if Self.active {
             print("\(Self.logPrefix): \(name): `\(Self.summarizeString(newMessage?.text, upTo: 8) ?? "")`")
         }
-        
-        logEntry["date"] = Self.currentDate()
         
         if let newMessage = newMessage {
             logEntry["newMessage"] = newMessage.toDictionary()
@@ -187,7 +178,6 @@ extension UILog {
             print("\(Self.logPrefix): UILog \("HandleMessages")")
         }
         var logEntry: LogEntry = ["_Snapshot" : "HandleMessages"]
-        logEntry["date"] = Self.currentDate()
         
         if Self.active {
             print("\(Self.logPrefix): HandleMessages: new:`\(newMessages?.count ?? 0)`, my: \(myMessages?.count ?? 0)")
@@ -222,7 +212,6 @@ extension UILog {
         }
         
         var logEntry: LogEntry = ["_Snapshot" : "StreamingMessage"]
-        logEntry["date"] = Self.currentDate()
         
         logEntry["streamingMessage"] = message.toDictionary()
         if let myMessages = myMessages {
@@ -240,7 +229,6 @@ extension UILog {
         }
         
         var logEntry: LogEntry = ["_Snapshot" : "UpdatedMessage"]
-        logEntry["date"] = Self.currentDate()
         
         logEntry["updatedMessage"] = message.toDictionary()
         if let myMessages = myMessages {
@@ -256,7 +244,6 @@ extension UILog {
         }
         
         var logEntry: LogEntry = ["_State" : name]
-        logEntry["date"] = Self.currentDate()
         
         logEntry["state"] = state
         Self.append(logEntry)
@@ -273,7 +260,6 @@ extension UILog {
         }
         
         var logEntry: LogEntry = ["_State" : "Message Markdown"]
-        logEntry["date"] = Self.currentDate()
         logEntry["string"] = summary
         
         Self.append(logEntry)
