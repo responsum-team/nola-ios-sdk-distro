@@ -7,7 +7,6 @@
 
 import Foundation
 import ResChatProtocols
-import ResChatUICommon
 import ResChatAttributedText
 
 extension UIMessage: AttributedTextProviding {}
@@ -19,6 +18,7 @@ public struct UIMessage: Hashable, Codable {
     public var text: String 
     public var rawText: String?
     public var type: UIMessageType
+    public var origin: UIMessageOrigin
     public let uuid: UUID
     public let date: Date
     public let timestamp: String
@@ -55,6 +55,7 @@ public struct UIMessage: Hashable, Codable {
         text = try container.decode(String.self, forKey: .text)
         rawText = try container.decodeIfPresent(String.self, forKey: .rawText)
         type = try container.decode(UIMessageType.self, forKey: .type)
+        origin = .none
         uuid = try container.decode(UUID.self, forKey: .uuid)
         date = try container.decode(Date.self, forKey: .date)
         timestamp = try container.decode(String.self, forKey: .timestamp)
@@ -76,6 +77,7 @@ public struct UIMessage: Hashable, Codable {
     public init(text: String,
                 rawText: String? = nil,
                 type: UIMessageType,
+                origin: UIMessageOrigin,
                 uuid: UUID = UUID(),
                 date: Date = Date(),
                 timestamp: String,
@@ -85,6 +87,7 @@ public struct UIMessage: Hashable, Codable {
         self.text = text
         self.rawText = rawText
         self.type = type
+        self.origin = origin
         self.uuid = uuid
         self.date = date
         self.timestamp = timestamp
@@ -99,6 +102,7 @@ public struct UIMessage: Hashable, Codable {
             text: "",
             rawText: nil,
             type: .user,
+            origin: .none,
             uuid: UUID(),
             date: Date(),
             timestamp: "",
@@ -121,6 +125,7 @@ public extension UIMessage {
     static func new(text: String,
                     rawText: String?,
                     type: UIMessageType,
+                    origin: UIMessageOrigin,
                     timestamp: String?,
                     messagePart: Int = 0,
                     messageIndex: Int = 0,
@@ -132,6 +137,7 @@ public extension UIMessage {
         let result = UIMessage(text: text,
                                rawText: rawText,
                                type: type,
+                               origin: origin,
                                uuid: UUID(),
                                date: date,
                                timestamp: myTimestamp,
@@ -146,6 +152,7 @@ public extension UIMessage {
         new(text: text, 
             rawText: nil,
             type: .user,
+            origin: .none,
             timestamp: nil)
     }
     
@@ -153,6 +160,7 @@ public extension UIMessage {
         new(text: text, 
             rawText: nil,
             type: .bot,
+            origin: .none,
             timestamp: nil)
     }
     
@@ -160,6 +168,7 @@ public extension UIMessage {
         new(text: "Loading", 
             rawText: nil,
             type: .placeholder(.forLoading),
+            origin: .none,
             timestamp: nil)
     }
     
@@ -167,6 +176,7 @@ public extension UIMessage {
         new(text: text,
             rawText: nil,
             type: .placeholder(.forUser),
+            origin: .none,
             timestamp: nil)
     }
     
@@ -174,6 +184,7 @@ public extension UIMessage {
         new(text: text,
             rawText: rawText,
             type: .placeholder(.forBot),
+            origin: .none,
             timestamp: nil)
     }
 }
@@ -243,4 +254,22 @@ public extension UIMessage {
        })
    }
 
+}
+
+public extension UIMessage {
+    
+    nonisolated(unsafe) static var current = [UIMessage]()
+    
+    static func processHistoryMessages(_ receivedMessages: [UIMessage], completion: @escaping (Bool) -> Void) {
+        
+    }
+    
+    static func processStreamingMessage(_ streamingMessage: UIMessage) {
+        
+    }
+    
+    static func processUpdatedMessage(_ updatedMessage: UIMessage) {
+        
+    }
+    
 }

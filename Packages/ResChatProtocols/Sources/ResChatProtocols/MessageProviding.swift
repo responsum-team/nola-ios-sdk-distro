@@ -16,6 +16,7 @@ public protocol MessageProviding {
     var messageIndex: Int { get }
     var isFinished: Bool { get }
     var messageType: MessageType { get }
+    var messageOrigin: MessageOrigin { get }
 }
 
 public extension MessageProviding {
@@ -33,8 +34,16 @@ public struct DefaultMessage: MessageProviding {
     public var messagePart: Int
     public var messageIndex: Int
     public var isFinished: Bool
+    public var messageOrigin: MessageOrigin
     
-    public init(text: String, rawText: String? = nil, isFromBot: Bool, timestamp: String, messagePart: Int, messageIndex: Int, isFinished: Bool) {
+    public init(text: String,
+                rawText: String? = nil,
+                isFromBot: Bool,
+                timestamp: String,
+                messagePart: Int,
+                messageIndex: Int,
+                isFinished: Bool,
+                messageOrigin: MessageOrigin) {
         self.text = text
         self.rawText = rawText
         self.isFromBot = isFromBot
@@ -42,6 +51,7 @@ public struct DefaultMessage: MessageProviding {
         self.messagePart = messagePart
         self.messageIndex = messageIndex
         self.isFinished = isFinished
+        self.messageOrigin = messageOrigin
     }
 }
 
@@ -51,11 +61,12 @@ public extension MessageProviding {
         return DefaultMessage(
             text: "",
             rawText: nil,
-            isFromBot: false,  
+            isFromBot: false,
             timestamp: "",
             messagePart: 0,
             messageIndex: 0,
-            isFinished: true
+            isFinished: true,
+            messageOrigin: .none
         )
     }
 }

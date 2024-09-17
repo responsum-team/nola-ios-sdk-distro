@@ -2,6 +2,15 @@
   "originHash" : "ae75720c74b64f80ffa6f5f5e2a7c987df8e2a08cbf6077ad5c47e935022efe9",
   "pins" : [
     {
+      "identity" : "down",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/iwasrobbed/Down.git",
+      "state" : {
+        "revision" : "f34b166be1f1db4aa8f573067e901d72f2a6be57",
+        "version" : "0.11.0"
+      }
+    },
+    {
       "identity" : "socket.io-client-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/socketio/socket.io-client-swift.git",

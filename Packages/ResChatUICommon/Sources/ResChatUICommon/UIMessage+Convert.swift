@@ -10,27 +10,22 @@ import Foundation
 import ResChatProtocols
 
 extension UIMessage: MessageProviding {
-    public var isFromBot: Bool { isBot  }
-}
-
-public extension ResChatProtocols.MessageType  {
-    func toUIMessageType() -> UIMessageType {
-        switch self {
-        case .user:
-            return UIMessageType.user
-        case .bot:
-            return UIMessageType.bot
-        }
+    public var messageOrigin: ResChatProtocols.MessageOrigin {
+        origin.toMessageOrigin()
     }
+    
+    public var isFromBot: Bool { isBot }
 }
 
 public extension MessageProviding {
     func toUIMessage() -> UIMessage {
         let uiType = messageType.toUIMessageType()
+        let originType = messageOrigin.toUIMessageOrigin()
         
         let result = UIMessage.new(text: text,
                                    rawText: rawText,
                                    type: uiType,
+                                   origin: originType,
                                    timestamp: timestamp,
                                    messagePart: messagePart,
                                    messageIndex: messageIndex,

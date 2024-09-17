@@ -84,8 +84,6 @@ extension ResChatSocket {
                 historyFinishedLoading = true
             }
             
-
-            
             // Handle conversations
             let newMessages = snapshot.messages.map { SocketMessage(from: $0) }
             

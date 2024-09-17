@@ -1,5 +1,5 @@
 //
-//  UIConnectionStateProviding.swift
+//  ConnectionStateProviding.swift
 //  ResChatUIApp
 //
 //  Created by Mihaela MJ on 14.09.2024..
