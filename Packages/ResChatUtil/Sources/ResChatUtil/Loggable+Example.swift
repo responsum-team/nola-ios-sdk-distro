@@ -17,7 +17,7 @@ struct SomeLog: @preconcurrency Loggable {
     #if DEBUG
     @MainActor static var active = true
     #else
-    static var active = false
+    @MainActor static var active = false
     #endif
     
     @MainActor
