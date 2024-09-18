@@ -22,16 +22,26 @@ public class AttributedTextCache {
     public func fetchOrGenerateAttributedText(for timestamp: String,
                                               messagePart: Int,
                                               isMessageComplete: Bool,
-                                              text: String) -> NSAttributedString {
+                                              text: String,
+                                              forceGeneration: Bool = false) -> NSAttributedString {
         let key = createCacheKeyFrom(timestamp: timestamp, messagePart: messagePart, isMessageComplete: isMessageComplete)
-        
-        // check if the text matches generated att string
-        
-        
+
+        // Invalidate cache if forced to generate or text does not match cached attributed string
+        if forceGeneration || !isTextMatchingCachedAttributedString(for: key, with: text) {
+            if let generatedText = Markdown2AttributedText.convertMarkdownToAttributedString(markdownText: text) {
+                cache[key] = generatedText
+                return generatedText
+            } else {
+                return NSAttributedString(string: text)
+            }
+        }
+
+        // Return cached attributed string if it exists and no forced generation
         if let cachedText = cache[key] {
             return cachedText
         }
-        // Generate and cache the attributed string
+        
+        // Fallback to generating attributed string if cache is empty
         if let generatedText = Markdown2AttributedText.convertMarkdownToAttributedString(markdownText: text) {
             cache[key] = generatedText
             return generatedText
@@ -39,21 +49,24 @@ public class AttributedTextCache {
             return NSAttributedString(string: text)
         }
     }
+
+    // Helper function to check if the cached attributed string matches the given text
+    private func isTextMatchingCachedAttributedString(for key: String, with text: String) -> Bool {
+        if let cachedAttributedText = cache[key] {
+            return cachedAttributedText.string.isEqualIgnoringWhitespaceAndNewlines(to: text)
+        }
+        return false
+    }
     
     public func getAttributedText(for timestamp: String,
                                   messagePart: Int,
                                   isMessageComplete: Bool,
                                   text: String) -> NSAttributedString {
-        let result = fetchOrGenerateAttributedText(for: timestamp, messagePart: messagePart, isMessageComplete: isMessageComplete, text: text)
-        
-        if text.matchesAttributedString(result) {
-            return result
-        } else {
-            // generate again
-            print("ATTTT: Generating attributed text again for \(timestamp)")
-            print("ATTTT: Generating attributed text again for \(text)")
-            return fetchOrGenerateAttributedText(for: timestamp, messagePart: messagePart, isMessageComplete: isMessageComplete, text: text)
-        }
+        fetchOrGenerateAttributedText(for: timestamp,
+                                      messagePart: messagePart,
+                                      isMessageComplete: isMessageComplete,
+                                      text: text)
+
     }
     
     // Optionally clear the cache if needed
