@@ -111,11 +111,9 @@ struct TrafficLog {
     static func append(_ logEntry: LogEntry) {
         logQueue.async(flags: .barrier) {
             guard active else { return }
-            // Create a mutable copy of the log entry and assign the index
             var modifiedLogEntry = logEntry
             modifiedLogEntry["index"] = log.count // Assign the index as the current size of the log
             modifiedLogEntry["date"] = currentDate()
-            
             // Append the modified log entry
             log.append(modifiedLogEntry)
             saveAsJSON()
@@ -144,30 +142,35 @@ struct TrafficLog {
         }
     }
     
-    // MARK: Actions: -
+    // MARK: Actions:
     
     func logConnect(params: LogEntry) {
         var logEntry: LogEntry = [ "event" : ResChatSocket.SocketEventKey.connect.rawValue]
-        logEntry["action"] = "AppConnect"
-        logEntry["params"] = params
         
-        if Self.active { print("\(Self.logPrefix): \(ResChatSocket.SocketEventKey.connect.rawValue), params: `\(params)`") }
+        if Self.active {
+            print("\(Self.logPrefix): \(ResChatSocket.SocketEventKey.connect.rawValue), params: `\(params)`")
+        }
+        
+        logEntry["params"] = params
         Self.append(logEntry)
     }
     
     func logDisconnect() {
-        var logEntry: LogEntry = [ "event" : ResChatSocket.SocketEventKey.disconnect.rawValue]
-        logEntry["action"] = "AppDisconnect"
-        
-        if Self.active { print("\(Self.logPrefix): \(ResChatSocket.SocketEventKey.disconnect.rawValue)") }
-        Self.append(logEntry)
+//        let logEntry: LogEntry = [ "event" : ResChatSocket.SocketEventKey.disconnect.rawValue]
+//        Self.append(logEntry)
     }
     
-    func logError(name: String, error: Error? = nil) {
-        var logEntry: LogEntry = [ "Error" : name]
-        if let error = error { logEntry["description"] = error.localizedDescription }
+    func logError(name: String,
+                  error: Error? = nil) {
+        var logEntry: LogEntry = [ "_Error" : name]
         
-        if Self.active { print("\(Self.logPrefix): Error: \(name)") }
+        if Self.active {
+            print("\(Self.logPrefix): \(name)")
+        }
+        
+        if let error = error {
+            logEntry["description"] = error.localizedDescription
+        }
         Self.append(logEntry)
     }
     
@@ -176,30 +179,38 @@ struct TrafficLog {
         logEntry["key"] = key
         logEntry["payload"] = payload
         
-        if Self.active {  print("\(Self.logPrefix): emitMessage, `\(key)`, payload: \(payload)") }
+        if Self.active {
+            print("\(Self.logPrefix): emitMessage, `\(key)`, payload: \(payload)")
+        }
+        
         Self.append(logEntry)
     }
     
     func logSocketCallback(key: String, payload: [String: Any], response: [Any]) {
         var logEntry: LogEntry = [ "event" : "callback"]
+        
+        if Self.active {
+            print("\(Self.logPrefix): callback, `\(key)`, payload: \(payload), response: \(response)")
+        }
+        
         logEntry["key"] = key
         logEntry["payload"] = payload
         logEntry["response"] = response
-        
-        if Self.active { print("\(Self.logPrefix): callback, `\(key)`, payload: \(payload), response: \(response)") }
         Self.append(logEntry)
     }
     
     func logOnResponse(named: String, data: [Any]) {
         var logEntry: LogEntry = [ "event" : "on \(named)"]
-        logEntry["action"] = "OnResponse"
-        logEntry["data"] = data
         
-        if Self.active { print("\(Self.logPrefix): OnResponse, `\(named)`") }
+        if Self.active {
+            print("\(Self.logPrefix): OnResponse, `\(named)`")
+        }
+        
+        logEntry["data"] = data
         Self.append(logEntry)
     }
     
-    // MARK: Helper -
+    // MARK: helper -
     
     static func eventName(from logEntry: TrafficLog.LogEntry) -> String? {
         if let eventName = logEntry["event"] as? String {

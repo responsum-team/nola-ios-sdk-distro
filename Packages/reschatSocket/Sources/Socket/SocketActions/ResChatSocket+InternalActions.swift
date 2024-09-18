@@ -14,18 +14,19 @@ internal extension ResChatSocket {
     
     func _connect() {
         guard connectionId != nil else {
-            TrafficLog.shared.logError(name: "Error connecting: Cannot connect: connectionId is missing!")
-            EventLog.shared.logError(name: "Error connecting: Cannot connect: connectionId is missing!")
+            TrafficLog.shared.logError(name: "connect: Cannot connect: connectionId is missing!")
+            ParsedResponseLog.shared.logError(name: "connect: Cannot connect: connectionId is missing!")
             return
         }
         
         guard socket.status != .connected else {
-            TrafficLog.shared.logError(name: "Error connecting: Socket is already connected!")
-            EventLog.shared.logError(name: "Error connecting: Socket is already connected!")
+            TrafficLog.shared.logError(name: "connect: Socket is already connected!")
+            ParsedResponseLog.shared.logError(name: "connect: Socket is already connected!")
             return
         }
         
         resetSocketHelperData()
+
         TrafficLog.shared.logConnect(params: connectParams)
         socket.connect(withPayload: connectParams)
     }
@@ -34,7 +35,8 @@ internal extension ResChatSocket {
         print("DBGG: Attempting to disconnect socket with appId: \(String(describing: Self.appId)) and connectionId: \(String(describing: connectionId))")
         
         guard socket.status == .connected else {
-            print("ERROR: Socket is already disconnected!")
+            TrafficLog.shared.logError(name: "connect: ERROR: Socket is already disconnected!!")
+            ParsedResponseLog.shared.logError(name: "connect: ERROR: Socket is already disconnected!!")
             return
         }
         
@@ -74,6 +76,7 @@ internal extension ResChatSocket {
         sendSocketMessage(key: .requestWelcomeMessage,
                           payload: welcomePayload,
                           socketResponseCallback: Self.defaultSocketResponseCallback)
+        ParsedResponseLog.shared.logEvent(name: "requestWelcomeMessage")
     }
 }
 
@@ -87,6 +90,7 @@ internal extension ResChatSocket {
                           payload: clearCachePayload,
                           socketResponseCallback: Self.defaultSocketResponseCallback)
         clearCache()
+        ParsedResponseLog.shared.logEvent(name: "clearChatHistory")
     }
 }
 
@@ -99,12 +103,12 @@ internal extension ResChatSocket {
         sendNewLoadingMoreState(.loadedMore)
         
         guard socket.status == .connected else {
-            EventLog.shared.logError(name: "\(errorMessage ?? "Load History Action") called while socket is disconnected!")
+            ParsedResponseLog.shared.logError(name: "\(errorMessage ?? "Load History Action") called while socket is disconnected!")
             return false
         }
         
         guard !historyIsLoading else {
-            EventLog.shared.logError(name: "\(errorMessage ?? "Load History Action") called while historyIsLoading == true!")
+            ParsedResponseLog.shared.logError(name: "\(errorMessage ?? "Load History Action") called while historyIsLoading == true!")
             return false
         }
         
@@ -121,7 +125,7 @@ internal extension ResChatSocket {
         
         sendNewLoadingState(.loading)
         
-        EventLog.shared.logEvent(name: "requestInitialHistorySnapshot")
+        ParsedResponseLog.shared.logEvent(name: "requestInitialHistorySnapshot")
         historyFinishedLoading = false
         requestHistorySnapshotCommon(
             externalAgentId: externalAgentId,
@@ -155,7 +159,7 @@ internal extension ResChatSocket {
         guard !historyFinishedLoading,
               let lastMessage = oldestMessage else { return } //_messages.value.last(where: { $0.socketSource != .streaming }) else { return } // needs to be first
 
-        EventLog.shared.logEvent(name: "requestMoreMessages")
+        ParsedResponseLog.shared.logEvent(name: "requestMoreMessages")
         
         sendNewLoadingMoreState(.loadingMore)
         

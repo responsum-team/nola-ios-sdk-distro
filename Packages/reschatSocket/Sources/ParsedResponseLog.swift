@@ -24,7 +24,7 @@ extension SocketMessage {
     }
 }
 
-struct EventLog {
+struct ParsedResponseLog {
     
     typealias LogEntry = [String: Any]
     
@@ -47,7 +47,7 @@ struct EventLog {
     // MARK: Properties -
     
     static var log: [LogEntry] = []
-    static let logFileName = "_reschat_event_log.json"
+    static let logFileName = "_reschat_parsed_response_log.json"
     static let logPrefix = "DBGG: Event->"
     
 #if DEBUG
@@ -56,7 +56,7 @@ struct EventLog {
     private static var active = false
 #endif
     
-    public static let shared = EventLog()
+    public static let shared = ParsedResponseLog()
     
     // MARK: Synchronization Queue -
     private static let logQueue = DispatchQueue(label: "com.example.EventLogQueue", attributes: .concurrent)
@@ -86,7 +86,6 @@ struct EventLog {
     static func append(_ logEntry: LogEntry) {
         logQueue.async(flags: .barrier) {
             guard active else { return }
-            // Create a mutable copy of the log entry and assign the index
             var modifiedLogEntry = logEntry
             modifiedLogEntry["index"] = log.count // Assign the index as the current size of the log
             modifiedLogEntry["date"] = currentDate()
@@ -119,44 +118,37 @@ struct EventLog {
     }
 }
 
-extension EventLog {
+extension ParsedResponseLog {
     static let nameReceivedConversations = "Received_Conversations"
     static let nameReceivedStreamMessage = "Received_StreamMessages"
     static let nameReceivedUpdateHistoryItems = "Received_UpdateHistoryItems"
     
     func logEvent(name: String,
-                  newMessage: SocketMessage? = nil,
-                  newMessages: [SocketMessage]? = nil,
-                  myMessages: [SocketMessage]? = nil) {
-        if Self.active {
-            print("\(Self.logPrefix): \(name)")
+                  customParam: [String: Any]? = nil,
+                  receivedMessage: SocketMessage? = nil,
+                  currentMessages: [SocketMessage]? = nil,
+                  receivedMessages: [SocketMessage]? = nil) {
+       
+        var logEntry: LogEntry = ["Event" : name]
+        if let receivedMessage = receivedMessage {
+            logEntry["receivedMessage"] = receivedMessage.toDictionary()
+        }
+        if let currentMessages = currentMessages {
+            logEntry["currentMessages"] = currentMessages.map { $0.toDictionary() }
+        }
+        if let receivedMessages = receivedMessages {
+            logEntry["receivedMessages"] = receivedMessages.map { $0.toDictionary() }
         }
         
-        var logEntry: LogEntry = [ "_Event" : name]
-        
-        if let newMessage = newMessage {
-            logEntry["newMessage"] = newMessage.toDictionary()
-        }
-        if let newMessages = newMessages {
-            logEntry["newMessages"] = newMessages.map { $0.toDictionary() }
-        }
-        if let myMessages = myMessages {
-            logEntry["myMessages"] = myMessages.map { $0.toDictionary() }
-        }
+        if Self.active { print("\(Self.logPrefix): \(name)") }
         Self.append(logEntry)
     }
     
-    func logError(name: String,
-                  error: Error? = nil) {
-        var logEntry: LogEntry = [ "_Error" : name]
+    func logError(name: String, error: Error? = nil) {
+        var logEntry: LogEntry = [ "Error" : name]
+        if let error = error { logEntry["description"] = error.localizedDescription }
         
-        if Self.active {
-            print("\(Self.logPrefix): \(name)")
-        }
-        
-        if let error = error {
-            logEntry["description"] = error.localizedDescription
-        }
+        if Self.active { print("\(Self.logPrefix): \(name)") }
         Self.append(logEntry)
     }
     
@@ -173,94 +165,95 @@ extension EventLog {
         logError(name: Self.nameReceivedUpdateHistoryItems, error: error)
     }
     
-    func logEventReceivedConversations(snapshot: HistorySnapshot,
-                                       historyFinishedLoading: Bool,
-                                       newMessages: [SocketMessage]? = nil,
-                                       myMessages: [SocketMessage]? = nil) {
-        var logEntry: LogEntry = [ "_HandleEvent" : Self.nameReceivedConversations]
-        
-        if Self.active {
-            print("\(Self.logPrefix): \(Self.nameReceivedStreamMessage): `\(snapshot.messages.count)`, messagesBefore = \(snapshot.messagesBefore)")
-        }
-        
-        logEntry["messagesBefore"] = "\(snapshot.messagesBefore)"
-        logEntry["messagesAfter"] = "\(snapshot.messagesAfter)"
-        logEntry["historyFinishedLoading"] = "\(historyFinishedLoading ? "true" : "false")"
-        
-        if let newMessages = newMessages {
-            logEntry["newMessages"] = newMessages.map { $0.toDictionary() }
-        }
-        if let myMessages = myMessages {
-            logEntry["myMessages"] = myMessages.map { $0.toDictionary() }
-        }
-        
-        if let startMessages = myMessages, let endMessages = newMessages {
-            let diffMessages = calculateDifferences(between: startMessages, and: endMessages)
-            logEntry["diffMessages"] = diffMessages.map { $0.toDictionary() }
-        }
-        Self.append(logEntry)
-    }
+//    func logEventReceivedConversations(snapshot: HistorySnapshot,
+//                                       historyFinishedLoading: Bool,
+//                                       newMessages: [SocketMessage]? = nil,
+//                                       myMessages: [SocketMessage]? = nil) {
+//        var logEntry: LogEntry = [ "_HandleEvent" : Self.nameReceivedConversations]
+//        
+//        if Self.active {
+//            print("\(Self.logPrefix): \(Self.nameReceivedStreamMessage): `\(snapshot.messages.count)`, messagesBefore = \(snapshot.messagesBefore)")
+//        }
+//        
+//        logEntry["messagesBefore"] = "\(snapshot.messagesBefore)"
+//        logEntry["messagesAfter"] = "\(snapshot.messagesAfter)"
+//        logEntry["historyFinishedLoading"] = "\(historyFinishedLoading ? "true" : "false")"
+//        
+//        if let newMessages = newMessages {
+//            logEntry["newMessages"] = newMessages.map { $0.toDictionary() }
+//        }
+//        if let myMessages = myMessages {
+//            logEntry["myMessages"] = myMessages.map { $0.toDictionary() }
+//        }
+//        
+//        if let startMessages = myMessages, let endMessages = newMessages {
+//            let diffMessages = calculateDifferences(between: startMessages, and: endMessages)
+//            logEntry["diffMessages"] = diffMessages.map { $0.toDictionary() }
+//        }
+//        Self.append(logEntry)
+//    }
     
     
-    func logEventReceivedStreamMessages(newMessage: SocketMessage? = nil, 
-                                        newMessages: [SocketMessage]? = nil,
-                                        myMessages: [SocketMessage]? = nil) {
-        var logEntry: LogEntry = [ "_HandleEvent" : Self.nameReceivedStreamMessage]
-        
-        if Self.active {
-            print("\(Self.logPrefix): \(Self.nameReceivedStreamMessage): (part: \(newMessage?.messagePartNumber)`\(Self.summarizeString(newMessage?.text, upTo: 8) ?? "")`")
-        }
-        
-        if let newMessage = newMessage {
-            logEntry["streamMessage"] = newMessage.toDictionary()
-        }
-        
-        if let newMessages = newMessages {
-            logEntry["newMessages"] = newMessages.map { $0.toDictionary() }
-        }
-        if let myMessages = myMessages {
-            logEntry["myMessages"] = myMessages.map { $0.toDictionary() }
-        }
-        
-        if let startMessages = myMessages, let endMessages = newMessages {
-            let diffMessages = calculateDifferences(between: startMessages, and: endMessages)
-            logEntry["diffMessages"] = diffMessages.map { $0.toDictionary() }
-        }
-        
-        Self.append(logEntry)
-    }
+//    func logEventReceivedStreamMessages(newMessage: SocketMessage? = nil, 
+//                                        newMessages: [SocketMessage]? = nil,
+//                                        myMessages: [SocketMessage]? = nil) {
+//        return
+//        var logEntry: LogEntry = [ "_HandleEvent" : Self.nameReceivedStreamMessage]
+//        
+//        if Self.active {
+//            print("\(Self.logPrefix): \(Self.nameReceivedStreamMessage): (part: \(newMessage?.messagePartNumber)`\(Self.summarizeString(newMessage?.text, upTo: 8) ?? "")`")
+//        }
+//        
+//        if let newMessage = newMessage {
+//            logEntry["streamMessage"] = newMessage.toDictionary()
+//        }
+//        
+//        if let newMessages = newMessages {
+//            logEntry["newMessages"] = newMessages.map { $0.toDictionary() }
+//        }
+//        if let myMessages = myMessages {
+//            logEntry["myMessages"] = myMessages.map { $0.toDictionary() }
+//        }
+//        
+//        if let startMessages = myMessages, let endMessages = newMessages {
+//            let diffMessages = calculateDifferences(between: startMessages, and: endMessages)
+//            logEntry["diffMessages"] = diffMessages.map { $0.toDictionary() }
+//        }
+//        
+//        Self.append(logEntry)
+//    }
     
-    func logEventUpdateHistoryItems(newMessage: SocketMessage? = nil,
-                                    newMessages: [SocketMessage]? = nil,
-                                    myMessages: [SocketMessage]? = nil) {
-        var logEntry: LogEntry = [ "_HandleEvent" : Self.nameReceivedUpdateHistoryItems]
-        
-        if Self.active {
-            print("\(Self.logPrefix): \(Self.nameReceivedUpdateHistoryItems): `\(Self.summarizeString(newMessage?.text, upTo: 8) ?? "")`")
-        }
-        
-        if let newMessage = newMessage {
-            logEntry["updatedMessage"] = newMessage.toDictionary()
-        }
-        
-        if let newMessages = newMessages {
-            logEntry["newMessages"] = newMessages.map { $0.toDictionary() }
-        }
-        if let myMessages = myMessages {
-            logEntry["myMessages"] = myMessages.map { $0.toDictionary() }
-        }
-        
-        if let startMessages = myMessages, let endMessages = newMessages {
-            let diffMessages = calculateDifferences(between: startMessages, and: endMessages)
-            logEntry["diffMessages"] = diffMessages.map { $0.toDictionary() }
-        }
-        
-        Self.append(logEntry)
-    }
+//    func logEventUpdateHistoryItems(newMessage: SocketMessage? = nil,
+//                                    newMessages: [SocketMessage]? = nil,
+//                                    myMessages: [SocketMessage]? = nil) {
+//        var logEntry: LogEntry = [ "_HandleEvent" : Self.nameReceivedUpdateHistoryItems]
+//        
+//        if Self.active {
+//            print("\(Self.logPrefix): \(Self.nameReceivedUpdateHistoryItems): `\(Self.summarizeString(newMessage?.text, upTo: 8) ?? "")`")
+//        }
+//        
+//        if let newMessage = newMessage {
+//            logEntry["updatedMessage"] = newMessage.toDictionary()
+//        }
+//        
+//        if let newMessages = newMessages {
+//            logEntry["newMessages"] = newMessages.map { $0.toDictionary() }
+//        }
+//        if let myMessages = myMessages {
+//            logEntry["myMessages"] = myMessages.map { $0.toDictionary() }
+//        }
+//        
+//        if let startMessages = myMessages, let endMessages = newMessages {
+//            let diffMessages = calculateDifferences(between: startMessages, and: endMessages)
+//            logEntry["diffMessages"] = diffMessages.map { $0.toDictionary() }
+//        }
+//        
+//        Self.append(logEntry)
+//    }
     
 }
 
-private extension EventLog {
+private extension ParsedResponseLog {
     func calculateDifferences<T: Equatable>(between oldArray: [T], and newArray: [T]) -> [T] {
         // Find elements that are in newArray but not in oldArray
         let addedOrUpdatedItems = newArray.filter { !oldArray.contains($0) }

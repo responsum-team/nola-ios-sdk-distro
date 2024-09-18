@@ -48,20 +48,18 @@ internal extension ResChatSocket {
 internal extension ResChatSocket {
     
     func onConnect(data: [Any]) {
-        EventLog.shared.logEvent(name: "onConnect")
         if sendNewConnectedState(.connected) {
             requestInitialHistorySnapshot()
         }
     }
     
     func onDisconnect(data: [Any]) {
-        EventLog.shared.logEvent(name: "onDisconnect")
-        sendNewConnectedState(.disconnected) // might be deallocated when this is called -
+        _ = sendNewConnectedState(.disconnected) // might be deallocated when this is called -
     }
     
     func onError(data: [Any]) {
         let error: Error? = nil // Extract error from data if applicable -
-        EventLog.shared.logError(name: "onError", error: error)
+        ParsedResponseLog.shared.logError(name: "onError", error: error)
         sendUpdateConnectionStateError(error)
     }
 }
@@ -89,10 +87,10 @@ extension ResChatSocket {
 
             let normalizedMessages = normalizeHistoryMessages(newMessages)
             
-            EventLog.shared.logEventReceivedConversations(snapshot: snapshot,
-                                                          historyFinishedLoading: historyFinishedLoading,
-                                                          newMessages: normalizedMessages,
-                                                          myMessages: nil)
+            ParsedResponseLog.shared.logEvent(name: ResChatSocket.SocketEventKey.sendHistorySnapshot.rawValue,
+                                     customParam: ["historyFinishedLoading" : "\(historyFinishedLoading ? "true" : "false")",
+                                                   "info" : "messages deduped & sorted"],
+                                     receivedMessages: normalizedMessages)
             
             sendHistoryMessagesIfNeeded(newMessages: normalizedMessages, force: true)
             
@@ -102,11 +100,11 @@ extension ResChatSocket {
             
         } catch let error as ParsingDataError {
             print("Parsing Error: \(error.localizedDescription)")
-            EventLog.shared.logReceivedConversationsError(error)
+            ParsedResponseLog.shared.logReceivedConversationsError(error)
             sendUpdateConnectionStateError(error)
         } catch {
             print("An unexpected error occurred: \(error)")
-            EventLog.shared.logReceivedConversationsError(error)
+            ParsedResponseLog.shared.logReceivedConversationsError(error)
             sendUpdateConnectionStateError(error)
         }
     }
@@ -116,18 +114,17 @@ extension ResChatSocket {
     func handleReceivedStreamMessages(data: [Any]) {
         do {
             let message = try parseStreamingMessages(from: data)
-            EventLog.shared.logEventReceivedStreamMessages(newMessage: message,
-                                                           newMessages: nil,
-                                                           myMessages: nil)
+            
+            ParsedResponseLog.shared.logEvent(name: ResChatSocket.SocketEventKey.streamMessage.rawValue, receivedMessage: message)
             
             sendStreamingMessage(message)
         } catch let error as ParsingDataError {
             print("Parsing Error: \(error.localizedDescription)")
-            EventLog.shared.logReceivedStreamMessagesError(error)
+            ParsedResponseLog.shared.logReceivedStreamMessagesError(error)
             sendUpdateConnectionStateError(error)
         } catch {
             print("An unexpected error occurred: \(error)")
-            EventLog.shared.logReceivedStreamMessagesError(error)
+            ParsedResponseLog.shared.logReceivedStreamMessagesError(error)
             sendUpdateConnectionStateError(error)
         }
     }
@@ -137,18 +134,18 @@ extension ResChatSocket {
     func handleReceivedUpdateHistoryItems(data: [Any]) {
         do {
             let newUpdateItem = try parseUpdateItems(from: data)
-            EventLog.shared.logEventReceivedStreamMessages(newMessage: newUpdateItem,
-                                                           newMessages: nil,
-                                                           myMessages: nil)
+            
+            ParsedResponseLog.shared.logEvent(name: ResChatSocket.SocketEventKey.updateHistoryItem.rawValue, receivedMessage: newUpdateItem)
+            
             sendUpdatedMessage(newUpdateItem)
             
         } catch let error as ParsingDataError {
             print("Parsing Error: \(error.localizedDescription)")
-            EventLog.shared.logReceivedUpdateHistoryItemsError(error)
+            ParsedResponseLog.shared.logReceivedUpdateHistoryItemsError(error)
             sendUpdateConnectionStateError(error)
         } catch {
             print("An unexpected error occurred: \(error)")
-            EventLog.shared.logReceivedUpdateHistoryItemsError(error)
+            ParsedResponseLog.shared.logReceivedUpdateHistoryItemsError(error)
             sendUpdateConnectionStateError(error)
         }
         

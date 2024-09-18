@@ -35,7 +35,7 @@ open class ResChatSocket {
     // MARK: SocketConnectionState -
     
     private func sendNewSocketConnectionState(_ newState: SocketConnectionState) {
-        EventLog.shared.logEvent(name: newState.name)
+        ParsedResponseLog.shared.logEvent(name: newState.name)
         _connectionState.send(newState)
     }
     
@@ -174,7 +174,7 @@ open class ResChatSocket {
         
         // Delete the log
         TrafficLog.deleteLog()
-        EventLog.deleteLog()
+        ParsedResponseLog.deleteLog()
     }
     
     // MARK: Setup -
