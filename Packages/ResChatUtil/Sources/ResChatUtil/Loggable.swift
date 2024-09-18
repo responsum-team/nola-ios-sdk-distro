@@ -7,11 +7,11 @@
 
 import Foundation
 
-import Foundation
+public typealias LogEntryData = [String: Any]
 
 // Wrapper around [String: Any] to make it Sendable
 public struct SendableLogEntry: @unchecked Sendable {
-    var data: [String: Any]
+    var data: LogEntryData
 
     // Custom subscript to access and modify data
     public subscript(key: String) -> Any? {
@@ -168,6 +168,37 @@ public extension Loggable {
             } catch {
                 print("\(logPrefix): Error deleting log file: \(error)")
             }
+        }
+    }
+}
+
+public extension Loggable {
+    
+    static func logParams(_ params: LogEntryData, key: String = "key", name: String = "name") {
+        // Create a new log entry
+        var logEntry = SendableLogEntry([key: name])
+        logEntry["params"] = params
+        
+        // Create a copy of logEntry to avoid reference capture
+        let logEntryCopy = logEntry
+        
+        if active { print("\(logPrefix): (\(key), \(name)), params: \(params)")  } // Print log information if logging is active
+        
+        // Dispatch to the queue
+        logQueue.async(flags: .barrier) {
+            // Append the copied log entry
+            append(logEntryCopy)
+        }
+    }
+    
+    // Log custom data
+    static func logCustom(logEntryData: LogEntryData) {
+        // Create a SendableLogEntry from modified data
+        let sendableLogEntry = SendableLogEntry(logEntryData)
+        
+        // Dispatch the append operation to the log queue
+        logQueue.async(flags: .barrier) {
+            Self.append(sendableLogEntry)
         }
     }
 }

@@ -19,6 +19,36 @@ struct SomeLog: @preconcurrency Loggable {
     #else
     static var active = false
     #endif
+    
+    @MainActor
+    static func logConnect(_ params: LogEntry) {
+        guard active else { return }
+        // Create a new log entry
+        var logEntry = SendableLogEntry(["event": "connect"])
+        logEntry["params"] = params.data
+        
+        // Create a copy of logEntry to avoid reference capture
+        let logEntryCopy = logEntry
+        
+        // Dispatch to the queue
+        logQueue.async(flags: .barrier) {
+            // Print log information if logging is active
+            print("\(Self.logPrefix): Connect, params: \(params.data)")
+            
+            // Append the copied log entry
+            Self.append(logEntryCopy)
+        }
+    }
+    
+    static func logCustom(logEntryData: LogEntryData) {
+        var modifiedLogEntryData = logEntryData
+        modifiedLogEntryData["customParams"] = "customParams"
+        
+        let sendableLogEntry = SendableLogEntry(modifiedLogEntryData)
+        logQueue.async(flags: .barrier) {
+            Self.append(sendableLogEntry)
+        }
+    }
 }
 
 struct AnotherLog: @preconcurrency Loggable {
@@ -32,4 +62,8 @@ struct AnotherLog: @preconcurrency Loggable {
     #else
     static var active = false
     #endif
+    
+    static func logConnect(_ message: String) {
+        logParams(["message": message], key: "action", name: "connect")
+    }
 }

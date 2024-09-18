@@ -109,8 +109,9 @@ struct TrafficLog {
     // MARK: Log Actions -
     
     static func append(_ logEntry: LogEntry) {
+        guard active else { return }
+        
         logQueue.async(flags: .barrier) {
-            guard active else { return }
             var modifiedLogEntry = logEntry
             modifiedLogEntry["index"] = log.count // Assign the index as the current size of the log
             modifiedLogEntry["date"] = currentDate()
