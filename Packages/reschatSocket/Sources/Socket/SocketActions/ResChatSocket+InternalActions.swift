@@ -26,7 +26,7 @@ internal extension ResChatSocket {
         }
         
         resetSocketHelperData()
-
+        TrafficLog.shared.logConnect(params: connectParams)
         socket.connect(withPayload: connectParams)
     }
     

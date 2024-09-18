@@ -7,44 +7,6 @@
 
 import Foundation
 
-
-/**
- 0. Pocetno stanje:
- - [Bot]
-
- 1. Ja saljem poruku:
- - [Bot]
- - P: [User]
- - P: [Bot]
- 
- 2. Nakon toga dobijem History Snapshot sa 3 poruke:
- - [Bot]
- - [User]
- - [Bot] (...)
- 
- 3. Streaming Events:
- - [Bot] Part 1
- - [Bot] Part 2
- ...
- - [Bot] Part n, isFinished = true
- 
- 4. Nakon toga ide Updated Message
- - [Bot] updated
- */
-
-// Streaming
-/**
- 2. **History**
- - zamjenit `P: [User]` sa `[User]`
- - provjerit `[Bot]` ako je `...`,  ostavit moj loading `P: [Bot]`
- 
- 3. **Streaming**
- - Zamjenit moj   `P: [Bot]` sa  `[Bot] Part n` opetovano
- 
- 4. **Updated Message**
- - Zamjenit `[Bot] Part n` sa `[Bot] updated`
- */
-
 public class UIMessageManager {
     
     public typealias UpdateHandler = (UIMessageManager) -> Void
@@ -110,6 +72,11 @@ public extension UIMessageManager {
         
         // handle "P [Bot]" case -> replace my `P: [Bot]` with the received (probably Dummy "...") bot, or delete my bot placeholder
         currentMessages = Self.replaceBotPlaceholders(in: currentMessages, with: receivedMessages)
+        
+        // Bot is Typing remains in the tableview
+        // replace those two with
+        //         // delete placeholders if needed
+//        currentMessages = currentMessages.filter { !$0.isPlaceholder }
         
         // merge both arrays
         let mergedMessages =  Array(Set(currentMessages + receivedMessages))
