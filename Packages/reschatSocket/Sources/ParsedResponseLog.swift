@@ -51,7 +51,7 @@ struct ParsedResponseLog {
     static let logPrefix = "DBGG: Event->"
     
 #if DEBUG
-    private static var active = false
+    private static var active = true
 #else
     private static var active = false
 #endif
