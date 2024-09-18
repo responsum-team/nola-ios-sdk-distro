@@ -252,12 +252,11 @@ public extension UIMessageManager {
         
         updateMessages(currentMessages)
 //        updateHandler(self)
-        
     }
     
     func processStreamingMessage(_ streamingMessage: UIMessage) {
         if !streamingMessage.isBot {
-            print("Error: Received a streaming message that is not a bot.")
+            print("Error: Received a streaming message that is not a bot!.")
         }
         var currentMessages = _uiMessages
         
@@ -265,7 +264,12 @@ public extension UIMessageManager {
         currentMessages = currentMessages.filter { !$0.isPlaceholder }
         
         // update Bot with Bot/part
-        currentMessages = currentMessages.map { $0.id == streamingMessage.id ? streamingMessage : $0 }
+        currentMessages = currentMessages.map {
+            ($0.id == streamingMessage.id
+             && streamingMessage.messagePart > $0.messagePart
+             && $0.isBot == true && streamingMessage.isBot == true)
+            ? streamingMessage : $0
+        }
         
         updateMessages(currentMessages)
 //        updateHandler(self)
@@ -277,8 +281,13 @@ public extension UIMessageManager {
         // delete placeholders if needed
         currentMessages = currentMessages.filter { !$0.isPlaceholder }
 
-        // Just update message in question, whether bot or user
-        currentMessages = currentMessages.map { $0.id == updatedMessage.id ? updatedMessage : $0 }
+        // Just update message in question, whether bot or user, but must be of the same type
+        currentMessages = currentMessages.map {
+            ($0.id == updatedMessage.id
+             && updatedMessage.messagePart > $0.messagePart
+             && $0.isBot == updatedMessage.isBot)
+            ? updatedMessage : $0
+        }
         
         updateMessages(currentMessages)
 //        updateHandler(self)

@@ -24,7 +24,7 @@ extension ChatViewController {
         case .loaded:
             // Hide any loading indicators and enable full interaction
             hideLoadingIndicator()
-        case .error(let error):
+        case .error(_):
             showSocketErrorAlert()
         case .loadingMore:
             addLoadingMessage()
@@ -37,7 +37,6 @@ extension ChatViewController {
 extension ChatViewController {
     
     func processHistoryMessages(_ receivedMessages: [UIMessage]) {
-        
         guard let manager = self.messageManager else {
             print("Error: message manager is nil")
             return
@@ -94,7 +93,6 @@ extension ChatViewController {
         
         manager.processUpdatedMessage(updatedMessage)
         updateUI(animated: false)
-        
     }
 }
 
