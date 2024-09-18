@@ -60,8 +60,8 @@ extension ChatViewController {
         let receivedMessagesAreOlder = manager.receivedMessagesAreOlder(receivedMessages)
         
         manager.processHistoryMessages(receivedMessages)
-        
         updateUI(animated: false)
+        
         print("ATTTT: receivedMessagesAreOlder: \(receivedMessagesAreOlder), scroling: \(receivedMessagesAreOlder ? "to top" : "to bottom")")
         // Use the receivedMessagesAreOlder flag as needed //receivedMessagesAreOlder: true, scroling: to top -- FIXME: -
         receivedMessagesAreOlder ? scrollToTop() : scrollToBottom()
@@ -90,7 +90,6 @@ extension ChatViewController {
             print("Error: message manager is nil")
             return
         }
-        
         UILog.shared.logUpdatedMessage(updatedMessage)
         
         manager.processUpdatedMessage(updatedMessage)
