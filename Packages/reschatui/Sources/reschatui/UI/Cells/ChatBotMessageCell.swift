@@ -165,7 +165,7 @@ open class ChatBotMessageCell: ProvidingTableViewCell {
         messageLabel.layer.removeAllAnimations()
         messageLabel.alpha = 1.0 // Reset alpha
         
-        if message.type == .placeholder(.forBot) && message.isBotWaiting {
+        if message.type == .placeholder(.forBot)/* &&*/ || message.isBotWaiting {
             if !isAnimatingPlaceholder {
                 // Create the SF Symbol for the animated placeholder
                 let symbolConfiguration = UIImage.SymbolConfiguration(scale: .large)
@@ -192,6 +192,7 @@ open class ChatBotMessageCell: ProvidingTableViewCell {
             }
         } else {
             isAnimatingPlaceholder = false // Reset the flag if we're no longer in the placeholder state
+            messageLabel.alpha = 1.0
             messageLabel.attributedText = message.attributedText
         }
     }

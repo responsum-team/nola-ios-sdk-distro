@@ -21,7 +21,7 @@ extension ChatViewController {
             _sendUserMessage(text)
         } else {
             // Not on the main thread, dispatch to the main thread
-            sendUserMessage(text)
+            _sendUserMessage(text)
         }
     }
 }

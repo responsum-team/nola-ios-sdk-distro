@@ -53,6 +53,11 @@ open class ChatViewController: PlatformViewController {
     }
     
     var messageHandler: MessageHandlingAlgorithm = OptimizedStreamingAlgorithm()
+    var messageManager: UIMessageManager = UIMessageManager { [weak self] (controller: UIMessageManager) in
+        guard let self = self else { return }
+        self.updateUI(animated: true)
+    }
+    
     
     // MARK: Cell Classes -
     

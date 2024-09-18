@@ -31,7 +31,6 @@ public struct UIMessage: Hashable, Codable {
     // Conform to Hashable
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-//        hasher.combine(messageIndex) //INFO:  maybe add this & sortMessagesByDateAndIndex -
     }
     
     public static func == (lhs: UIMessage, rhs: UIMessage) -> Bool {
