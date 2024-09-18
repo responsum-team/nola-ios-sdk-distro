@@ -24,6 +24,7 @@ public class AttributedTextCache {
                                               isMessageComplete: Bool,
                                               text: String,
                                               forceGeneration: Bool = false) -> NSAttributedString {
+        
         let key = createCacheKeyFrom(timestamp: timestamp, messagePart: messagePart, isMessageComplete: isMessageComplete)
 
         // Invalidate cache if forced to generate or text does not match cached attributed string
