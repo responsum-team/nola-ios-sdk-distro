@@ -16,6 +16,7 @@ extension UIMessage {
             "text": text,
             "rawText": _rawText,
             "type": type.stringValue,
+            "origin": origin.rawValue,
             "messagePart": "\(messagePart)",
             "messageIndex": "\(messageIndex)",
             "isBot": "\(isBot ? "true" : "false")",
@@ -118,151 +119,41 @@ struct UILog {
 
 
 extension UILog {
-    // MARK: Actions:
-    
-    func logMessageAction(name: String, 
-                          newMessage: UIMessage? = nil,
-                          newMessages: [UIMessage]? = nil,
-                          myMessages: [UIMessage]? = nil) {
-        print("\(Self.logPrefix): UILog  \(name)")
-        var logEntry: LogEntry = [ "_Message" : name]
-        
-        print("\(Self.logPrefix): \(name): `\(Self.summarizeString(newMessage?.text, upTo: 8) ?? "")`")
-        
-        if let newMessage = newMessage {
-            logEntry["newMessage"] = newMessage.toDictionary()
-        }
-        if let newMessages = newMessages {
-            logEntry["newMessages"] = newMessages.map { $0.toDictionary() }
-        }
-        if let myMessages = myMessages {
-            logEntry["myMessages"] = myMessages.map { $0.toDictionary() }
-        }
-        Self.append(logEntry)
-    }
-    
-    func logSnapshotAction(name: String, 
-                           newMessage: UIMessage? = nil,
-                           newMessages: [UIMessage]? = nil,
-                           myMessages: [UIMessage]? = nil,
-                           messagePart: Int? = nil) {
-        if Self.active {
-            print("\(Self.logPrefix): UILog \(name)")
-        }
-        var logEntry: LogEntry = ["_Snapshot" : name]
-        if Self.active {
-            print("\(Self.logPrefix): \(name): `\(Self.summarizeString(newMessage?.text, upTo: 8) ?? "")`")
-        }
-        
-        if let newMessage = newMessage {
-            logEntry["newMessage"] = newMessage.toDictionary()
-        }
-        if let newMessages = newMessages {
-            logEntry["newMessages"] = newMessages.map { $0.toDictionary() }
-        }
-        if let myMessages = myMessages {
-            logEntry["myMessages"] = myMessages.map { $0.toDictionary() }
-        }
-        if let messagePart = messagePart {
-            logEntry["messagePart"] = messagePart
-        }
-        Self.append(logEntry)
-    }
-    
-    func logHandleMessages(newMessages: [UIMessage]? = nil,
-                           myMessages: [UIMessage]? = nil,
-                           toReload: [UIMessage]? = nil,
-                           toAppend: [UIMessage]? = nil,
-                           toRemove: [UIMessage]? = nil,
-                           finalResult: [UIMessage]? = nil) {
-        if Self.active {
-            print("\(Self.logPrefix): UILog \("HandleMessages")")
-        }
-        var logEntry: LogEntry = ["_Snapshot" : "HandleMessages"]
-        
-        if Self.active {
-            print("\(Self.logPrefix): HandleMessages: new:`\(newMessages?.count ?? 0)`, my: \(myMessages?.count ?? 0)")
-        }
+    func logHistoryMessages(receivedMessages: [UIMessage]? = nil,
+                            currentMessages: [UIMessage]? = nil,
+                            updatedMessages: [UIMessage]? = nil) {
+        var logEntry: LogEntry = ["_Processing" : "HistoryMessages"]
 
-        if let newMessages = newMessages {
-            logEntry["newMessages"] = newMessages.map { $0.toDictionary() }
+        if let receivedMessages = receivedMessages {
+            logEntry["receivedMessages"] = receivedMessages.map { $0.toDictionary() }
         }
-        if let myMessages = myMessages {
-            logEntry["myMessages"] = myMessages.map { $0.toDictionary() }
+        if let currentMessages = currentMessages {
+            logEntry["currentMessages"] = currentMessages.map { $0.toDictionary() }
         }
-        
-        if let toReload = toReload {
-            logEntry["toReload"] = toReload.map { $0.toDictionary() }
-        }
-        if let toAppend = toAppend {
-            logEntry["toAppend"] = toAppend.map { $0.toDictionary() }
-        }
-        if let toRemove = toRemove {
-            logEntry["toRemove"] = toRemove.map { $0.toDictionary() }
-        }
-        if let finalResult = finalResult {
-            logEntry["finalResult"] = finalResult.map { $0.toDictionary() }
+        if let updatedMessages = updatedMessages {
+            logEntry["updatedMessages"] = updatedMessages.map { $0.toDictionary() }
         }
 
         Self.append(logEntry)
     }
     
-    func logStreamingMessage(_ message: UIMessage, myMessages: [UIMessage]? = nil) {
-        if Self.active {
-            print("\(Self.logPrefix): StreamingMessage: `\(Self.summarizeString(message.text, upTo: 8) ?? "")`")
-        }
-        
-        var logEntry: LogEntry = ["_Snapshot" : "StreamingMessage"]
-        
+    func logStreamingMessage(_ message: UIMessage) {
+        var logEntry: LogEntry = ["_Processing" : "StreamingMessage"]
         logEntry["streamingMessage"] = message.toDictionary()
-        if let myMessages = myMessages {
-            logEntry["myMessages"] = myMessages.map { $0.toDictionary() }
-        }
         Self.append(logEntry)
     }
     
-    func logUpdatedMessage(_ message: UIMessage, myMessages: [UIMessage]? = nil) {
-        if Self.active {
-            print("\(Self.logPrefix): UpdatedMessage: `\(Self.summarizeString(message.text, upTo: 8) ?? "")`")
-            if let rawText = message.rawText, message.isFinished {
-                print("\(Self.logPrefix): UpdatedMessage: FINISHED!")
-            }
-        }
-        
-        var logEntry: LogEntry = ["_Snapshot" : "UpdatedMessage"]
-        
+    func logUpdatedMessage(_ message: UIMessage) {
+        var logEntry: LogEntry = ["_Processing" : "UpdatedMessage"]
         logEntry["updatedMessage"] = message.toDictionary()
-        if let myMessages = myMessages {
-            logEntry["myMessages"] = myMessages.map { $0.toDictionary() }
-        }
         Self.append(logEntry)
     }
     
-    func logStateAction(name: String, state: String) {
-        if Self.active {
-            print("\(Self.logPrefix): UILog \(name)")
-            print("\(Self.logPrefix): State: `\(state)")
-        }
-        
-        var logEntry: LogEntry = ["_State" : name]
-        
-        logEntry["state"] = state
+    func loadPlaceholderMessage(_ message: UIMessage) {
+        var logEntry: LogEntry = ["_Processing" : "LoadPlaceholderMessage"]
+        logEntry["PlaceholderMessage"] = message.toDictionary()
+        logEntry["type"] = message.type.stringValue
         Self.append(logEntry)
     }
     
-    func logMessageMarkdown(message: UIMessage) {
-        return
-        let summary = Self.summarizeString(message.attributedText.string, upTo: 20)
-        
-        if Self.active {
-            print("\(Self.logPrefix): UILog \("MessageMarkdown")")
-            print("\(Self.logPrefix): Markdown: `\(summary)")
-            return
-        }
-        
-        var logEntry: LogEntry = ["_State" : "Message Markdown"]
-        logEntry["string"] = summary
-        
-        Self.append(logEntry)
-    }
 }

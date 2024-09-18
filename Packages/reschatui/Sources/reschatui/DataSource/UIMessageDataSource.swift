@@ -50,44 +50,12 @@ class UIMessageDataSource: UITableViewDiffableDataSource<ChatSection, UIMessage>
 
     func applyInitialSnapshot(messages: [UIMessage]) {
         var snapshot = UIMessageSnapshot()
-        snapshot.applyInitialMessages(messages)
+        snapshot.appendSections([.main])
+        snapshot.appendItems(messages, toSection: .main)
         apply(snapshot, animatingDifferences: true)
     }
     
-    func clearMessages() {
-        var snapshot = UIMessageSnapshot()
-        snapshot.clearAllMessages()
-        apply(snapshot, animatingDifferences: true)
-    }
-    
-    // MARK: - Older Message Check
-
-    /// Checks if the received messages are older than the existing ones in the snapshot.
-    func areReceivedMessagesOlderThanExisting(receivedMessages: [UIMessage]) -> Bool {
-        // Retrieve the current snapshot
-        let snapshot = self.snapshot()
-
-        // Find the oldest message in the current snapshot
-        if let oldestExistingMessage = snapshot.itemIdentifiers.sorted(by: { $0.date < $1.date }).first,
-           let oldestReceivedMessage = receivedMessages.sorted(by: { $0.date < $1.date }).first {
-            // Return true if the received messages are older than the oldest existing message
-            return oldestReceivedMessage.date < oldestExistingMessage.date
-        }
-
-        // If there are no existing or received messages, we can't compare, so return false
-        return false
-    }
-
-    func areMessagesNewerThanExisting(receivedMessages: [UIMessage]) -> Bool {
-        let existingMessages = self.snapshot().itemIdentifiers
-        guard let latestReceivedMessage = receivedMessages.max(by: { $0.date < $1.date }),
-              let latestExistingMessage = existingMessages.max(by: { $0.date < $1.date }) else {
-            // Fallback: assume messages are newer if we can't compare
-            return true
-        }
-        
-        return latestReceivedMessage.date > latestExistingMessage.date
-    }
+    // MARK: - Older Message Check -
 
     func areMessagesOlderThanExisting(receivedMessages: [UIMessage]) -> Bool {
         let existingMessages = self.snapshot().itemIdentifiers

@@ -11,7 +11,6 @@ import ResChatUICommon
 internal extension ChatViewController {
     
     func clear() {
-        UILog.shared.logSnapshotAction(name: "clear")
         // Get the current snapshot
         var snapshot = dataSource.snapshot()
 
@@ -23,7 +22,6 @@ internal extension ChatViewController {
     }
     
     func addLoadingMessage() {
-        UILog.shared.logSnapshotAction(name: "addLoadingMessage")
         
         var snapshot = dataSource.snapshot()
         
@@ -36,6 +34,7 @@ internal extension ChatViewController {
         if !snapshot.itemIdentifiers.contains(where: { $0.type.isLoadingPlaceholder }) {
             // Create a new placeholder loading message
             let loadingMessage = UIMessage.newPlaceholderLoadingMessage()
+            UILog.shared.loadPlaceholderMessage(loadingMessage)
             
             if let firstItem = snapshot.itemIdentifiers.first {
                 // Insert the loading message before the first item
@@ -52,8 +51,6 @@ internal extension ChatViewController {
     func removeLoadingMessage() {
         
         var snapshot = dataSource.snapshot()
-        
-        UILog.shared.logSnapshotAction(name: "removeLoadingMessage", newMessage: nil, newMessages: nil, myMessages: snapshot.extractCurrentMessages())
         
         // Check if the snapshot contains any items before trying to remove
         guard !snapshot.itemIdentifiers.isEmpty else { return }
@@ -72,7 +69,7 @@ internal extension ChatViewController {
     
     func addUserPlaceholderMessage(_ text: String) {
         let newMessage = UIMessage.newPlaceholderUserMessage(text)
-        UILog.shared.logSnapshotAction(name: "addUserPlaceholderMessage", newMessage: newMessage)
+        UILog.shared.loadPlaceholderMessage(newMessage)
         var snapshot = dataSource.snapshot()
         
         // Ensure the section exists before adding items
@@ -88,7 +85,7 @@ internal extension ChatViewController {
     
     func addBotPlaceholderMessage(_ text: String) {
         let newMessage = UIMessage.newPlaceholderBotMessage(text)
-        UILog.shared.logSnapshotAction(name: "addBotPlaceholderMessage", newMessage: newMessage)
+        UILog.shared.loadPlaceholderMessage(newMessage)
         var snapshot = dataSource.snapshot()
         
         // Ensure the section exists before adding items

@@ -13,8 +13,6 @@ import ResChatUICommon
 extension ChatViewController {
     
     func handleConnectionStateChange(_ state: UIConnectionState) {
-        UILog.shared.logStateAction(name: "handleConnectionStateChange", state: state.toString())
-        
         switch state {
         case .connected:
             break
@@ -40,7 +38,8 @@ extension ChatViewController {
     
     func processHistoryMessages(_ receivedMessages: [UIMessage]) {
         
-        UILog.shared.logHandleMessages(newMessages: receivedMessages, myMessages: dataSource.snapshot().extractCurrentMessages())
+        UILog.shared.logHistoryMessages(receivedMessages: receivedMessages, currentMessages: dataSource.snapshot().itemIdentifiers)
+        
         // Check for `clear chat` -
         if receivedMessages.isEmpty && didRequestToClearChat {
             didRequestToClearChat = false
@@ -60,7 +59,6 @@ extension ChatViewController {
         receivedMessagesAreOlder ? scrollToTop() : scrollToBottom()
         
         hideLoadingIndicator()
-        UILog.shared.logHandleMessages(finalResult: dataSource.snapshot().extractCurrentMessages())
     }
     
     func processStreamingMessage(_ streamingMessage: UIMessage) {
@@ -71,11 +69,9 @@ extension ChatViewController {
         if streamingMessage.isFinished {
             notifyBotFinishedTyping()
         }
-        UILog.shared.logStreamingMessage(streamingMessage, myMessages: dataSource.snapshot().extractCurrentMessages())
     }
     
     func processUpdatedMessage(_ updatedMessage: UIMessage) {
         messageHandler.processUpdatedMessage(updatedMessage, dataSource: dataSource)
-        UILog.shared.logUpdatedMessage(updatedMessage, myMessages: dataSource.snapshot().extractCurrentMessages())
     }
 }

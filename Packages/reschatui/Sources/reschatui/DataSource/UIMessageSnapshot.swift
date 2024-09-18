@@ -15,24 +15,6 @@ public enum ChatSection {
 // Custom snapshot type alias
 typealias UIMessageSnapshot = NSDiffableDataSourceSnapshot<ChatSection, UIMessage>
 
-// Extension to add snapshot-specific methods
-extension UIMessageSnapshot {
-    
-    mutating func applyInitialMessages(_ messages: [UIMessage]) {
-        appendSections([.main])
-        appendItems(messages, toSection: .main)
-    }
-    
-    mutating func clearAllMessages() {
-        deleteAllItems()
-    }
-    
-    mutating func updateMessages(_ messages: [UIMessage]) {
-        appendItems(messages, toSection: .main)
-    }
-}
-
-
 extension UIMessageSnapshot {
     mutating func ensureSectionExists(_ section: ChatSection = .main) {
         if sectionIdentifiers.isEmpty {
