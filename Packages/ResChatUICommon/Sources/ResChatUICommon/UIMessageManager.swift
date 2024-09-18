@@ -174,22 +174,10 @@ private extension UIMessageManager {
         }
     }
     
-    static func findMessage(_ message: UIMessage, in messages: [UIMessage]) -> UIMessage? {
-        return messages.first(where:  { $0.id == message.id } )
-    }
-    
     static func messages(_ messages: [UIMessage], containMessage: UIMessage) -> Bool {
         return messages.contains { candidate in
             containMessage.id == candidate.id
         }
-    }
-    
-    static func mergeArraysRemovingDuplicates(_ array1: [UIMessage], with array2: [UIMessage]) -> [UIMessage] {
-        // Create a set from both arrays to automatically remove duplicates
-        let mergedSet = Set(array1).union(Set(array2))
-        
-        // Convert the set back to an array and return
-        return Array(mergedSet)
     }
 }
 
