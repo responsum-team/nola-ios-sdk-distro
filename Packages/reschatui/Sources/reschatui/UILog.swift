@@ -14,7 +14,7 @@ extension UIMessage {
         var _rawText = rawText ?? "-"
         var dict: [String: Any] = [
             "text": text,
-            "rawText": _rawText,
+            "attributedText": attributedText.string,
             "type": type.stringValue,
             "origin": origin.rawValue,
             "messagePart": "\(messagePart)",

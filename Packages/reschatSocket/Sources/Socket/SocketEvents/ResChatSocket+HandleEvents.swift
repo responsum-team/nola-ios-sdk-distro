@@ -13,38 +13,32 @@ internal extension ResChatSocket {
     // MARK: Connection -
     
     func onConnect(data: [Any], ack: SocketAckEmitter) {
-        TrafficLog.shared.logOnResponse(named: "onConnect", data: data)
         onConnect(data: data)
     }
     
     func onDisconnect(data: [Any], ack: SocketAckEmitter) {
-        TrafficLog.shared.logOnResponse(named: "onDisconnect", data: data)
         onDisconnect(data: data)
     }
     
     func onError(data: [Any], ack: SocketAckEmitter) {
-        TrafficLog.shared.logOnResponse(named: "onError", data: data)
         onError(data: data)
     }
     
     // MARK: History -
     
     func handleReceivedConversations(data: [Any], ack: SocketAckEmitter) { // Conversation
-        TrafficLog.shared.logOnResponse(named: "ReceivedConversations", data: data)
         handleReceivedConversations(data: data)
     }
     
     // MARK: Bot Streaming Message in Parts -
     
     func handleReceivedStreamMessages(data: [Any], ack: SocketAckEmitter) {
-        TrafficLog.shared.logOnResponse(named: "StreamMessages", data: data)
         handleReceivedStreamMessages(data: data)
     }
     
     // MARK: Updated Item for History -
     
     func handleReceivedUpdateHistoryItems(data: [Any], ack: SocketAckEmitter) {
-        TrafficLog.shared.logOnResponse(named: "UpdateHistoryItems", data: data)
         handleReceivedUpdateHistoryItems(data: data)
     }
 }

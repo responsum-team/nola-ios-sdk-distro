@@ -183,6 +183,7 @@ private extension UIMessageManager {
 
 public extension UIMessageManager {
     func receivedMessagesAreOlder(_ receivedMessages: [UIMessage]) -> Bool {
+        if _uiMessages.isEmpty { return false }
         Self.messagesAreOlder(receivedMessages, thanOtherMessages: _uiMessages)
     }
 }
@@ -192,16 +193,6 @@ public extension UIMessageManager {
     @MainActor
     func processSendMessageWith(text: String) {
         
-        /**
-         didTapSendUserMessageSubject.send(text)
-
-         addUserPlaceholderMessage(message)
-         dismissKeyboard()
-         
-         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-             self.addBotPlaceholderMessage("")
-         }
-         */
         var currentMessages = _uiMessages
         
         currentMessages = Self.sortMessagesByDateAscending(messages: currentMessages)
@@ -221,6 +212,11 @@ public extension UIMessageManager {
             }
         }
         
+    }
+    
+    func clearMessages() {
+        _uiMessages.removeAll()
+        updateMessages(_uiMessages)
     }
     
     func processHistoryMessages(_ receivedMessages: [UIMessage]) {
@@ -252,7 +248,7 @@ public extension UIMessageManager {
         currentMessages = currentMessages.filter { !$0.isPlaceholder }
         
         // update Bot with Bot/part
-        currentMessages = currentMessages.map {
+        currentMessages = currentMessages.map { // trebam promjenit isFinished na false ako su ...
             ($0.id == streamingMessage.id
              && streamingMessage.messagePart > $0.messagePart
              && $0.isBot == true && streamingMessage.isBot == true)
@@ -270,9 +266,8 @@ public extension UIMessageManager {
         currentMessages = currentMessages.filter { !$0.isPlaceholder }
 
         // Just update message in question, whether bot or user, but must be of the same type
-        currentMessages = currentMessages.map {
+        currentMessages = currentMessages.map { // nije zamjenio updatred message
             ($0.id == updatedMessage.id
-             && updatedMessage.messagePart > $0.messagePart
              && $0.isBot == updatedMessage.isBot)
             ? updatedMessage : $0
         }

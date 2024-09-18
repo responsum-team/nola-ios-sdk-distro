@@ -14,20 +14,19 @@ internal extension ResChatSocket {
     
     func _connect() {
         guard connectionId != nil else {
-            TrafficLog.shared.logError(name: "connect: Cannot connect: connectionId is missing!")
-            EventLog.shared.logError(name: "connect: Cannot connect: connectionId is missing!")
+            TrafficLog.shared.logError(name: "Error connecting: Cannot connect: connectionId is missing!")
+            EventLog.shared.logError(name: "Error connecting: Cannot connect: connectionId is missing!")
             return
         }
         
         guard socket.status != .connected else {
-            TrafficLog.shared.logError(name: "connect: Socket is already connected!")
-            EventLog.shared.logError(name: "connect: Socket is already connected!")
+            TrafficLog.shared.logError(name: "Error connecting: Socket is already connected!")
+            EventLog.shared.logError(name: "Error connecting: Socket is already connected!")
             return
         }
         
         resetSocketHelperData()
 
-        TrafficLog.shared.logConnect(params: connectParams)
         socket.connect(withPayload: connectParams)
     }
     

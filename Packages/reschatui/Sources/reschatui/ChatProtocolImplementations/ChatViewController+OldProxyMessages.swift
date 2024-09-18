@@ -19,7 +19,7 @@ extension ChatViewController {
         // Check for `clear chat` -
         if receivedMessages.isEmpty && didRequestToClearChat {
             didRequestToClearChat = false
-            clear()
+//            clear()
             hideLoadingIndicator()
             return
         }

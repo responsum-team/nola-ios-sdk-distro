@@ -193,7 +193,10 @@ open class ChatBotMessageCell: ProvidingTableViewCell {
         } else {
             isAnimatingPlaceholder = false // Reset the flag if we're no longer in the placeholder state
             messageLabel.alpha = 1.0
-            messageLabel.attributedText = message.attributedText
+            if !message.attributexTextMatches() {
+                print("WARNING: Message text does not match attributed text")
+            }
+            messageLabel.attributedText = message.attributedText // attributed text nije dobar
             if message.isFinished && message.origin == .updateItem {
                 animatePulse()
             }

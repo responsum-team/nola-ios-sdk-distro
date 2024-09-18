@@ -26,7 +26,12 @@ public struct UIMessage: Hashable, Codable {
     public var messagePart: Int = 0
     public var messageIndex: Int = 0
     public var isFinished: Bool = true
-    public var attributedText: NSAttributedString
+    public var attributedText: NSAttributedString {
+        AttributedTextCache.shared.getAttributedText(for: timestamp,
+                                                     messagePart: messagePart,
+                                                     isMessageComplete: isFinished,
+                                                     text: text)
+    }
 
     // Conform to Hashable
     public func hash(into hasher: inout Hasher) {
@@ -58,7 +63,6 @@ public struct UIMessage: Hashable, Codable {
         uuid = try container.decode(UUID.self, forKey: .uuid)
         date = try container.decode(Date.self, forKey: .date)
         timestamp = try container.decode(String.self, forKey: .timestamp)
-        attributedText = AttributedTextCache.shared.getAttributedText(for: timestamp, messagePart: messagePart, isMessageComplete: isFinished, text: text)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -93,7 +97,6 @@ public struct UIMessage: Hashable, Codable {
         self.messagePart = messagePart
         self.messageIndex = messageIndex
         self.isFinished = isFinished
-        self.attributedText = AttributedTextCache.shared.getAttributedText(for: timestamp, messagePart: messagePart, isMessageComplete: isFinished, text: text)
     }
     
     public static var none: UIMessage {
@@ -232,15 +235,16 @@ public extension UIMessage {
         // Update the text and other relevant properties
         self.rawText = newMessage.rawText
         self.text = newMessage.text
-        self.attributedText = AttributedTextCache.shared.getAttributedText(for: newMessage.timestamp,
-                                                                           messagePart: newMessage.messagePart,
-                                                                           isMessageComplete: newMessage.isFinished,
-                                                                           text: newMessage.text)
         self.messagePart = newMessage.messagePart
         self.messageIndex = newMessage.messageIndex
         self.isFinished = newMessage.isFinished
         self.type = newMessage.type
     }
+      
+    public func attributexTextMatches() -> Bool {
+        self.attributedText.string.isEqualIgnoringWhitespaceAndNewlines(to: text)
+    }
+    
 }
 
 public extension UIMessage {

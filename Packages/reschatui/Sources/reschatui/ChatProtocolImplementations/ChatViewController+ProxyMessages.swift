@@ -48,20 +48,22 @@ extension ChatViewController {
         // Check for `clear chat` -
         if receivedMessages.isEmpty && didRequestToClearChat {
             didRequestToClearChat = false
-            clear()
+            manager.clearMessages()
+            updateUI(animated: true)
             hideLoadingIndicator()
             return
         }
         
         showLoadingIndicator()
         
+        // Determine if received messages are older
         let receivedMessagesAreOlder = manager.receivedMessagesAreOlder(receivedMessages)
         
         manager.processHistoryMessages(receivedMessages)
         
         updateUI(animated: false)
-        
-        // Use the receivedMessagesAreOlder flag as needed
+        print("ATTTT: receivedMessagesAreOlder: \(receivedMessagesAreOlder), scroling: \(receivedMessagesAreOlder ? "to top" : "to bottom")")
+        // Use the receivedMessagesAreOlder flag as needed //receivedMessagesAreOlder: true, scroling: to top -- FIXME: -
         receivedMessagesAreOlder ? scrollToTop() : scrollToBottom()
         hideLoadingIndicator()
     }
@@ -106,6 +108,7 @@ extension ChatViewController {
         currentSnapshot = UIMessageSnapshot()
         currentSnapshot.appendSections([.main])
         currentSnapshot.appendItems(manager.uiMessages, toSection: .main)
+        print("updateUI: " + (manager.uiMessages.last?.text ?? "No text"))
         
         dataSource.apply(currentSnapshot, animatingDifferences: animated)
     }

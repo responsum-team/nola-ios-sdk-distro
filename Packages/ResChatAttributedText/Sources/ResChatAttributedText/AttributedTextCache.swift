@@ -19,12 +19,14 @@ public class AttributedTextCache {
     // Private initializer to restrict instantiation
     private init() {}
     
-    public func getAttributedText(for timestamp: String,
-                                  messagePart: Int,
-                                  isMessageComplete: Bool,
-                                  text: String) -> NSAttributedString {
-        
+    public func fetchOrGenerateAttributedText(for timestamp: String,
+                                              messagePart: Int,
+                                              isMessageComplete: Bool,
+                                              text: String) -> NSAttributedString {
         let key = createCacheKeyFrom(timestamp: timestamp, messagePart: messagePart, isMessageComplete: isMessageComplete)
+        
+        // check if the text matches generated att string
+        
         
         if let cachedText = cache[key] {
             return cachedText
@@ -32,11 +34,25 @@ public class AttributedTextCache {
         // Generate and cache the attributed string
         if let generatedText = Markdown2AttributedText.convertMarkdownToAttributedString(markdownText: text) {
             cache[key] = generatedText
-//            print("DBGGGG: generate attributed string for: \(key): `\(Markdown2AttributedText.summarizeString(text, upTo: 20))`")
             return generatedText
         } else {
-//            print("DBGGGG: error creating attributed string from: \(text)")
             return NSAttributedString(string: text)
+        }
+    }
+    
+    public func getAttributedText(for timestamp: String,
+                                  messagePart: Int,
+                                  isMessageComplete: Bool,
+                                  text: String) -> NSAttributedString {
+        let result = fetchOrGenerateAttributedText(for: timestamp, messagePart: messagePart, isMessageComplete: isMessageComplete, text: text)
+        
+        if text.matchesAttributedString(result) {
+            return result
+        } else {
+            // generate again
+            print("ATTTT: Generating attributed text again for \(timestamp)")
+            print("ATTTT: Generating attributed text again for \(text)")
+            return fetchOrGenerateAttributedText(for: timestamp, messagePart: messagePart, isMessageComplete: isMessageComplete, text: text)
         }
     }
     

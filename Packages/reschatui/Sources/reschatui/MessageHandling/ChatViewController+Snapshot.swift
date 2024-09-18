@@ -10,17 +10,6 @@ import ResChatUICommon
 
 internal extension ChatViewController {
     
-    func clear() {
-        // Get the current snapshot
-        var snapshot = dataSource.snapshot()
-
-        // Clear all items in the snapshot
-        snapshot.deleteAllItems()
-
-        // Apply the cleared snapshot to the data source
-        dataSource.apply(snapshot, animatingDifferences: true)
-    }
-    
     func addLoadingMessage() {
         
         var snapshot = dataSource.snapshot()

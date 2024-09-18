@@ -23,3 +23,17 @@ public extension AttributedTextProviding {
         }
     }
 }
+
+
+public extension String {
+    func isEqualIgnoringWhitespaceAndNewlines(to otherString: String) -> Bool {
+        let normalizedSelf = self.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedOtherString = otherString.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        return normalizedSelf == normalizedOtherString
+    }
+    
+    public func matchesAttributedString(_ attributedString: NSAttributedString) -> Bool {
+        self.isEqualIgnoringWhitespaceAndNewlines(to: attributedString.string)
+    }
+}
