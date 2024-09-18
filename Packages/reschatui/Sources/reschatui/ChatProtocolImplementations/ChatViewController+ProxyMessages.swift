@@ -38,7 +38,13 @@ extension ChatViewController {
     
     func processHistoryMessages(_ receivedMessages: [UIMessage]) {
         
-        UILog.shared.logHistoryMessages(receivedMessages: receivedMessages, currentMessages: dataSource.snapshot().itemIdentifiers)
+        guard let manager = self.messageManager else {
+            print("Error: message manager is nil")
+            return
+        }
+        
+        UILog.shared.logHistoryMessages(receivedMessages: receivedMessages,
+                                        currentMessages: dataSource.snapshot().itemIdentifiers)
         
         // Check for `clear chat` -
         if receivedMessages.isEmpty && didRequestToClearChat {
@@ -50,18 +56,27 @@ extension ChatViewController {
         
         showLoadingIndicator()
         
-        var receivedMessagesAreOlder = false
-
+        let receivedMessagesAreOlder = manager.receivedMessagesAreOlder(receivedMessages)
+        
+        manager.processHistoryMessages(receivedMessages)
+        
+        updateUI(animated: false)
         
         // Use the receivedMessagesAreOlder flag as needed
         receivedMessagesAreOlder ? scrollToTop() : scrollToBottom()
-        
         hideLoadingIndicator()
     }
     
     func processStreamingMessage(_ streamingMessage: UIMessage) {
+        guard let manager = self.messageManager else {
+            print("Error: message manager is nil")
+            return
+        }
         
-
+        UILog.shared.logStreamingMessage(streamingMessage)
+        
+        manager.processStreamingMessage(streamingMessage)
+        updateUI(animated: false)
         
         scrollToBottom()
         if streamingMessage.isFinished {
@@ -70,54 +85,32 @@ extension ChatViewController {
     }
     
     func processUpdatedMessage(_ updatedMessage: UIMessage) {
-
-    }
-}
-
-extension ChatViewController {
-    func updateUI(animated: Bool) {
-        // TODO: -
-    }
-}
-
-extension ChatViewController {
-    
-    func processHistoryMessagesOld(_ receivedMessages: [UIMessage]) {
-        
-        UILog.shared.logHistoryMessages(receivedMessages: receivedMessages, currentMessages: dataSource.snapshot().itemIdentifiers)
-        
-        // Check for `clear chat` -
-        if receivedMessages.isEmpty && didRequestToClearChat {
-            didRequestToClearChat = false
-            clear()
-            hideLoadingIndicator()
+        guard let manager = self.messageManager else {
+            print("Error: message manager is nil")
             return
         }
         
-        showLoadingIndicator()
+        UILog.shared.logUpdatedMessage(updatedMessage)
         
-        var receivedMessagesAreOlder = false
-        messageHandler.processHistoryMessages(receivedMessages,
-                                              dataSource: dataSource,
-                                              completion: { older in receivedMessagesAreOlder = older })
+        manager.processUpdatedMessage(updatedMessage)
+        updateUI(animated: false)
         
-        // Use the receivedMessagesAreOlder flag as needed
-        receivedMessagesAreOlder ? scrollToTop() : scrollToBottom()
-        
-        hideLoadingIndicator()
-    }
-    
-    func processStreamingMessageOld(_ streamingMessage: UIMessage) {
-        
-        messageHandler.processStreamingMessage(streamingMessage, dataSource: dataSource)
-        
-        scrollToBottom()
-        if streamingMessage.isFinished {
-            notifyBotFinishedTyping()
-        }
-    }
-    
-    func processUpdatedMessageOld(_ updatedMessage: UIMessage) {
-        messageHandler.processUpdatedMessage(updatedMessage, dataSource: dataSource)
     }
 }
+
+// MARK: UI -
+
+extension ChatViewController {
+    func updateUI(animated: Bool) {
+        
+        guard let manager = self.messageManager else { return }
+        
+        currentSnapshot = UIMessageSnapshot()
+        currentSnapshot.appendSections([.main])
+        currentSnapshot.appendItems(manager.uiMessages, toSection: .main)
+        
+        dataSource.apply(currentSnapshot, animatingDifferences: animated)
+    }
+}
+
+

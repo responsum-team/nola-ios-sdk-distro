@@ -53,11 +53,8 @@ open class ChatViewController: PlatformViewController {
     }
     
     var messageHandler: MessageHandlingAlgorithm = OptimizedStreamingAlgorithm()
-    var messageManager: UIMessageManager = UIMessageManager { [weak self] (controller: UIMessageManager) in
-        guard let self = self else { return }
-        self.updateUI(animated: true)
-    }
-    
+    var messageManager: UIMessageManager! = nil
+    var currentSnapshot: UIMessageSnapshot! = nil
     
     // MARK: Cell Classes -
     
@@ -271,6 +268,13 @@ open class ChatViewController: PlatformViewController {
     // MARK: UI Setup -
     
     private func configureDataSource() {
+        // init message manager
+        
+        self.messageManager = UIMessageManager { [weak self] (manager: UIMessageManager) in
+            guard let self = self else { return }
+            self.updateUI(animated: true)
+        }
+        
         _ = dataSource // This triggers the lazy initialization of `dataSource`
     }
     

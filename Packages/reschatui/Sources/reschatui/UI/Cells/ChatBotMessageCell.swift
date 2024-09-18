@@ -194,6 +194,9 @@ open class ChatBotMessageCell: ProvidingTableViewCell {
             isAnimatingPlaceholder = false // Reset the flag if we're no longer in the placeholder state
             messageLabel.alpha = 1.0
             messageLabel.attributedText = message.attributedText
+            if message.isFinished && message.origin == .updateItem {
+                animatePulse()
+            }
         }
     }
     

@@ -89,30 +89,24 @@ public class UIMessageManager {
     
     // MARK: Properties -
     
-    private var _uiMessages = Set<UIMessage>()
-    var uiMessages: Set<UIMessage> { _uiMessages }
+    private var _uiMessages = [UIMessage]()
+    public var uiMessages: [UIMessage] { _uiMessages }
     
-    var myMessages: [UIMessage] {
-        Array(_uiMessages)
-    }
     
     // MARK: Init -
     
     public init(updateHandler: @escaping UpdateHandler) {
         self.updateHandler = updateHandler
     }
-    
 }
 
+
 private extension UIMessageManager {
+    
     func updateMessages(_ messages: [UIMessage]) {
-        _uiMessages = Set<UIMessage>(messages) // updejta sve
+        _uiMessages = messages
     }
-}
 
-private extension UIMessageManager {
-
-    
     static func messagesAreOlder(_ messages: [UIMessage], thanOtherMessages: [UIMessage]) -> Bool {
         guard let earliestMessage = messages.min(by: { $0.date < $1.date }),
               let earliestOtherMessage = thanOtherMessages.min(by: { $0.date < $1.date }) else {
@@ -190,7 +184,7 @@ private extension UIMessageManager {
         }
     }
     
-    static func mergeMessagesRemovingDuplicates(_ array1: [UIMessage], with array2: [UIMessage]) -> [UIMessage] {
+    static func mergeArraysRemovingDuplicates(_ array1: [UIMessage], with array2: [UIMessage]) -> [UIMessage] {
         // Create a set from both arrays to automatically remove duplicates
         let mergedSet = Set(array1).union(Set(array2))
         
@@ -201,7 +195,7 @@ private extension UIMessageManager {
 
 public extension UIMessageManager {
     func receivedMessagesAreOlder(_ receivedMessages: [UIMessage]) -> Bool {
-        Self.messagesAreOlder(receivedMessages, thanOtherMessages: myMessages)
+        Self.messagesAreOlder(receivedMessages, thanOtherMessages: _uiMessages)
     }
 }
 
@@ -220,11 +214,13 @@ public extension UIMessageManager {
              self.addBotPlaceholderMessage("")
          }
          */
-        var currentMessages = Array(_uiMessages)
+        var currentMessages = _uiMessages
+        
         currentMessages = Self.sortMessagesByDateAscending(messages: currentMessages)
         let newUserMessage = UIMessage.newPlaceholderUserMessage(text)
         currentMessages.append(newUserMessage)
-        updateHandler(self)
+        updateMessages(currentMessages)
+//        updateHandler(self)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else { return }
@@ -232,36 +228,60 @@ public extension UIMessageManager {
             Task { @MainActor in
                 let newBotMessage = UIMessage.newPlaceholderBotMessage("")
                 currentMessages.append(newUserMessage)
-                updateHandler(self)
+                updateMessages(currentMessages)
+//                updateHandler(self)
             }
         }
         
     }
     
-    func processHistoryMessages(_ receivedMessages: [UIMessage], completion: @escaping (Bool) -> Void) {
-        var currentMessages = Array(_uiMessages)
+    func processHistoryMessages(_ receivedMessages: [UIMessage]) {
+        var currentMessages = _uiMessages
         
-        // Determine whether the received messages are older (we need to return it)
-        var receivedMessagesAreOlder = Self.messagesAreOlder(receivedMessages, thanOtherMessages: currentMessages)
-        
-        // handle "P: [User]" case -> replace my `P: [User]` with `[User]`, , or delete my user placeholder
+        // handle "P: [User]" case -> replace my `P: [User]` with `[User]`, or delete my user placeholder
         currentMessages = Self.replaceUserPlaceholders(in: currentMessages, with: receivedMessages)
         
-        // handle "P [Bot]" case -> replace my `P: [Bot]` with the received (probably Dummy (...)) bot, or delete my bot placeholder
+        // handle "P [Bot]" case -> replace my `P: [Bot]` with the received (probably Dummy "...") bot, or delete my bot placeholder
         currentMessages = Self.replaceBotPlaceholders(in: currentMessages, with: receivedMessages)
         
-        // sort messages by date
-        currentMessages = Self.sortMessagesByDateAscending(messages: currentMessages)
+        // merge both arrays
+        let mergedMessages =  Array(Set(currentMessages + receivedMessages))
         
-        completion(receivedMessagesAreOlder)
+        // sort messages by date
+        currentMessages = Self.sortMessagesByDateAscending(messages: mergedMessages)
+        
+        updateMessages(currentMessages)
+//        updateHandler(self)
+        
     }
     
     func processStreamingMessage(_ streamingMessage: UIMessage) {
+        if !streamingMessage.isBot {
+            print("Error: Received a streaming message that is not a bot.")
+        }
+        var currentMessages = _uiMessages
         
+        // delete placeholders if needed
+        currentMessages = currentMessages.filter { !$0.isPlaceholder }
+        
+        // update Bot with Bot/part
+        currentMessages = currentMessages.map { $0.id == streamingMessage.id ? streamingMessage : $0 }
+        
+        updateMessages(currentMessages)
+//        updateHandler(self)
     }
     
     func processUpdatedMessage(_ updatedMessage: UIMessage) {
+        var currentMessages = _uiMessages
         
+        // delete placeholders if needed
+        currentMessages = currentMessages.filter { !$0.isPlaceholder }
+
+        // Just update message in question, whether bot or user
+        currentMessages = currentMessages.map { $0.id == updatedMessage.id ? updatedMessage : $0 }
+        
+        updateMessages(currentMessages)
+//        updateHandler(self)
     }
 }
 

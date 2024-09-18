@@ -47,20 +47,6 @@ class OptimizedStreamingAlgorithm: MessageHandlingAlgorithm {
             updatedMessage.isFinished = true
             print("Final part received for message ID: \(updatedMessage.id)") // onda izbrise message
         }
-        /**
-         ▿ UIMessage
-           - text : ""
-           ▿ rawText : Optional<String>
-             - some : ""
-           - type : reschatui.UIMessageType.bot
-           - uuid : 2B193DB7-269A-422F-A2EE-D2DBAC83B26C
-           ▿ date : 2024-09-17 01:24:15 +0000
-             - timeIntervalSinceReferenceDate : 748229055.0710001
-           - timestamp : "2024-09-17T01:24:15.071066+00:00"
-           - messagePart : 1
-           - messageIndex : 0
-           - isFinished : true
-         */
         
         // Update the snapshot with the new message part
         snapshot.deleteItems([existingMessage])

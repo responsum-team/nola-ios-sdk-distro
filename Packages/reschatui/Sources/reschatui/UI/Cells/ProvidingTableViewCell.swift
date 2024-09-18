@@ -78,7 +78,6 @@ extension UserMessageCell: ConfigurableMessageCell {}
 extension ChatBotMessageCell: ConfigurableMessageCell {}
 extension LoadingTableViewCell: ConfigurableMessageCell {}
 
-
 extension UIView {
     func startShineBorderAnimation() {
         let borderColorAnimation = CABasicAnimation(keyPath: "borderColor")
@@ -107,5 +106,18 @@ extension UIView {
     func stopShineBorderAnimation() {
         self.layer.removeAnimation(forKey: "borderColor")
         self.layer.removeAnimation(forKey: "borderWidth")
+    }
+}
+
+extension ProvidingTableViewCell {
+    func animatePulse() {
+        // Perform pulse animation: scale up and back to normal size
+        UIView.animate(withDuration: 0.2, animations: {
+            self.transform = CGAffineTransform(scaleX: 1.1, y: 1.1) // Scale up slightly
+        }) { _ in
+            UIView.animate(withDuration: 0.2, animations: {
+                self.transform = CGAffineTransform.identity // Return to original size
+            })
+        }
     }
 }
