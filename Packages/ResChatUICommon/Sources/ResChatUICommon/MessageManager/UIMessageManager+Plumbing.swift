@@ -43,7 +43,9 @@ internal extension UIMessageManager {
             
             // Find the corresponding user message in newMessages with the same text
             if let matchingUserMessage = newMessages.first(where: { $0.type == .user && $0.text == existingMessage.text }) {
-                return matchingUserMessage // Replace the placeholder with the user message
+                var refreshedMessage = existingMessage
+                refreshedMessage.update(with: matchingUserMessage)
+                return refreshedMessage // Replace (update) the placeholder with the user message
             }
             
             // If no match, return the placeholder or nil depending on the flag
@@ -58,17 +60,16 @@ internal extension UIMessageManager {
     ) -> [UIMessage] {
         return messages.compactMap { existingMessage -> UIMessage? in
             // Only work with bot placeholders
-            guard case .placeholder(.forBot) = existingMessage.type else {
-                return existingMessage // Return non-placeholder messages as is
-            }
+            guard case .placeholder(.forBot) = existingMessage.type else { return existingMessage } // Return non-placeholder messages as is
             
             // Find the last bot message from newMessages that is waiting and not already in current messages
             if let matchingBotMessage = newMessages.last(where: {
                 $0.type == .bot &&
                 $0.isBotWaiting &&
-                !Self.messages(messages, containMessage: $0)
-            }) {
-                return matchingBotMessage // Replace the placeholder with the matching bot message
+                !Self.messages(messages, containMessage: $0)}) {
+                var refreshedMessage = existingMessage
+                refreshedMessage.update(with: matchingBotMessage)
+                return refreshedMessage // Replace (update) the placeholder with the matching bot message
             }
             
             // If no match, return the placeholder or nil based on keepPlaceholderIfNoMatch

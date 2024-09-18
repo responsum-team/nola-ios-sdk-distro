@@ -26,12 +26,7 @@ public struct UIMessage: Hashable, Codable {
     public var messagePart: Int = 0
     public var messageIndex: Int = 0
     public var isFinished: Bool = true
-    public var attributedText: NSAttributedString {
-        AttributedTextCache.shared.getAttributedText(for: timestamp,
-                                                     messagePart: messagePart,
-                                                     isMessageComplete: isFinished,
-                                                     text: text)
-    }
+    public var attributedText: NSAttributedString
 
     // Conform to Hashable
     public func hash(into hasher: inout Hasher) {
@@ -63,6 +58,10 @@ public struct UIMessage: Hashable, Codable {
         uuid = try container.decode(UUID.self, forKey: .uuid)
         date = try container.decode(Date.self, forKey: .date)
         timestamp = try container.decode(String.self, forKey: .timestamp)
+        attributedText = AttributedTextCache.shared.getAttributedText(for: timestamp,
+                                                                      messagePart: messagePart,
+                                                                      isMessageComplete: isFinished,
+                                                                      text: text)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -97,6 +96,10 @@ public struct UIMessage: Hashable, Codable {
         self.messagePart = messagePart
         self.messageIndex = messageIndex
         self.isFinished = isFinished
+        self.attributedText = AttributedTextCache.shared.getAttributedText(for: timestamp,
+                                                                           messagePart: messagePart,
+                                                                           isMessageComplete: isFinished,
+                                                                           text: text)
     }
     
     public static var none: UIMessage {
@@ -239,6 +242,8 @@ public extension UIMessage {
         self.messageIndex = newMessage.messageIndex
         self.isFinished = newMessage.isFinished
         self.type = newMessage.type
+        self.origin = newMessage.origin
+        self.attributedText = newMessage.attributedText
     }
       
     public func attributexTextMatches() -> Bool {

@@ -77,13 +77,12 @@ public extension UIMessageManager {
         // handle "P [Bot]" case -> replace my `P: [Bot]` with the received (probably Dummy "...") bot, or delete my bot placeholder
         currentMessages = Self.replaceBotPlaceholders(in: currentMessages, with: receivedMessages)
         
-        // Bot is Typing remains in the tableview
-        // replace those two with
-        //         // delete placeholders if needed
-//        currentMessages = currentMessages.filter { !$0.isPlaceholder }
+        // Bot is Typing remains in the tableview, this should fix it
+        // delete placeholders if needed
+        currentMessages = currentMessages.filter { !$0.isPlaceholder }
         
         // merge both arrays
-        let mergedMessages =  Array(Set(currentMessages + receivedMessages))
+        let mergedMessages = Array(Set(currentMessages + receivedMessages))
         
         // sort messages by date
         currentMessages = Self.sortMessagesByDateAscending(messages: mergedMessages)
@@ -103,10 +102,15 @@ public extension UIMessageManager {
         
         // update Bot with Bot/part
         currentMessages = currentMessages.map {
-            ($0.id == streamingMessage.id
-             && streamingMessage.messagePart > $0.messagePart
-             && $0.isBot == true && streamingMessage.isBot == true)
-            ? streamingMessage : $0
+           if  ($0.id == streamingMessage.id
+             && $0.messagePart < streamingMessage.messagePart
+                && $0.isBot == true && streamingMessage.isBot == true) {
+            var refreshedMessage = $0
+               refreshedMessage.update(with: streamingMessage)
+               return refreshedMessage
+           } else {
+               return $0
+           }
         }
         
         updateMessages(currentMessages)
@@ -120,10 +124,17 @@ public extension UIMessageManager {
         currentMessages = currentMessages.filter { !$0.isPlaceholder }
 
         // Just update message in question, whether bot or user, but must be of the same type
+
         currentMessages = currentMessages.map {
-            ($0.id == updatedMessage.id
-             && $0.isBot == updatedMessage.isBot)
-            ? updatedMessage : $0
+            if ($0.id == updatedMessage.id
+                && $0.isBot == updatedMessage.isBot) {
+                var refreshedMessage = $0
+                refreshedMessage.update(with: updatedMessage)
+                   return refreshedMessage
+            } else {
+                return $0
+            }
+           
         }
         
         updateMessages(currentMessages)
