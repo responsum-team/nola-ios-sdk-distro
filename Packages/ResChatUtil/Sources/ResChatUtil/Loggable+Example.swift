@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Loggable+Example.swift
 //  ResChatUtil
 //
 //  Created by Mihaela MJ on 18.09.2024..
