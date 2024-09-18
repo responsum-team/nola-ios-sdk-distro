@@ -30,6 +30,11 @@ public class UIMessageManager {
     private func updateMessages(_ messages: [UIMessage]) {
         _uiMessages = messages
     }
+    
+    private func callUpdateHandler() {
+        print("UIMessageManager: Calling update handler disabled for now!")
+//        updateHandler(self)
+    }
 }
 
 // MARK: Process -
@@ -38,14 +43,13 @@ public extension UIMessageManager {
     
     @MainActor
     func processSendMessageWith(text: String) {
-        
         var currentMessages = _uiMessages
-        
         currentMessages = Self.sortMessagesByDateAscending(messages: currentMessages)
+        
         let newUserMessage = UIMessage.newPlaceholderUserMessage(text)
         currentMessages.append(newUserMessage)
         updateMessages(currentMessages)
-//        updateHandler(self)
+        callUpdateHandler()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else { return }
@@ -54,7 +58,7 @@ public extension UIMessageManager {
                 let newBotMessage = UIMessage.newPlaceholderBotMessage("")
                 currentMessages.append(newBotMessage)
                 updateMessages(currentMessages)
-//                updateHandler(self)
+                callUpdateHandler()
             }
         }
     }
@@ -85,7 +89,7 @@ public extension UIMessageManager {
         currentMessages = Self.sortMessagesByDateAscending(messages: mergedMessages)
         
         updateMessages(currentMessages)
-//        updateHandler(self)
+        callUpdateHandler()
     }
     
     func processStreamingMessage(_ streamingMessage: UIMessage) {
@@ -106,7 +110,7 @@ public extension UIMessageManager {
         }
         
         updateMessages(currentMessages)
-//        updateHandler(self)
+        callUpdateHandler()
     }
     
     func processUpdatedMessage(_ updatedMessage: UIMessage) {
@@ -123,7 +127,7 @@ public extension UIMessageManager {
         }
         
         updateMessages(currentMessages)
-//        updateHandler(self)
+        callUpdateHandler()
     }
 }
 
