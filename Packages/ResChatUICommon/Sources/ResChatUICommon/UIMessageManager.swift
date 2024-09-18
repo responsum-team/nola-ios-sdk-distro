@@ -184,7 +184,7 @@ private extension UIMessageManager {
 public extension UIMessageManager {
     func receivedMessagesAreOlder(_ receivedMessages: [UIMessage]) -> Bool {
         if _uiMessages.isEmpty { return false }
-        Self.messagesAreOlder(receivedMessages, thanOtherMessages: _uiMessages)
+        return Self.messagesAreOlder(receivedMessages, thanOtherMessages: _uiMessages)
     }
 }
 
