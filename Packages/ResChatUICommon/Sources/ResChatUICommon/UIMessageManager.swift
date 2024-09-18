@@ -248,7 +248,7 @@ public extension UIMessageManager {
         currentMessages = currentMessages.filter { !$0.isPlaceholder }
         
         // update Bot with Bot/part
-        currentMessages = currentMessages.map { // trebam promjenit isFinished na false ako su ...
+        currentMessages = currentMessages.map {
             ($0.id == streamingMessage.id
              && streamingMessage.messagePart > $0.messagePart
              && $0.isBot == true && streamingMessage.isBot == true)
@@ -266,7 +266,7 @@ public extension UIMessageManager {
         currentMessages = currentMessages.filter { !$0.isPlaceholder }
 
         // Just update message in question, whether bot or user, but must be of the same type
-        currentMessages = currentMessages.map { // nije zamjenio updatred message
+        currentMessages = currentMessages.map {
             ($0.id == updatedMessage.id
              && $0.isBot == updatedMessage.isBot)
             ? updatedMessage : $0
