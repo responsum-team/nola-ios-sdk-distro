@@ -144,17 +144,6 @@ internal extension ResChatSocket {
         let sortedMessages = SocketMessage.sortMessagesByDate(in: _messages.value)
         let oldestMessage = sortedMessages.first
         let newestMessage = sortedMessages.last
-        
-        print("requestMoreMessages, current messages:")
-        sortedMessages.map { print( Date.niceDateFrom($0.date)) }
-        
-        if let oldestDate = oldestMessage?.date {
-            print("oldest = \(Date.niceDateFrom(oldestDate))")
-        }
-        if let newestDate = newestMessage?.date {
-            print("newest = \(Date.niceDateFrom(newestDate))")
-        }
-        
 
         guard !historyFinishedLoading,
               let lastMessage = oldestMessage else { return } //_messages.value.last(where: { $0.socketSource != .streaming }) else { return } // needs to be first
@@ -203,12 +192,3 @@ private extension ResChatSocket {
     }
 }
 
-
-extension Date {
-    static func niceDateFrom(_ date: Date?) -> String {
-        guard let date = date else { return "" }
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy. HH:mm:ss"
-        return dateFormatter.string(from: date)
-    }
-}

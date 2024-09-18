@@ -27,7 +27,7 @@ struct TrafficLog {
     static let logPrefix = "DBGG: Traffic->"
     
     #if DEBUG
-    private static var active = true
+    private static var active = false
     #else
     private static var active = false
     #endif

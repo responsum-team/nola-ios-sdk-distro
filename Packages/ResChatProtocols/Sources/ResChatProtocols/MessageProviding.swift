@@ -25,7 +25,6 @@ public extension MessageProviding {
     }
 }
 
-// Define a concrete struct that conforms to MessageProviding
 public struct DefaultMessage: MessageProviding {
     public var text: String
     public var rawText: String?
@@ -55,7 +54,7 @@ public struct DefaultMessage: MessageProviding {
     }
 }
 
-// Provide a default `none` instance in the protocol extension
+// Default `none` instance in the protocol extension
 public extension MessageProviding {
     static var none: MessageProviding {
         return DefaultMessage(

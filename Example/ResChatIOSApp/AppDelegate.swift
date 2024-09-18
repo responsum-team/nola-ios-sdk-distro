@@ -67,15 +67,12 @@ extension AppDelegate: AirportAndLanguageChooserDelegate {
                           chooserViewController: ResChatProtocols.PlatformAirportViewController) {
         
         
-        // TODO: You can set current location if you want to!!!
+        // INFO: You can set current location if you want to!!!
         ResChatSocket.location = nil
         
         print("Airport selected: \(airport.name), Language selected: \(language.rawValue)")
         
-        guard let uiProvidingController = chatViewController as? reschatui.ChatViewController else {
-            print("uiProvidingController is not `reschatui.ChatViewController`!!")
-            return
-        }
+        guard let uiProvidingController = chatViewController as? reschatui.ChatViewController else { return }
         
         let proxy = reschatproxy.SocketProxy(socketProviding: socket,
                                              uiProviding: uiProvidingController)
@@ -86,12 +83,7 @@ extension AppDelegate: AirportAndLanguageChooserDelegate {
         if let airportChooserVC = chooserViewController as? ResChatHouUIKit.AirportChooserViewController {
             // INFO: insert it into navigation stack -
             airportChooserVC.navigationController?.pushViewController(uiProvidingController, animated: true)
-        } else {
-            print("Error: airportChooserVC is not `ResChatHouUIKit.AirportChooserViewController`!!")
         }
-        
-
-        
     }
 }
 

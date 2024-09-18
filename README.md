@@ -34,25 +34,29 @@ here's the example:
 
 ```swift
     func didSelectAirport(_ airport: ResChatHouCommon.Airport,
-                         language: ResChatHouCommon.Language,
-                         socket: reschatSocket.ResChatSocket,
-                         chatViewController: reschatui.ChatViewController,
-                         chooserViewController: ResChatHouUIKit.AirportChooserViewController) {
-
-       // INFO: You can set current location if you want to!!!
-       ResChatSocket.location = nil
-
-       print("Airport selected: \(airport.name), Language selected: \(language.rawValue)")
-
-       let proxy = reschatproxy.SocketProxy(socketProviding: socket,
-                                            uiProviding: chatViewController)
-       chatViewController.proxy = proxy
-
-       self.socket = socket
-
-       // INFO: insert it into navigation stack -
-       chooserViewController.navigationController?.pushViewController(chatViewController, animated: true)
-   }
+                          language: ResChatHouCommon.Language,
+                          socket: reschatSocket.ResChatSocket,
+                          chatViewController: any ResChatProtocols.PlatformChatViewController,
+                          chooserViewController: ResChatProtocols.PlatformAirportViewController) {
+        
+        
+        // INFO: You can set current location if you want to!!!
+        ResChatSocket.location = nil
+        
+        print("Airport selected: \(airport.name), Language selected: \(language.rawValue)")
+        
+        guard let uiProvidingController = chatViewController as? reschatui.ChatViewController else { return }
+        
+        let proxy = reschatproxy.SocketProxy(socketProviding: socket,
+                                             uiProviding: uiProvidingController)
+        chatViewController.proxy = proxy
+        
+        self.socket = socket
+        
+        if let airportChooserVC = chooserViewController as? ResChatHouUIKit.AirportChooserViewController {
+            airportChooserVC.navigationController?.pushViewController(uiProvidingController, animated: true)
+        }
+    }
 ```
 
 SocketProxy is unaware of the UI framework that uses it and is designed to support both SwiftUI and AppKit.
