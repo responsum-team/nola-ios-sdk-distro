@@ -75,7 +75,7 @@ internal extension UIMessageManager {
                     print("Looki here")
                     print("Existing: \(existingMessage)")
                     print("Existing: \(matchingBotMessage)")
-                    refreshedMessage.origin = existingMessage.origin
+//                    refreshedMessage.origin = existingMessage.origin
                 }
                 return refreshedMessage // Replace (update) the placeholder with the matching bot message
             }

@@ -156,64 +156,6 @@ open class ChatBotMessageCell: ProvidingTableViewCell {
 
     internal var isAnimatingPlaceholder = false // Track if the animation is already running
     
-    public func configureOld(with message: UIMessage) {
-
-        timestampLabel.text = message.date.description
-        configureForDebugging(with: message.type)
-        
-        // Stop any existing animation before updating
-        messageLabel.layer.removeAllAnimations()
-        messageLabel.alpha = 1.0 // Reset alpha
-        // if message.origin == .bistory && message.isBotwaiting nemoj animirat{
-        //
-        if message.origin == .history && message.isBotWaiting {
-            isAnimatingPlaceholder = false // Reset the flag if we're no longer in the placeholder state
-            messageLabel.alpha = 1.0
-            if !message.attributexTextMatches() {
-                print("WARNING: Message text does not match attributed text")
-            }
-            messageLabel.attributedText = message.attributedText // attributed text nije dobar
-            if message.isFinished && message.origin == .updateItem {
-                animatePulse()
-            }
-        } else if message.type == .placeholder(.forBot)/* &&*/ || message.isBotWaiting {
-            if !isAnimatingPlaceholder {
-                // Create the SF Symbol for the animated placeholder
-                let symbolConfiguration = UIImage.SymbolConfiguration(scale: .large)
-                let symbolImage = UIImage(systemName: "ellipsis.circle.fill", withConfiguration: symbolConfiguration)?
-                    .withTintColor(.systemGray, renderingMode: .alwaysOriginal)
-                
-                let attachment = NSTextAttachment()
-                attachment.image = symbolImage
-                
-                let attributedText = NSMutableAttributedString(string: "Bot is typing... ")
-                let symbolAttributedString = NSAttributedString(attachment: attachment)
-                
-                attributedText.append(symbolAttributedString)
-                messageLabel.attributedText = attributedText
-                
-                // Animate the symbol (only once)
-                UIView.animate(withDuration: 0.5, delay: 0, options: [.repeat, .autoreverse]) {
-                    self.messageLabel.alpha = 0.5
-                } completion: { _ in
-                    self.messageLabel.alpha = 1.0
-                }
-                
-                isAnimatingPlaceholder = true // Set flag to true to indicate animation is running
-            }
-        } else {
-            isAnimatingPlaceholder = false // Reset the flag if we're no longer in the placeholder state
-            messageLabel.alpha = 1.0
-            if !message.attributexTextMatches() {
-                print("WARNING: Message text does not match attributed text")
-            }
-            messageLabel.attributedText = message.attributedText // attributed text nije dobar
-            if message.isFinished && message.origin == .updateItem {
-                animatePulse()
-            }
-        }
-    }
-    
     private func setupShadow() {
         messageContainerView.layer.shadowColor = Self.colorProvider.shadowColor.cgColor
         messageContainerView.layer.shadowOpacity = LayoutConstants.containerShadowOpacity

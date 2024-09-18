@@ -137,19 +137,6 @@ public extension Loggable {
 // MARK: Actions -
 
 public extension Loggable {
-
-//    static func append(_ logEntry: LogEntry) {
-//        logQueue.async(flags: .barrier) {
-//            guard active else { return }
-//
-//            var modifiedLogEntry = logEntry
-//            modifiedLogEntry["index"] = log.count
-//            modifiedLogEntry["date"] = Date.loggableCurrentDate()
-//
-//            log.append(modifiedLogEntry)
-//            saveAsJSON()
-//        }
-//    }
     
     static func append(_ logEntry: LogEntry) {
         logQueue.async(flags: .barrier) {

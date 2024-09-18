@@ -55,7 +55,7 @@ struct UILog {
     static let logPrefix = "DBGG: UI_Event-> "
     
     #if DEBUG
-    private static var active = true
+    private static var active = false
     #else
     private static var active = false
     #endif

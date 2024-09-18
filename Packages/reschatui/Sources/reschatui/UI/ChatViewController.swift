@@ -52,7 +52,6 @@ open class ChatViewController: PlatformViewController {
             .store(in: &cancellables)
     }
     
-    var messageHandler: MessageHandlingAlgorithm = OptimizedStreamingAlgorithm()
     var messageManager: UIMessageManager! = nil
     var currentSnapshot: UIMessageSnapshot! = nil
     
@@ -272,7 +271,7 @@ open class ChatViewController: PlatformViewController {
         
         self.messageManager = UIMessageManager { [weak self] (manager: UIMessageManager) in
             guard let self = self else { return }
-            self.updateUI(animated: true)
+//            self.updateUI(animated: true)
         }
         
         _ = dataSource // This triggers the lazy initialization of `dataSource`

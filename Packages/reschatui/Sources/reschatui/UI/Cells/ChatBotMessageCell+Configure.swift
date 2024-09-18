@@ -10,28 +10,31 @@ import ResChatUICommon
 
 extension ChatBotMessageCell {
     public func configure(with message: UIMessage) {
+        var checkedMessage = message
+        checkedMessage.updateAttributedTextInNeeded()
+        
         // Update timestamp and setup debugging configuration
-        timestampLabel.text = message.date.description
-        configureForDebugging(with: message.type)
+        timestampLabel.text = checkedMessage.date.description
+        configureForDebugging(with: checkedMessage.type)
         
         // Reset any ongoing animations on the messageLabel
         resetMessageLabelAnimation()
         
-        if isEmptyBotHistory(message: message) {
+        if isEmptyBotHistory(message: checkedMessage) {
             // No animation needed, update message label directly
 //            stopPlaceholderAnimation()
 //            handleEmptyBotHistory(with: message)
-            updateMessageLabel(with: message)
-        } else if shouldAnimatePlaceholder(for: message) {
+            updateMessageLabel(with: checkedMessage)
+        } else if shouldAnimatePlaceholder(for: checkedMessage) {
             // Handle placeholder animation for bot messages
             handlePlaceholderAnimation()
         } else {
             // Reset placeholder animation if it's not needed anymore
             stopPlaceholderAnimation()
-            updateMessageLabel(with: message)
+            updateMessageLabel(with: checkedMessage)
             
             // If the message is finished and from a specific origin, apply pulse animation
-            if message.isFinished && message.origin == .updateItem {
+            if checkedMessage.isFinished && checkedMessage.origin == .updateItem {
                 animatePulse()
             }
         }
