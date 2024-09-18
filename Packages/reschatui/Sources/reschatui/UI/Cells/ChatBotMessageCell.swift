@@ -11,12 +11,12 @@ import ResChatUICommon
 open class ChatBotMessageCell: ProvidingTableViewCell {
     override open class var identifier: String { "ChatBotMessageCell" }
     
-    private let messageLabel = UILabel()
-    private let timestampLabel = UILabel()
-    private let avatarContainerView = UIView()
-    private let avatarImageView = UIImageView()
-    private let iconImageView = UIImageView()
-    private let messageContainerView = UIView()
+    internal let messageLabel = UILabel()
+    internal let timestampLabel = UILabel()
+    internal let avatarContainerView = UIView()
+    internal let avatarImageView = UIImageView()
+    internal let iconImageView = UIImageView()
+    internal let messageContainerView = UIView()
     
     override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -154,9 +154,9 @@ open class ChatBotMessageCell: ProvidingTableViewCell {
         setupTapGesture()
     }
 
-    private var isAnimatingPlaceholder = false // Track if the animation is already running
+    internal var isAnimatingPlaceholder = false // Track if the animation is already running
     
-    public func configure(with message: UIMessage) {
+    public func configureOld(with message: UIMessage) {
 
         timestampLabel.text = message.date.description
         configureForDebugging(with: message.type)
@@ -164,8 +164,19 @@ open class ChatBotMessageCell: ProvidingTableViewCell {
         // Stop any existing animation before updating
         messageLabel.layer.removeAllAnimations()
         messageLabel.alpha = 1.0 // Reset alpha
-        
-        if message.type == .placeholder(.forBot)/* &&*/ || message.isBotWaiting {
+        // if message.origin == .bistory && message.isBotwaiting nemoj animirat{
+        //
+        if message.origin == .history && message.isBotWaiting {
+            isAnimatingPlaceholder = false // Reset the flag if we're no longer in the placeholder state
+            messageLabel.alpha = 1.0
+            if !message.attributexTextMatches() {
+                print("WARNING: Message text does not match attributed text")
+            }
+            messageLabel.attributedText = message.attributedText // attributed text nije dobar
+            if message.isFinished && message.origin == .updateItem {
+                animatePulse()
+            }
+        } else if message.type == .placeholder(.forBot)/* &&*/ || message.isBotWaiting {
             if !isAnimatingPlaceholder {
                 // Create the SF Symbol for the animated placeholder
                 let symbolConfiguration = UIImage.SymbolConfiguration(scale: .large)
