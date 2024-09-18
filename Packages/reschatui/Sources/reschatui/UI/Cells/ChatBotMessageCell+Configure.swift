@@ -16,10 +16,11 @@ extension ChatBotMessageCell {
         
         // Reset any ongoing animations on the messageLabel
         resetMessageLabelAnimation()
-
+        
         if isEmptyBotHistory(message: message) {
             // No animation needed, update message label directly
-            stopPlaceholderAnimation()
+//            stopPlaceholderAnimation()
+//            handleEmptyBotHistory(with: message)
             updateMessageLabel(with: message)
         } else if shouldAnimatePlaceholder(for: message) {
             // Handle placeholder animation for bot messages
@@ -28,34 +29,22 @@ extension ChatBotMessageCell {
             // Reset placeholder animation if it's not needed anymore
             stopPlaceholderAnimation()
             updateMessageLabel(with: message)
-
+            
             // If the message is finished and from a specific origin, apply pulse animation
             if message.isFinished && message.origin == .updateItem {
                 animatePulse()
             }
         }
     }
+}
 
-    // MARK: - Helper Methods
+// MARK: Handle States -
 
-    private func resetMessageLabelAnimation() {
-        messageLabel.layer.removeAllAnimations()
-        messageLabel.alpha = 1.0
-    }
-
-    private func isEmptyBotHistory(message: UIMessage) -> Bool {
-        return (message.origin == .history || message.origin == .updateItem)
-        && message.isBotWaiting
-    }
-
-    private func shouldAnimatePlaceholder(for message: UIMessage) -> Bool {
-        return message.type == .placeholder(.forBot) || message.isBotWaiting
-    }
-
-    private func handlePlaceholderAnimation() {
+private extension ChatBotMessageCell {
+    func handlePlaceholderAnimation() {
         guard !isAnimatingPlaceholder else { return }
 
-        let attributedText = createPlaceholderAttributedText()
+        let attributedText = createBotTypingAttributedText()
         messageLabel.attributedText = attributedText
         
         // Animate placeholder
@@ -68,11 +57,42 @@ extension ChatBotMessageCell {
         isAnimatingPlaceholder = true
     }
 
-    private func stopPlaceholderAnimation() {
+    func stopPlaceholderAnimation() {
         isAnimatingPlaceholder = false
     }
+    
+    func updateMessageLabel(with message: UIMessage) {
+        if !message.attributexTextMatches() {
+            print("WARNING: Message text does not match attributed text")
+        }
+        messageLabel.attributedText = message.attributedText
+    }
+    
+    func handleEmptyBotHistory(with message: UIMessage) {
+        let attributedText = createEmptyStringErrorAttributedText2()
+        messageLabel.attributedText = attributedText
+    }
+}
 
-    private func createPlaceholderAttributedText() -> NSAttributedString {
+private extension ChatBotMessageCell {
+
+    // MARK: - Helper Methods
+
+    func resetMessageLabelAnimation() {
+        messageLabel.layer.removeAllAnimations()
+        messageLabel.alpha = 1.0
+    }
+
+    func isEmptyBotHistory(message: UIMessage) -> Bool {
+        return (message.origin == .history) // || message.origin == .updateItem)
+        && message.isBotWaiting
+    }
+
+    func shouldAnimatePlaceholder(for message: UIMessage) -> Bool {
+        return message.type == .placeholder(.forBot) && message.isBotWaiting
+    }
+
+    func createBotTypingAttributedText() -> NSAttributedString {
         let symbolConfiguration = UIImage.SymbolConfiguration(scale: .large)
         let symbolImage = UIImage(systemName: "ellipsis.circle.fill", withConfiguration: symbolConfiguration)?
             .withTintColor(.systemGray, renderingMode: .alwaysOriginal)
@@ -86,11 +106,46 @@ extension ChatBotMessageCell {
         
         return attributedText
     }
+    
+    private func createEmptyStringErrorAttributedText() -> NSAttributedString {
+        let symbolConfiguration = UIImage.SymbolConfiguration(scale: .large)
+        let symbolImage = UIImage(systemName: "questionmark.circle", withConfiguration: symbolConfiguration)?
+            .withTintColor(.systemGray, renderingMode: .alwaysOriginal)
 
-    private func updateMessageLabel(with message: UIMessage) {
-        if !message.attributexTextMatches() {
-            print("WARNING: Message text does not match attributed text")
-        }
-        messageLabel.attributedText = message.attributedText
+        let attachment = NSTextAttachment()
+        attachment.image = symbolImage
+
+        let attributedText = NSMutableAttributedString(string: "Oops! No response. ")
+        let symbolAttributedString = NSAttributedString(attachment: attachment)
+        
+        attributedText.append(symbolAttributedString)
+        return attributedText
+    }
+    
+    private func createEmptyStringErrorAttributedText2() -> NSAttributedString {
+        let symbolConfiguration = UIImage.SymbolConfiguration(scale: .large)
+        let symbolImage = UIImage(systemName: "questionmark.circle", withConfiguration: symbolConfiguration)?
+            .withTintColor(.systemGray, renderingMode: .alwaysOriginal)
+
+        let attachment = NSTextAttachment()
+        attachment.image = symbolImage
+
+        // Create an attributed string with "Oops!" bolded
+        let attributedText = NSMutableAttributedString(string: "Oops!", attributes: [
+            .font: UIFont.boldSystemFont(ofSize: 16),
+            .foregroundColor: UIColor.darkGray
+        ])
+        let normalText = NSAttributedString(string: " No response.", attributes: [
+            .font: UIFont.systemFont(ofSize: 16),
+            .foregroundColor: UIColor.darkGray
+        ])
+        
+        attributedText.append(normalText)
+
+        // Create the symbol and append it
+        let symbolAttributedString = NSAttributedString(attachment: attachment)
+        attributedText.append(symbolAttributedString)
+
+        return attributedText
     }
 }

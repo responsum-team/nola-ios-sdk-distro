@@ -138,6 +138,19 @@ public extension Loggable {
 
 public extension Loggable {
 
+//    static func append(_ logEntry: LogEntry) {
+//        logQueue.async(flags: .barrier) {
+//            guard active else { return }
+//
+//            var modifiedLogEntry = logEntry
+//            modifiedLogEntry["index"] = log.count
+//            modifiedLogEntry["date"] = Date.loggableCurrentDate()
+//
+//            log.append(modifiedLogEntry)
+//            saveAsJSON()
+//        }
+//    }
+    
     static func append(_ logEntry: LogEntry) {
         logQueue.async(flags: .barrier) {
             guard active else { return }
@@ -146,8 +159,11 @@ public extension Loggable {
             modifiedLogEntry["index"] = log.count
             modifiedLogEntry["date"] = Date.loggableCurrentDate()
 
-            log.append(modifiedLogEntry)
-            saveAsJSON()
+            // If `log` is UI-related or @MainActor-marked, ensure it's done on the main thread
+            DispatchQueue.main.async {
+                log.append(modifiedLogEntry)
+                saveAsJSON()
+            }
         }
     }
 

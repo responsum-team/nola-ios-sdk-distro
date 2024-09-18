@@ -36,7 +36,9 @@ struct ProcessLog: @preconcurrency Loggable {
                     subActionName: String,
                     message: UIMessage? = nil,
                     messages: [UIMessage]? = nil) {
-        var logEntry: LogEntryData = ["subAction": subActionName]
+
+        var logEntry: LogEntryData = ["action": action.rawValue]
+        logEntry["subAction"] = subActionName
         if let message = message {
             logEntry["message"] = message.toDictionary()
         }

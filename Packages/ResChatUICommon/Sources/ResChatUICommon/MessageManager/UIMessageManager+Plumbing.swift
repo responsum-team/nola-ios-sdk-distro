@@ -67,8 +67,16 @@ internal extension UIMessageManager {
                 $0.type == .bot &&
                 $0.isBotWaiting &&
                 !Self.messages(messages, containMessage: $0)}) {
+                
                 var refreshedMessage = existingMessage
                 refreshedMessage.update(with: matchingBotMessage)
+                
+                if existingMessage.origin == .history && matchingBotMessage.origin != .history {
+                    print("Looki here")
+                    print("Existing: \(existingMessage)")
+                    print("Existing: \(matchingBotMessage)")
+                    refreshedMessage.origin = existingMessage.origin
+                }
                 return refreshedMessage // Replace (update) the placeholder with the matching bot message
             }
             

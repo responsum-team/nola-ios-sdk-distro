@@ -244,6 +244,20 @@ public extension UIMessage {
         self.type = newMessage.type
         self.origin = newMessage.origin
         self.attributedText = newMessage.attributedText
+        if !attributexTextMatches() {
+            print("Attributed text needs refreshing")
+            print("text = `\(text)`")
+            print("attributedText.string = `\(attributedText)`")
+            self.attributedText = AttributedTextCache.shared.getAttributedText(for: timestamp,
+                                                                               messagePart: messagePart,
+                                                                               isMessageComplete: isFinished,
+                                                                               text: text)
+            print("Attributed text refreshed")
+            print("attributedText.string = `\(attributedText)`")
+        }
+        
+        
+
     }
       
     public func attributexTextMatches() -> Bool {

@@ -121,6 +121,7 @@ public extension UIMessageManager {
                 && $0.isBot == true && streamingMessage.isBot == true) {
             var refreshedMessage = $0
                refreshedMessage.update(with: streamingMessage)
+               
                return refreshedMessage
            } else {
                return $0
