@@ -18,8 +18,7 @@ let package = Package(
     dependencies: [
         .package(name: "ResChatAppearance", path: "../ResChatAppearance"),  // Add ResChatAppearance as a local package
         .package(name: "ResChatProtocols", path: "../ResChatProtocols"),   // Add ResChatProtocols as a local package
-        .package(name: "ResChatAttributedText", path: "../ResChatAttributedText"),  // Add ResChatAttributedText as a local package
-        .package(name: "ResChatUtil", path: "../ResChatUtil")  // Add ResChatUtil as a local package//
+        .package(name: "ResChatAttributedText", path: "../ResChatAttributedText")  // Add ResChatAttributedText as a local package
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -29,8 +28,7 @@ let package = Package(
             dependencies: [
                 "ResChatAppearance",  // Specify ResChatAppearance as a dependency
                 "ResChatProtocols",   // Specify ResChatProtocols as a dependency
-                "ResChatAttributedText",  // Specify ResChatAttributedText as a dependency
-                "ResChatUtil"  // Specify ResChatUtil as a dependency
+                "ResChatAttributedText"  // Specify ResChatAttributedText as a dependency
             ]),
         .testTarget(
             name: "ResChatUICommonTests",

@@ -252,11 +252,11 @@ public extension UIMessage {
         }
     }
       
-    public func attributexTextMatches() -> Bool {
+    func attributexTextMatches() -> Bool {
         self.attributedText.string.isEqualIgnoringWhitespaceAndNewlines(to: text)
     }
     
-    public mutating func updateAttributedTextInNeeded() {
+    mutating func updateAttributedTextInNeeded() {
         if !attributexTextMatches() {
             self.attributedText = AttributedTextCache.shared.getAttributedText(for: timestamp,
                                                                                messagePart: messagePart,

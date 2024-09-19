@@ -9,6 +9,8 @@ import Foundation
 
 public typealias LogEntryData = [String: Any]
 
+public typealias LogEntry = [String: Any]
+
 // Wrapper around [String: Any] to make it Sendable
 public struct SendableLogEntry: @unchecked Sendable {
     var data: LogEntryData

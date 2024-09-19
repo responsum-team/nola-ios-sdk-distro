@@ -205,6 +205,11 @@ struct TrafficLog {
         
         if Self.active {
             print("\(Self.logPrefix): OnResponse, `\(named)`")
+            if named == ResChatSocket.SocketEventKey.streamMessage.rawValue
+                || named == ResChatSocket.SocketEventKey.updateHistoryItem.rawValue
+                || named == ResChatSocket.SocketEventKey.sendHistorySnapshot.rawValue {
+                Self.printPrettyJSON(from: data)
+            }
         }
         
         logEntry["data"] = data
@@ -218,6 +223,26 @@ struct TrafficLog {
             return eventName
         } else {
             return nil
+        }
+    }
+    
+
+    static func printPrettyJSON(from array: [Any]) {
+        // Ensure the array is a valid JSON object
+        guard JSONSerialization.isValidJSONObject(array) else {
+            return
+        }
+        
+        do {
+            // Serialize the array into pretty-printed JSON data
+            let jsonData = try JSONSerialization.data(withJSONObject: array, options: .prettyPrinted)
+            
+            // Convert the JSON data to a string
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                print("Pretty-Printed JSON Array: \n\(jsonString)")
+            }
+        } catch {
+            print("Error serializing array to JSON: \(error)")
         }
     }
 }

@@ -71,23 +71,23 @@ public extension UIMessageManager {
     func processHistoryMessages(_ receivedMessages: [UIMessage]) {
         var currentMessages = _uiMessages
         
-        ProcessLog.log(action: .processHistoryMessages, subActionName: "01. start", messages: currentMessages)
+//        ProcessLog.shared.log(action: .processHistoryMessages, subActionName: "01. start", messages: currentMessages)
         
         // handle "P: [User]" case -> replace my `P: [User]` with `[User]`, or delete my user placeholder
         currentMessages = Self.replaceUserPlaceholders(in: currentMessages, with: receivedMessages)
         
-        ProcessLog.log(action: .processHistoryMessages, subActionName: "02. replaceUserPlaceholders", messages: currentMessages)
+//        ProcessLog.shared.log(action: .processHistoryMessages, subActionName: "02. replaceUserPlaceholders", messages: currentMessages)
         
         // handle "P [Bot]" case -> replace my `P: [Bot]` with the received (probably Dummy "...") bot, or delete my bot placeholder
         currentMessages = Self.replaceBotPlaceholders(in: currentMessages, with: receivedMessages)
         
-        ProcessLog.log(action: .processHistoryMessages, subActionName: "03. replaceBotPlaceholders", messages: currentMessages)
+//        ProcessLog.shared.log(action: .processHistoryMessages, subActionName: "03. replaceBotPlaceholders", messages: currentMessages)
         
         // Bot is Typing remains in the tableview, this should fix it
         // delete placeholders if needed
         currentMessages = currentMessages.filter { !$0.isPlaceholder }
         
-        ProcessLog.log(action: .processHistoryMessages, subActionName: "04. filter {!$0.isPlaceholder}", messages: currentMessages)
+//        ProcessLog.shared.log(action: .processHistoryMessages, subActionName: "04. filter {!$0.isPlaceholder}", messages: currentMessages)
         
         // merge both arrays
         let mergedMessages = Array(Set(currentMessages + receivedMessages))
@@ -95,7 +95,7 @@ public extension UIMessageManager {
         // sort messages by date
         currentMessages = Self.sortMessagesByDateAscending(messages: mergedMessages)
         
-        ProcessLog.log(action: .processHistoryMessages, subActionName: "05. merge & sort", messages: currentMessages)
+//        ProcessLog.shared.log(action: .processHistoryMessages, subActionName: "05. merge & sort", messages: currentMessages)
         
         updateMessages(currentMessages)
         callUpdateHandler()
@@ -107,12 +107,12 @@ public extension UIMessageManager {
         }
         var currentMessages = _uiMessages
         
-        ProcessLog.log(action: .processStreamingMessage, subActionName: "01. start", message: streamingMessage, messages: currentMessages)
+//        ProcessLog.shared.log(action: .processStreamingMessage, subActionName: "01. start", message: streamingMessage, messages: currentMessages)
         
         // delete placeholders if needed
         currentMessages = currentMessages.filter { !$0.isPlaceholder }
         
-        ProcessLog.log(action: .processStreamingMessage, subActionName: "02. filter {!$0.isPlaceholder}", messages: currentMessages)
+//        ProcessLog.shared.log(action: .processStreamingMessage, subActionName: "02. filter {!$0.isPlaceholder}", messages: currentMessages)
         
         // update Bot with Bot/part
         currentMessages = currentMessages.map {
@@ -128,7 +128,7 @@ public extension UIMessageManager {
            }
         }
         
-        ProcessLog.log(action: .processStreamingMessage, subActionName: "03. update Bot with Bot/part", messages: currentMessages)
+//        ProcessLog.shared.log(action: .processStreamingMessage, subActionName: "03. update Bot with Bot/part", messages: currentMessages)
         
         updateMessages(currentMessages)
         callUpdateHandler()
@@ -137,12 +137,12 @@ public extension UIMessageManager {
     func processUpdatedMessage(_ updatedMessage: UIMessage) {
         var currentMessages = _uiMessages
         
-        ProcessLog.log(action: .processUpdatedMessage, subActionName: "01. start", message: updatedMessage, messages: currentMessages)
+//        ProcessLog.shared.log(action: .processUpdatedMessage, subActionName: "01. start", message: updatedMessage, messages: currentMessages)
         
         // delete placeholders if needed
         currentMessages = currentMessages.filter { !$0.isPlaceholder }
         
-        ProcessLog.log(action: .processUpdatedMessage, subActionName: "02. filter {!$0.isPlaceholder}", messages: currentMessages)
+//        ProcessLog.shared.log(action: .processUpdatedMessage, subActionName: "02. filter {!$0.isPlaceholder}", messages: currentMessages)
 
         // Just update message in question, whether bot or user, but must be of the same type
         currentMessages = currentMessages.map {
@@ -157,7 +157,7 @@ public extension UIMessageManager {
            
         }
         
-        ProcessLog.log(action: .processUpdatedMessage, subActionName: "03. update with update item", messages: currentMessages)
+//        ProcessLog.shared.log(action: .processUpdatedMessage, subActionName: "03. update with update item", messages: currentMessages)
         
         updateMessages(currentMessages)
         callUpdateHandler()
