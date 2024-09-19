@@ -82,8 +82,8 @@ struct UILog {
     }
     
     static func append(_ logEntry: LogEntry) {
+        guard active else { return }
         logQueue.async(flags: .barrier) {
-            guard active else { return }
             // Create a mutable copy of the log entry and assign the index
             var modifiedLogEntry = logEntry
             modifiedLogEntry["index"] = log.count // Assign the index as the current size of the log

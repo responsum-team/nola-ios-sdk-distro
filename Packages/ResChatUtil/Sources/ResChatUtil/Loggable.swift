@@ -139,8 +139,8 @@ public extension Loggable {
 public extension Loggable {
     
     static func append(_ logEntry: LogEntry) {
+        guard active else { return }
         logQueue.async(flags: .barrier) {
-            guard active else { return }
 
             var modifiedLogEntry = logEntry
             modifiedLogEntry["index"] = log.count
