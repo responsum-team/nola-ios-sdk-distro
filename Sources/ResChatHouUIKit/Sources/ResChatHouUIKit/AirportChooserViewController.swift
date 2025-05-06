@@ -23,7 +23,7 @@ public class AirportChooserViewController: PlatformViewController {
     let languagePicker = UIPickerView()
     let chooseButton = UIButton(type: .system)
     
-//    public weak var delegate: AirportAndLanguageChooserDelegate?
+    public weak var delegate: AirportAndLanguageChooserDelegate?
     
     let airports: [Airport]
     let languages: [Language]
