@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F968B192DCA20DA00C8513E /* NolaChat in Frameworks */ = {isa = PBXBuildFile; productRef = 2F968B182DCA20DA00C8513E /* NolaChat */; };
+		2F968B1C2DCA37C400C8513E /* NolaChat in Frameworks */ = {isa = PBXBuildFile; productRef = 2F968B1B2DCA37C400C8513E /* NolaChat */; };
 		A957F1032C9739F7001C6A73 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A957F1022C9739F7001C6A73 /* AppDelegate.swift */; };
 		A957F10C2C9739F9001C6A73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A957F10B2C9739F9001C6A73 /* Assets.xcassets */; };
 		A957F10F2C9739F9001C6A73 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = A957F10E2C9739F9001C6A73 /* Base */; };
@@ -14,10 +16,7 @@
 		A957F1242C9739F9001C6A73 /* ResChatIOSAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A957F1232C9739F9001C6A73 /* ResChatIOSAppUITests.swift */; };
 		A957F1262C9739F9001C6A73 /* ResChatIOSAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A957F1252C9739F9001C6A73 /* ResChatIOSAppUITestsLaunchTests.swift */; };
 		A957F1382C974DEE001C6A73 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A957F1372C974DEE001C6A73 /* Localizable.xcstrings */; };
-		A9A042C62C977352004682C8 /* ResChatHouUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = A9A042C52C977352004682C8 /* ResChatHouUIKit */; };
 		A9A042CD2C97C8D4004682C8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A9A042CC2C97C8D4004682C8 /* README.md */; };
-		A9EB4BAE2C986D0D001C0ED7 /* reschatproxy in Frameworks */ = {isa = PBXBuildFile; productRef = A9EB4BAD2C986D0D001C0ED7 /* reschatproxy */; };
-		A9EB4BB02C986D1A001C0ED7 /* reschatui in Frameworks */ = {isa = PBXBuildFile; productRef = A9EB4BAF2C986D1A001C0ED7 /* reschatui */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,9 +56,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9EB4BAE2C986D0D001C0ED7 /* reschatproxy in Frameworks */,
-				A9EB4BB02C986D1A001C0ED7 /* reschatui in Frameworks */,
-				A9A042C62C977352004682C8 /* ResChatHouUIKit in Frameworks */,
+				2F968B1C2DCA37C400C8513E /* NolaChat in Frameworks */,
+				2F968B192DCA20DA00C8513E /* NolaChat in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,9 +153,8 @@
 			);
 			name = ResChatIOSApp;
 			packageProductDependencies = (
-				A9A042C52C977352004682C8 /* ResChatHouUIKit */,
-				A9EB4BAD2C986D0D001C0ED7 /* reschatproxy */,
-				A9EB4BAF2C986D1A001C0ED7 /* reschatui */,
+				2F968B182DCA20DA00C8513E /* NolaChat */,
+				2F968B1B2DCA37C400C8513E /* NolaChat */,
 			);
 			productName = ResChatIOSApp;
 			productReference = A957F0FF2C9739F7001C6A73 /* ResChatIOSApp.app */;
@@ -232,9 +229,7 @@
 			);
 			mainGroup = A957F0F62C9739F7001C6A73;
 			packageReferences = (
-				A9EB4BAA2C986C40001C0ED7 /* XCLocalSwiftPackageReference "../Packages/reschatproxy" */,
-				A9EB4BAB2C986C55001C0ED7 /* XCLocalSwiftPackageReference "../Packages/reschatui" */,
-				A9EB4BAC2C986C66001C0ED7 /* XCLocalSwiftPackageReference "../Packages/ResChatHouUIKit" */,
+				2F968B1A2DCA37C400C8513E /* XCLocalSwiftPackageReference "../../nola-ios-sdk-distro" */,
 			);
 			productRefGroup = A957F1002C9739F7001C6A73 /* Products */;
 			projectDirPath = "";
@@ -461,7 +456,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -489,7 +484,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -621,34 +616,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		A9EB4BAA2C986C40001C0ED7 /* XCLocalSwiftPackageReference "../Packages/reschatproxy" */ = {
+		2F968B1A2DCA37C400C8513E /* XCLocalSwiftPackageReference "../../nola-ios-sdk-distro" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Packages/reschatproxy;
-		};
-		A9EB4BAB2C986C55001C0ED7 /* XCLocalSwiftPackageReference "../Packages/reschatui" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Packages/reschatui;
-		};
-		A9EB4BAC2C986C66001C0ED7 /* XCLocalSwiftPackageReference "../Packages/ResChatHouUIKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Packages/ResChatHouUIKit;
+			relativePath = "../../nola-ios-sdk-distro";
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A9A042C52C977352004682C8 /* ResChatHouUIKit */ = {
+		2F968B182DCA20DA00C8513E /* NolaChat */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = ResChatHouUIKit;
+			productName = NolaChat;
 		};
-		A9EB4BAD2C986D0D001C0ED7 /* reschatproxy */ = {
+		2F968B1B2DCA37C400C8513E /* NolaChat */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A9EB4BAA2C986C40001C0ED7 /* XCLocalSwiftPackageReference "../Packages/reschatproxy" */;
-			productName = reschatproxy;
-		};
-		A9EB4BAF2C986D1A001C0ED7 /* reschatui */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A9EB4BAB2C986C55001C0ED7 /* XCLocalSwiftPackageReference "../Packages/reschatui" */;
-			productName = reschatui;
+			productName = NolaChat;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

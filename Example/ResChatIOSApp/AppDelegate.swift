@@ -6,13 +6,7 @@
 //
 
 import UIKit
-import ResChatHouCommon
-import ResChatHouUIKit
-
-import reschatui
-import reschatSocket
-import reschatproxy
-import ResChatProtocols
+import NolaChat
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -62,7 +56,7 @@ private extension AppDelegate {
 extension AppDelegate: AirportAndLanguageChooserDelegate {
     func didSelectAirport(_ airport: ResChatHouCommon.Airport,
                           language: ResChatHouCommon.Language,
-                          socket: reschatSocket.ResChatSocket,
+                          socket: ResChatSocket,
                           chatViewController: any ResChatProtocols.PlatformChatViewController,
                           chooserViewController: ResChatProtocols.PlatformAirportViewController) {
         
@@ -72,9 +66,9 @@ extension AppDelegate: AirportAndLanguageChooserDelegate {
         
         print("Airport selected: \(airport.name), Language selected: \(language.rawValue)")
         
-        guard let uiProvidingController = chatViewController as? reschatui.ChatViewController else { return }
+        guard let uiProvidingController = chatViewController as? ChatViewController else { return }
         
-        let proxy = reschatproxy.SocketProxy(socketProviding: socket,
+        let proxy = SocketProxy(socketProviding: socket,
                                              uiProviding: uiProvidingController)
         chatViewController.proxy = proxy
         
