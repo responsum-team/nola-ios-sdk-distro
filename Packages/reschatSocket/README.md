@@ -1,4 +1,0 @@
-# reschatSocket
-
-Responsum Chat Socket
-
