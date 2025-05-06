@@ -9,7 +9,7 @@ let package = Package(
         .macOS(.v14),
     ],
     products: [
-        .singleTargetLibrary("NolaChatSDK"),
+        .singleTargetLibrary("NolaChat"),
     ],
     dependencies: [
         .package(url: "https://github.com/iwasrobbed/Down.git", from: "0.9.4"),
@@ -143,7 +143,7 @@ let package = Package(
         )
         
         let chatTarget = Target.target(
-            name: "NolaChatSDK",
+            name: "NolaChat",
             dependencies: [
                 "ResChatAppearance",
                 "ResChatMessageManager",
