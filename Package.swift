@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/iwasrobbed/Down.git", from: "0.9.4"),
-        .package(url: "https://github.com/socketio/socket.io-client-swift.git", from: "16.0.1")
+        .package(url: "https://github.com/socketio/socket.io-client-swift.git", from: "16.0.1"),
     ],
     targets: {
         
