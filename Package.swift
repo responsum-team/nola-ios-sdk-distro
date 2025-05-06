@@ -13,7 +13,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/iwasrobbed/Down.git", from: "0.9.4"),
-        .package(url: "https://github.com/socketio/socket.io-client-swift.git", from: "16.0.1")
+        .package(url: "https://github.com/socketio/socket.io-client-swift.git", from: "16.0.1"),
+        .package(url: "https://github.com/responsum-team/nola-ios-sdk-distro.git", from: "1.0.0")
     ],
     targets: {
         
@@ -153,6 +154,7 @@ let package = Package(
                 "ResChatProtocols",
                 "ResChatSocket",
                 "ResChatProxy",
+                .product(name: "NolaChat", package: "nola-ios-sdk-distro"),
                 .target(name: "ResChatHouUIKit", condition: .when(platforms: [.iOS])),
                 .target(name: "ResChatUIKit", condition: .when(platforms: [.iOS])),
                 .target(name: "ResChatHouAppKit", condition: .when(platforms: [.macOS])),
