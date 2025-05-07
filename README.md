@@ -29,7 +29,7 @@ SDK for embedding the Responsum ChatBot in your iOS apps & macOS apps. Note: mac
 
 ```swift
 // In Xcode: File → Add Packages…
-https://github.com/your-org/nola-sdk.git
+https://github.com/responsum-team/nola-ios-sdk-distro.git
 ```
 
 ---
@@ -37,7 +37,7 @@ https://github.com/your-org/nola-sdk.git
 ## Quick Start
 
 ```swift
-import NolaSDK
+import NolaChat
 // or the umbrella package name you chose
 
 // 1. Present the chat interface from any UIViewController/NSViewController:
