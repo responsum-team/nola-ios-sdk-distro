@@ -39,7 +39,11 @@ class SocketAlertController {
             rotateImageView(imageView) // Start the rotation animation
         case .error2:
             imageView.image = UIImage(systemName: "ev.plug.ac.gb.t.fill")
-            imageView.tintColor = .systemCyan
+            if #available(iOS 15.0, *) {
+                imageView.tintColor = .systemCyan
+            } else {
+                imageView.tintColor = UIColor(red: 50/255, green: 173/255, blue: 230/255, alpha: 1.0)
+            }
         case .error3:
             imageView.image = UIImage(systemName: "xmark.circle.fill")
             imageView.tintColor = .systemRed

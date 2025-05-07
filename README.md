@@ -1,103 +1,168 @@
-# ResChatSocketSDK
+# Nola SDK
 
-SDK for Responsum ChatBot
+SDK for embedding the Responsum ChatBot in your iOS apps & macOS apps. Note: macOS SDK in beta testing.
 
-## Usage
+> **Latest version:** 1.1.3
 
-### Airport Chooser - starting point
+---
 
-- `AirportChooserViewController` is a part of `ResChatHouUIKit`
+## Features
 
-Here's the example of creating it:
+- **One-line integration** — present the full chat UI with a single call.  
+- **WebSocket-powered chat** — real-time, bidirectional messaging via `ResChatSocket`.  
+- **UI framework-agnostic** — works out of the box with UIKit, AppKit, SwiftUI, etc., via `SocketProxy`.  
+- **Fully themable** — swap out default colors, icons, fonts, and navigation bar.
 
-```swift
-    func makeChooserController() -> UIViewController {
-        let chooserVC = AirportChooserViewController.make()
-        chooserVC.delegate = self
-        let navigationController = UINavigationController()
-        navigationController.viewControllers = [chooserVC]
-        return navigationController
-    }
-```
+---
 
-- Upon selecting the airport and the language, it instantiates a new socket with pre-populated connection parameters for the airport.
-- It also instantiates a UIKit view controller, ChatViewController, for the chosen language (to initialize the speech recognizer with that language).
+## Requirements
 
-It provides a delegate that returns all the necessary properties.
+- Xcode 16+  
+- Swift 5.6+  
+- iOS 14+/macOS 11+  
 
-You should then create an instance of SocketProxy from the reschatproxy package.
-(The idea behind the proxy is to allow the socket to be used with different UI frameworks, such as AppKit or SwiftUI.)
+---
 
-### Putting it all together
+## Installation
 
-here's the example:
+### Swift Package Manager
 
 ```swift
-    func didSelectAirport(_ airport: ResChatHouCommon.Airport,
-                          language: ResChatHouCommon.Language,
-                          socket: reschatSocket.ResChatSocket,
-                          chatViewController: any ResChatProtocols.PlatformChatViewController,
-                          chooserViewController: ResChatProtocols.PlatformAirportViewController) {
-        
-        
-        // INFO: You can set current location if you want to!!!
-        ResChatSocket.location = nil
-        
-        print("Airport selected: \(airport.name), Language selected: \(language.rawValue)")
-        
-        guard let uiProvidingController = chatViewController as? reschatui.ChatViewController else { return }
-        
-        let proxy = reschatproxy.SocketProxy(socketProviding: socket,
-                                             uiProviding: uiProvidingController)
-        chatViewController.proxy = proxy
-        
-        self.socket = socket
-        
-        if let airportChooserVC = chooserViewController as? ResChatHouUIKit.AirportChooserViewController {
-            airportChooserVC.navigationController?.pushViewController(uiProvidingController, animated: true)
-        }
-    }
+// In Xcode: File → Add Packages…
+https://github.com/your-org/nola-sdk.git
 ```
 
-SocketProxy is unaware of the UI framework that uses it and is designed to support both SwiftUI and AppKit.
+---
 
-### Socket:
-
-- It is advisable to instantiate the socket separately, as shown in this example (in AppDelegate or another reliable host).
+## Quick Start
 
 ```swift
-    var socket: ResChatSocket? {
-        didSet {
-            let socketValueHasChanged = (oldValue !== socket)
-            guard socketValueHasChanged else { return }
+import NolaSDK
+// or the umbrella package name you chose
 
-            // disconnect old socket if it has changed
-            if let oldSocket = oldValue {
-                stopSocket(socket: oldSocket)
-            }
+// 1. Present the chat interface from any UIViewController/NSViewController:
+ChatManager.shared.presentResChatInterface(from: self)
 
-            // connect new socket if it is set
-            if let newSocket = socket {
-                startSocket(socket: newSocket)
-            }
-        }
-    }
+// 2. Later, when you're done:
+ChatManager.shared.cleanup()
 ```
 
-## Customisations
+That’s it! The SDK handles initial configuration selection, socket lifecycle, UI presentation, and theming.
 
-### Parameters (URL, path, name, id):
+---
 
-- In package `ResChatHouCommon`:
-  - file `AirportConstants.swift`
+## Customization & Theming
 
-### Colors & Images:
+All appearance is driven via three “provider” protocols in `ResChatAppearance`. The SDK ships with default implementations under `ResChatAppearance/DefaultImplements`:
 
-- In package `ResChatHouCommon`, files:
-  - `HOU+UIProviding.swift`
-  - `IAH+UIProviding.swift`
+1. **DefaultColorProvider** (`ColorProviding`)  
+2. **DefaultImageProvider** (`ImageProviding`)  
+3. **DefaultNavigationBarProvider** (`NavigationBarProviding`)
 
-### Languages:
+To override:
 
-- In package `ResChatHouCommon`, file:
-  - `Language.swift`
+```swift
+// 1. Conform your own providers:
+struct MyColors: ColorProviding { … }
+struct MyImages: ImageProviding { … }
+struct MyNavBar: NavigationBarProviding { … }
+
+// 2. Register them before presenting:
+ResChatAppearance.colorProvider = MyColors()
+ResChatAppearance.imageProvider = MyImages()
+ResChatAppearance.navigationBarProvider = MyNavBar()
+```
+
+### Example
+
+Below is a full example showing how to define and register custom theming providers before presenting the chat interface:
+
+```swift
+import NolaSDK
+import UIKit  // or AppKit on macOS
+
+// 1) Define your custom providers:
+
+struct MyColorProvider: ColorProviding {
+    public var textColor: ColorType { .red }
+    public var chatBotButtonBackground: ColorType { .green }
+    public var userButtonBackground: ColorType { .blue }
+    public var backgroundColor: ColorType { .white }
+    public var timestampTextColor: ColorType { .gray }
+    public var messageTextColor: ColorType { .black }
+    public var placeholderMessageTextColor: ColorType { .lightGray }
+    public var inputBorderColor: ColorType { .darkGray }
+    public var shadowColor: ColorType { .black.withAlphaComponent(0.3) }
+    public var sendIconColor: ColorType { .purple }
+    
+    public init() {}
+}
+
+struct MyImageProvider: ImageProviding {
+    public var chatBotIcon: ImageType? { MyImageProvider.systemImage(named: "star.fill") }
+    public var userIcon: ImageType?    { MyImageProvider.systemImage(named: "heart.fill") }
+    public var sendIcon: ImageType?    { MyImageProvider.systemImage(named: "paperplane.fill") }
+    public var clearAllIcon: ImageType?{ MyImageProvider.systemImage(named: "trash.fill") }
+    
+    public init() {}
+}
+
+struct MyNavBarProvider: NavigationBarProviding {
+    public var backgroundColor: ColorType { MyColorProvider().chatBotButtonBackground }
+    public var textColor: ColorType       { .white }
+    public var rightButtonImage: ImageType? { MyImageProvider().clearAllIcon }
+    public var backButtonImage: ImageType?  { MyImageProvider().chatBotIcon }
+    public var title: String               { "My Custom HelpBot" }
+    public var font: FontType {
+        #if os(iOS)
+        return .preferredFont(forTextStyle: .headline)
+        #else
+        return .systemFont(ofSize: 18, weight: .semibold)
+        #endif
+    }
+    
+    public init() {}
+}
+
+// 2) Register your custom providers before presenting:
+
+func presentChat(from viewController: UIViewController) {
+    ResChatAppearance.colorProvider         = MyColorProvider()
+    ResChatAppearance.imageProvider         = MyImageProvider()
+    ResChatAppearance.navigationBarProvider = MyNavBarProvider()
+    
+    ChatManager.shared.presentResChatInterface(from: viewController)
+}
+
+// 3) Usage in your view controller:
+
+class ViewController: UIViewController {
+    @IBAction func showHelpBot(_ sender: Any) {
+        presentChat(from: self)
+    }
+}
+```
+
+---
+
+## Configuration
+ 
+- **Supported languages:** defined in `ResChatHouCommon/Language.swift`.  
+- **Default assets (colors & images):** see `HOU+UIProviding.swift`, `IAH+UIProviding.swift`.
+
+---
+
+## Changelog
+
+### v1.1.3
+- Minimum iOS deployment version iOS 14
+
+---
+
+### v1.1.2 
+- Bugfix: SPM remote handling
+- Performance improvements in socket reconnection  
+
+---
+
+Enjoy building with Nola SDK! Pull requests and feedback are always welcome.
