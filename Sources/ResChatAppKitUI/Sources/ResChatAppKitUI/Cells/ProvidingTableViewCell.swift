@@ -12,8 +12,8 @@ import ResChatUICommon
 open class ProvidingTableViewCell: NSTableCellView {
     // MARK: - Class Properties
     open class var identifier: String { "ProvidingTableViewCell" }
-    open class var imageProvider: ImageProviding { ResChatAppearance.DefaultImageProvider() }
-    open class var colorProvider: ColorProviding { ResChatAppearance.DefaultColorProvider() }
+    open class var imageProvider: ImageProviding { ChatAppearance.images }
+    open class var colorProvider: ColorProviding { ChatAppearance.colors }
 }
 
 // Protocol to handle cell configuration

@@ -36,7 +36,7 @@ public class ChatManager: NSObject {
         super.init()
     }
     
-    public func presentResChatInterface(from viewController: PlatformViewController) {
+    public func start(from viewController: PlatformViewController) {
         guard presentedViewController == nil else {
             print("ResChat interface is already presented.")
             return

@@ -301,8 +301,10 @@ open class ChatViewController: PlatformViewController {
         UILog.shared.deleteLog()
         ResChatMessageManager.ProcessLog.shared.deleteLog()
         
-        self.imageProvider = imageProvider ?? ResChatAppearance.DefaultImageProvider()
-        self.colorProvider = colorProvider ?? ResChatAppearance.DefaultColorProvider()
+        self.imageProvider = imageProvider ?? ChatAppearance.imageProvider
+        self.colorProvider = colorProvider ?? ChatAppearance.colors
+        self.navigationBarProvider = ChatAppearance.navigationBar
+        
         self.speechRecognizer = speechRecognizer
         super.init(nibName: nil, bundle: nil)
     }

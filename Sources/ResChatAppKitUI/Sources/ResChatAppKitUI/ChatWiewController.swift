@@ -125,8 +125,9 @@ open class ChatViewController: PlatformViewController {
     public init(imageProvider: ImageProviding? = nil,
                 colorProvider: ColorProviding? = nil,
                 speechRecognizer: SpeechRecognizerProtocol? = nil) {
-        self.imageProvider = imageProvider ?? ResChatAppearance.DefaultImageProvider()
-        self.colorProvider = colorProvider ?? ResChatAppearance.DefaultColorProvider()
+        self.imageProvider = imageProvider ?? ChatAppearance.images
+        self.colorProvider = colorProvider ?? ChatAppearance.colors
+        
         self.speechRecognizer = speechRecognizer
         super.init(nibName: nil, bundle: nil)
     }
