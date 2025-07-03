@@ -121,7 +121,7 @@ open class ResChatSocket {
     
     // MARK: Class Properties -
     
-    open class var urlString: String { "https://nola-chat-dev3.responsum.ai" }
+    open class var urlString: String { "https://nola-chat.responsum.ai" }
     open class var urlPathString: String { "/ws-public/socket.io/" }
     open class var appId: String { "has" }
     open class var airportId: String { "IAH" }
@@ -161,13 +161,14 @@ open class ResChatSocket {
     // MARK: Init -
 
     required public init() {
-        let savedConnectionId = Self.retrieveOrGenerateConnectionId()
+        let metadata = Self.metadata
+        let savedConnectionId = Self.retrieveOrGenerateConnectionId(for: metadata)
         self.connectionId = savedConnectionId
         
-        self.connectParams =  [
+        self.connectParams = [
             SocketKey.connectionId.rawValue: savedConnectionId,
             SocketKey.appId.rawValue: Self.appId,
-            SocketKey.metadata.rawValue: Self.metadata
+            SocketKey.metadata.rawValue: metadata
         ]
         setupSocket()
         setupSocketEvents()
@@ -180,11 +181,6 @@ open class ResChatSocket {
     // MARK: Setup -
 
     private func setupSocket() {
-        guard Self.retrieveConnectionId() != nil else {
-            print("Cannot setup socket: connectionId is missing")
-            return
-        }
-        
         manager = SocketIO.SocketManager(socketURL: socketURL, config: [
             .log(false),
             .compress,
@@ -248,25 +244,36 @@ public extension ResChatSocket {
     }
 }
 
-// MARK: ConnectionId -
+// MARK: ConnectionId per Metadata -
 
 private extension ResChatSocket {
     
-    static func generateAndSaveConnectionId() -> String {
+    static func stableKey(from metadata: [String: Any]) -> String {
+        metadata
+            .sorted { $0.key < $1.key }
+            .map { "\($0.key)=\($0.value)" }
+            .joined(separator: "&")
+            .addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? "default"
+    }
+
+    static func generateAndSaveConnectionId(for metadata: [String: Any]) -> String {
+        let key = stableKey(from: metadata)
         let connectionId = "mobile_iOS_\(UUID().uuidString)"
-        UserDefaults.standard.set(connectionId, forKey: "connectionId")
+        UserDefaults.standard.set(connectionId, forKey: "connectionId_\(key)")
         return connectionId
     }
 
-    static func retrieveConnectionId() -> String? {
-        return UserDefaults.standard.string(forKey: "connectionId")
+    static func retrieveConnectionId(for metadata: [String: Any]) -> String? {
+        let key = stableKey(from: metadata)
+        return UserDefaults.standard.string(forKey: "connectionId_\(key)")
     }
 
-    static func deleteConnectionId() {
-        UserDefaults.standard.removeObject(forKey: "connectionId")
+    static func deleteConnectionId(for metadata: [String: Any]) {
+        let key = stableKey(from: metadata)
+        UserDefaults.standard.removeObject(forKey: "connectionId_\(key)")
     }
-    
-    static func retrieveOrGenerateConnectionId() -> String {
-         Self.retrieveConnectionId() ?? Self.generateAndSaveConnectionId()
+
+    static func retrieveOrGenerateConnectionId(for metadata: [String: Any]) -> String {
+        retrieveConnectionId(for: metadata) ?? generateAndSaveConnectionId(for: metadata)
     }
 }
