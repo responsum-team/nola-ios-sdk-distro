@@ -2,7 +2,7 @@
 
 SDK for embedding the Responsum ChatBot in your iOS apps & macOS apps. Note: macOS SDK in alpha testing.
 
-> **Latest version:** 1.1.4
+> **Latest version:** 1.1.5
 
 ---
 
@@ -124,6 +124,11 @@ struct HOUNavigationBarProvider: NavigationBarProviding {
 ---
 
 ## Changelog
+
+### v1.1.5
+- Fix issue with airport welcome message.
+
+---
 
 ### v1.1.4
 - Renaming presentResChatInterface() method into start()
