@@ -26,11 +26,11 @@ public struct AirportConstants {
 }
 
 public extension AirportConstants {
-    static let iah = AirportConstants(urlString: "https://nola-chat-dev3.responsum.ai",
+    static let iah = AirportConstants(urlString: "https://nola-chat.responsum.ai",
                                       pathString: "/ws-public/socket.io/",
                                       name: "George Bush Intercontinental Airport",
                                       id: "IAH")
-    static let hou = AirportConstants(urlString: "https://nola-chat-dev3.responsum.ai",
+    static let hou = AirportConstants(urlString: "https://nola-chat.responsum.ai",
                                       pathString: "/ws-public/socket.io/",
                                       name: "William P. Hobby Airport",
                                       id: "HOU")
