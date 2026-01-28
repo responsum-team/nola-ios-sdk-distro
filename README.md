@@ -120,10 +120,13 @@ struct HOUNavigationBarProvider: NavigationBarProviding {
  
 - **Supported languages:** defined in ResChatHouCommon/Language.swift.  
 - **Default assets (colors & images):** see HOU+UIProviding.swift, IAH+UIProviding.swift.
+- **Default Time Format:** use ChatManager.shared.setTimeDateFormat("dd.MM.YYYY HH:mm")
 
 ---
 
 ## Changelog
+### v1.1.6
+- Adding option to define time format on the SDK level.
 
 ### v1.1.5
 - Fix issue with airport welcome message.
