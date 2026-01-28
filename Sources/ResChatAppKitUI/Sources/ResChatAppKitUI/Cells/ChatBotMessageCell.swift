@@ -33,7 +33,7 @@ open class ChatBotMessageCell: ProvidingTableViewCell {
         var checkedMessage = message
         checkedMessage.updateAttributedTextInNeeded()
         
-        timestampLabel.stringValue = checkedMessage.date.description
+        timestampLabel.stringValue = checkedMessage.date.messageDateForm()
 //        configureForDebugging(with: checkedMessage.type)
         
         resetMessageLabelAnimation()

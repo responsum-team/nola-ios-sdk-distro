@@ -6,6 +6,7 @@
 #if os(iOS)
 import UIKit
 import ResChatUICommon
+import ResChatUtil
 
 extension ChatBotMessageCell {
     public func configure(with message: UIMessage) {
@@ -13,7 +14,7 @@ extension ChatBotMessageCell {
         checkedMessage.updateAttributedTextInNeeded()
         
         // Update timestamp and setup debugging configuration
-        timestampLabel.text = checkedMessage.date.description
+        timestampLabel.text = checkedMessage.date.messageDateForm()
         configureForDebugging(with: checkedMessage.type)
         
         // Reset any ongoing animations on the messageLabel

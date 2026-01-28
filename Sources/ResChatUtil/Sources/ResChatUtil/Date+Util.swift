@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ResChatAppearance
 
 public extension Date {
     static func niceDateFrom(_ date: Date?) -> String {
@@ -19,5 +20,11 @@ public extension Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy. HH:mm:ss"
         return dateFormatter.string(from: Date())
+    }
+    
+    func messageDateForm() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = ChatConstants.timeDateFormat
+        return dateFormatter.string(from: self)
     }
 }

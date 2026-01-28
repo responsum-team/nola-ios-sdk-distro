@@ -63,6 +63,10 @@ public class ChatManager: NSObject {
         
     #endif
     }
+    
+    public func setTimeDateFormat(_ format: String) {
+        ChatConstants.setTimeDateFormat(format)
+    }
 
     public func cleanup() {
         stopSocket()

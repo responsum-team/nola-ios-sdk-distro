@@ -33,8 +33,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = makeChooserController()
-        window?.rootViewController = viewController
+        
+        let rootVC = EmptyViewController()
+        let navigationController = UINavigationController(rootViewController: rootVC)
+        
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
         return true
     }
@@ -108,5 +111,14 @@ extension AppDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         socket?.disconnect() // Clean up the socket when the app is terminated
+    }
+}
+
+final class EmptyViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        ChatManager.shared.start(from: self)
+        ChatManager.shared.setTimeDateFormat("dd.MM.YYYY HH:mm")
     }
 }

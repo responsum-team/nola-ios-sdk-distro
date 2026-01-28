@@ -47,6 +47,7 @@ let package = Package(
         let socketTarget = Target.target(
             name: "ResChatSocket",
             dependencies: [
+                "ResChatAppearance",
                 .product(name: "SocketIO", package: "socket.io-client-swift")
             ]
         )
