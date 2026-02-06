@@ -121,7 +121,7 @@ struct HOUNavigationBarProvider: NavigationBarProviding {
 - **Supported languages:** defined in ResChatHouCommon/Language.swift.  
 - **Default assets (colors & images):** see HOU+UIProviding.swift, IAH+UIProviding.swift.
 - **Default Time Format:** use ChatManager.shared.setTimeDateFormat("dd.MM.YYYY HH:mm")
-- **Default Time Zone:** use ChatManager.shared.setTimeZone("America/Chicago")
+- **Default Time Zone:** use "ChatManager.shared.setTimeZone("America/Chicago")" or use "ChatManager.shared.setTimeZone(TimeZone(identifier: "America/Chicago") ?? .current)"
 
 ---
 
