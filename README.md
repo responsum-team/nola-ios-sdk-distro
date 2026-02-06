@@ -2,7 +2,7 @@
 
 SDK for embedding the Responsum ChatBot in your iOS apps & macOS apps. Note: macOS SDK in alpha testing.
 
-> **Latest version:** 1.1.5
+> **Latest version:** 1.1.7
 
 ---
 
