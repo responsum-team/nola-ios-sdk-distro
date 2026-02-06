@@ -25,6 +25,7 @@ public extension Date {
     func messageDateForm() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = ChatConstants.timeDateFormat
+        dateFormatter.timeZone = ChatConstants.timeZone
         return dateFormatter.string(from: self)
     }
 }

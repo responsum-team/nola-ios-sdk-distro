@@ -119,6 +119,7 @@ final class EmptyViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         ChatManager.shared.start(from: self)
-        ChatManager.shared.setTimeDateFormat("dd.MM.YYYY HH:mm")
+        ChatManager.shared.setTimeDateFormat("M/d/yyyy, h:mm a")
+        ChatManager.shared.setTimeZone("America/Chicago")
     }
 }

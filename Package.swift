@@ -41,7 +41,9 @@ let package = Package(
         
         let utilTarget = Target.target(
             name: "ResChatUtil",
-            dependencies: []
+            dependencies: [
+                "ResChatAppearance"
+                          ]
         )
         
         let socketTarget = Target.target(
@@ -74,7 +76,8 @@ let package = Package(
             dependencies: [
                 "ResChatAppearance",
                 "ResChatProtocols",
-                "ResChatAttributedText"
+                "ResChatAttributedText",
+                "ResChatLogging"
             ]
         )
         

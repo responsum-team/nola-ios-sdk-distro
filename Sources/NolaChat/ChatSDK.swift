@@ -67,6 +67,14 @@ public class ChatManager: NSObject {
     public func setTimeDateFormat(_ format: String) {
         ChatConstants.setTimeDateFormat(format)
     }
+    
+    public func setTimeZone(_ timeZoneId: String) {
+        ChatConstants.setTimeZoneId(timeZoneId)
+    }
+
+    public func setTimeZone(_ timeZone: TimeZone) {
+        ChatConstants.setTimeZone(timeZone)
+    }
 
     public func cleanup() {
         stopSocket()
