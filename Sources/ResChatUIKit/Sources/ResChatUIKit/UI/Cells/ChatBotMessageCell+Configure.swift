@@ -48,7 +48,7 @@ private extension ChatBotMessageCell {
         guard !isAnimatingPlaceholder else { return }
 
         let attributedText = createBotTypingAttributedText()
-        messageLabel.attributedText = attributedText
+        messageLabel.attributedText = attributedText.withForegroundColor(Self.colorProvider.messageTextColor)
         
         // Animate placeholder
         UIView.animate(withDuration: 0.5, delay: 0, options: [.repeat, .autoreverse]) {
@@ -69,15 +69,15 @@ private extension ChatBotMessageCell {
 //            print("WARNING: Message text does not match attributed text")
             var updatedMessage = message
             updatedMessage.updateAttributedTextInNeeded()
-            messageLabel.attributedText = updatedMessage.attributedText
+            messageLabel.attributedText = updatedMessage.attributedText.withForegroundColor(Self.colorProvider.messageTextColor)
         } else {
-            messageLabel.attributedText = message.attributedText
+            messageLabel.attributedText = message.attributedText.withForegroundColor(Self.colorProvider.messageTextColor)
         }
     }
     
     func handleEmptyBotHistory(with message: UIMessage) {
         let attributedText = createEmptyStringErrorAttributedText2()
-        messageLabel.attributedText = attributedText
+        messageLabel.attributedText = attributedText.withForegroundColor(Self.colorProvider.messageTextColor)
     }
 }
 
@@ -183,6 +183,14 @@ private extension ChatBotMessageCell {
         attributedText.append(symbolAttributedString)
 
         return attributedText
+    }
+}
+
+private extension NSAttributedString {
+    func withForegroundColor(_ color: UIColor) -> NSAttributedString {
+        let mutable = NSMutableAttributedString(attributedString: self)
+        mutable.addAttribute(.foregroundColor, value: color, range: NSRange(location: 0, length: mutable.length))
+        return mutable
     }
 }
 #endif

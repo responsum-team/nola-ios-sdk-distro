@@ -13,7 +13,7 @@ public struct AirportConstants {
     public let appId: String = "has"
     public let name: String
     public let id: String
-    public static let followSystemDarkAndLightMode = false
+    public static var followSystemDarkAndLightMode = false
     
     // MARK: Init -
     

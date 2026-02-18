@@ -118,6 +118,7 @@ final class EmptyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        AirportConstants.followSystemDarkAndLightMode = false
         ChatManager.shared.start(from: self)
         ChatManager.shared.setTimeDateFormat("M/d/yyyy, h:mm a")
         ChatManager.shared.setTimeZone("America/Chicago")

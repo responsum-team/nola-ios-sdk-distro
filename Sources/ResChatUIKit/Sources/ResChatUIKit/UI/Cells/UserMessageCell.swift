@@ -90,7 +90,16 @@ open class UserMessageCell: ProvidingTableViewCell {
     }
     
     public func configure(with message: UIMessage) {
-        messageLabel.attributedText = message.attributedText
+        let original = message.attributedText
+        let mutable = NSMutableAttributedString(attributedString: original)
+
+        mutable.addAttribute(
+            .foregroundColor,
+            value: Self.colorProvider.messageTextColor,
+            range: NSRange(location: 0, length: mutable.length)
+        )
+
+        messageLabel.attributedText = mutable
         configureForDebugging(with: message.type)
     }
 }
