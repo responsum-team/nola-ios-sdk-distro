@@ -61,6 +61,8 @@ Each file contains three provider structs that you can modify:
 
 ### ColorProviding Implementation
 
+Defining color properties for elements, based on the Airport selection.
+
 ```swift
 struct HOUColorProvider: ColorProviding {
     public var textColor: ColorType { .red } // Main Text Color
@@ -76,6 +78,14 @@ struct HOUColorProvider: ColorProviding {
     
     public init() {}
 }
+```
+
+### Handling Dark & Light Mode Support
+
+Set this parameter in order to control system dark & light mode.
+
+```swift
+AirportConstants.followSystemDarkAndLightMode = false
 ```
 
 ### ImageProviding Implementation
@@ -126,6 +136,10 @@ struct HOUNavigationBarProvider: NavigationBarProviding {
 ---
 
 ## Changelog
+### v1.1.8
+- Improved handling of message text color through Colors configuration
+- Improved handling dark & light mode through SDK configuration
+
 ### v1.1.7
 - Adding option to define timeZone on the SDK level.
 
