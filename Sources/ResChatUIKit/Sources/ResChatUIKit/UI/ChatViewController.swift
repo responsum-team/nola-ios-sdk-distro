@@ -655,14 +655,14 @@ public extension ChatViewController {
 
 extension ChatViewController {
     
-    func scrollToBottom() {
+    func scrollToBottom(shouldAnimate: Bool = true) {
         let numberOfRows = tableView.numberOfRows(inSection: 0)
         
         // Ensure there is at least one row to scroll to
         guard numberOfRows > 0 else { return }
         
         let indexPath = IndexPath(row: numberOfRows - 1, section: 0)
-        tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+        tableView.scrollToRow(at: indexPath, at: .bottom, animated: shouldAnimate)
     }
     
     func scrollToTop() {
