@@ -16,17 +16,26 @@ extension ChatViewController {
     func handleConnectionStateChange(_ state: UIConnectionState) {
         switch state {
         case .connected:
-            break
+            hasReceivedConnectionState = true
+            isSocketConnected = true
+            updateDisconnectedIndicator()
         case .disconnected:
-            break
+            isSocketConnected = false
+            // Only show the indicator if we've previously connected.
+            // The initial .disconnected from CurrentValueSubject replay is ignored.
+            updateDisconnectedIndicator(reconnecting: false)
         case .loading:
             // Show a loading indicator while the connection is being established
             showLoadingIndicator()
         case .loaded:
             // Hide any loading indicators and enable full interaction
             hideLoadingIndicator()
+            updateDisconnectedIndicator()
         case .error(_):
-            showSocketErrorAlert()
+            hasReceivedConnectionState = true
+            isSocketConnected = false
+            // Error = socket is trying to reconnect automatically
+            updateDisconnectedIndicator(reconnecting: true)
         case .loadingMore:
             addLoadingMessage()
         case .loadedMore:
@@ -36,7 +45,7 @@ extension ChatViewController {
 }
 
 extension ChatViewController {
-    
+
     func processHistoryMessages(_ receivedMessages: [UIMessage]) {
         guard let manager = self.messageManager else {
             print("Error: message manager is nil")

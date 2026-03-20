@@ -58,8 +58,25 @@ internal extension ResChatSocket {
     }
     
     func onError(data: [Any]) {
-        let error: Error? = nil // Extract error from data if applicable -
-        ParsedResponseLog.shared.logError(name: "onError", error: error)
+        // Extract meaningful error info from the socket data
+        let errorDescription: String
+        if let firstItem = data.first {
+            if let error = firstItem as? Error {
+                errorDescription = error.localizedDescription
+            } else if let errorString = firstItem as? String {
+                errorDescription = errorString
+            } else if let errorDict = firstItem as? [String: Any] {
+                errorDescription = "Server error: \(errorDict)"
+            } else {
+                errorDescription = "Unknown error type (\(type(of: firstItem))): \(firstItem)"
+            }
+        } else {
+            errorDescription = "Socket error (no data provided)"
+        }
+
+        let error = UnknownStateError.unknownState(message: errorDescription)
+        print("⚠️ [ResChatSocket] onError: \(errorDescription)")
+        ParsedResponseLog.shared.logError(name: "onError: \(errorDescription)", error: error)
         sendUpdateConnectionStateError(error)
     }
 }
