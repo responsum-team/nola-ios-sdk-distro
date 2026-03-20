@@ -129,10 +129,15 @@ public extension UIMessageManager {
            }
         }
 
-        // If no existing message matched, append the streaming message
+        // If no existing message was updated, only append if no message with the same ID exists.
+        // A message with the same ID but a higher messagePart means we already have a newer version —
+        // appending the stale one would create a duplicate and regress the displayed content.
         if !didUpdate {
-            currentMessages.append(streamingMessage)
-            currentMessages = Self.sortMessagesByDateAscending(messages: currentMessages)
+            let alreadyExists = currentMessages.contains { $0.id == streamingMessage.id }
+            if !alreadyExists {
+                currentMessages.append(streamingMessage)
+                currentMessages = Self.sortMessagesByDateAscending(messages: currentMessages)
+            }
         }
 
         ProcessLog.shared.log(action: .processStreamingMessage, subActionName: "03. update Bot with Bot/part", messages: currentMessages)
