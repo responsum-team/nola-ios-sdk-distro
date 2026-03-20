@@ -127,10 +127,21 @@ extension ChatViewController {
         guard let manager = self.messageManager else { return }
         
         messagesArrived()
+
+        // Deduplicate by id (timestamp), keeping the last occurrence (most up-to-date)
+        // This prevents NSDiffableDataSourceSnapshot from crashing on duplicate identifiers
+        var seenIDs = Set<String>()
+        var deduplicated = [UIMessage]()
+        for message in manager.uiMessages.reversed() {
+            if seenIDs.insert(message.id).inserted {
+                deduplicated.append(message)
+            }
+        }
+        deduplicated.reverse()
         
         currentSnapshot = UIMessageSnapshot()
         currentSnapshot.appendSections([.main])
-        currentSnapshot.appendItems(manager.uiMessages, toSection: .main)
+        currentSnapshot.appendItems(deduplicated, toSection: .main)
 //        print("updateUI: " + (manager.uiMessages.last?.text ?? "No text"))
         dataSource.apply(currentSnapshot, animatingDifferences: animated)
     }

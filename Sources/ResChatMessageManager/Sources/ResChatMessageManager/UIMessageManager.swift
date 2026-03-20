@@ -115,19 +115,26 @@ public extension UIMessageManager {
         ProcessLog.shared.log(action: .processStreamingMessage, subActionName: "02. filter {!$0.isPlaceholder}", messages: currentMessages)
         
         // update Bot with Bot/part
+        var didUpdate = false
         currentMessages = currentMessages.map {
            if  ($0.id == streamingMessage.id
              && $0.messagePart < streamingMessage.messagePart
                 && $0.isBot == true && streamingMessage.isBot == true) {
             var refreshedMessage = $0
                refreshedMessage.update(with: streamingMessage)
-               
+               didUpdate = true
                return refreshedMessage
            } else {
                return $0
            }
         }
-        
+
+        // If no existing message matched, append the streaming message
+        if !didUpdate {
+            currentMessages.append(streamingMessage)
+            currentMessages = Self.sortMessagesByDateAscending(messages: currentMessages)
+        }
+
         ProcessLog.shared.log(action: .processStreamingMessage, subActionName: "03. update Bot with Bot/part", messages: currentMessages)
         
         updateMessages(currentMessages)
