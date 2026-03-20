@@ -13,8 +13,8 @@ internal extension ResChatSocket {
     
     // remove duplicates, sort by timestamp
     func normalizeHistoryMessages(_ historyMessages: [SocketMessage]) -> [SocketMessage] {
-        let sorted = SocketMessage.sortMessagesByDate(in: historyMessages, ascending: true)
-        let deduped = Array(Set(sorted))
+        let deduped = Array(Set(historyMessages))
+        let sorted = SocketMessage.sortMessagesByDate(in: deduped, ascending: true)
         return sorted
     }
 }

@@ -45,11 +45,20 @@ internal extension SocketProxy {
                                     MessageBufferingConfig.myMessagesBufferMessageCount))  // Buffer messages based on time or count
             .sink { [weak self] bufferedMessages in
                 guard let self = self else { return }
-                
-                // Since we're working with a single message, no need to flatten an array of arrays
-                // We map the buffered messages directly to UI-friendly format
-                if let lastBufferedSocketMessage = bufferedMessages.last {
-                    let message = lastBufferedSocketMessage.toMessage()
+
+                // Group by message ID and forward the latest part for each unique message
+                // This ensures we don't drop updates for different messages within the same buffer window
+                // We iterate in reverse so the last (most recent) update per ID wins,
+                // then reverse again to preserve original arrival order when forwarding.
+                var latestByID = [String: Int]()
+                for index in stride(from: bufferedMessages.count - 1, through: 0, by: -1) {
+                    let id = bufferedMessages[index].messageTimestamp
+                    if latestByID[id] == nil {
+                        latestByID[id] = index
+                    }
+                }
+                for index in latestByID.values.sorted() {
+                    let message = bufferedMessages[index].toMessage()
                     self._didReceiveStreamingMessagePublisher.send(message)
                 }
             }
