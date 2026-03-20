@@ -18,7 +18,19 @@ extension UIColor {
         var green: CGFloat = 0
         var blue: CGFloat = 0
         var alpha: CGFloat = 0
-        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        // resolvedColor ensures the dynamic color is resolved for the current trait collection,
+        // and converting to sRGB guarantees getRed succeeds (it can fail on grayscale/P3 colors).
+        let resolved = self.resolvedColor(with: UITraitCollection.current)
+        if let srgb = resolved.cgColor.converted(to: CGColorSpaceCreateDeviceRGB(), intent: .defaultIntent, options: nil) {
+            let components = srgb.components ?? []
+            red = components.count > 0 ? components[0] : 0
+            green = components.count > 1 ? components[1] : 0
+            blue = components.count > 2 ? components[2] : 0
+            alpha = components.count > 3 ? components[3] : 1
+        } else {
+            // Fallback: try getRed directly
+            resolved.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        }
         return String(format: "rgba(%d, %d, %d, %.2f)", Int(red * 255), Int(green * 255), Int(blue * 255), alpha)
     }
 }
@@ -33,7 +45,16 @@ extension NSColor {
         var green: CGFloat = 0
         var blue: CGFloat = 0
         var alpha: CGFloat = 0
-        usingColorSpace(.deviceRGB)?.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        // Convert to sRGB first to ensure getRed succeeds (fails on catalog/pattern colors)
+        if let rgbColor = usingColorSpace(.sRGB) {
+            rgbColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        } else if let deviceRGB = usingColorSpace(.deviceRGB) {
+            deviceRGB.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        }
+        // If both conversions failed, defaults stay at rgba(0,0,0,0) — use black as fallback
+        if alpha == 0 && red == 0 && green == 0 && blue == 0 {
+            alpha = 1.0 // Ensure text is never transparent
+        }
         return String(format: "rgba(%d, %d, %d, %.2f)", Int(red * 255), Int(green * 255), Int(blue * 255), alpha)
     }
 }
