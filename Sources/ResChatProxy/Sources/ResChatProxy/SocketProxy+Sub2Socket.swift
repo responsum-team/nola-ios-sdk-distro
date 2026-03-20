@@ -48,11 +48,16 @@ internal extension SocketProxy {
 
                 // Group by message ID and forward the latest part for each unique message
                 // This ensures we don't drop updates for different messages within the same buffer window
+                // We iterate in reverse so the last (most recent) update per ID wins,
+                // then reverse again to preserve original arrival order when forwarding.
                 var latestByID = [String: Int]()
-                for (index, msg) in bufferedMessages.enumerated() {
-                    latestByID[msg.messageTimestamp] = index
+                for index in stride(from: bufferedMessages.count - 1, through: 0, by: -1) {
+                    let id = bufferedMessages[index].messageTimestamp
+                    if latestByID[id] == nil {
+                        latestByID[id] = index
+                    }
                 }
-                for (_, index) in latestByID {
+                for index in latestByID.values.sorted() {
                     let message = bufferedMessages[index].toMessage()
                     self._didReceiveStreamingMessagePublisher.send(message)
                 }
