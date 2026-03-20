@@ -50,6 +50,7 @@ let package = Package(
             name: "ResChatSocket",
             dependencies: [
                 "ResChatAppearance",
+                "ResChatLogging",
                 .product(name: "SocketIO", package: "socket.io-client-swift")
             ]
         )
