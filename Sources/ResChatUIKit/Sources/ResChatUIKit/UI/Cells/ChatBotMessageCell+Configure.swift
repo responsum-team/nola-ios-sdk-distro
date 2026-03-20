@@ -33,10 +33,8 @@ extension ChatBotMessageCell {
             stopPlaceholderAnimation()
             updateMessageLabel(with: checkedMessage)
             
-            // If the message is finished and from a specific origin, apply pulse animation
-            if checkedMessage.isFinished && checkedMessage.origin == .updateItem {
-                animatePulse()
-            }
+            // Pulse animation on finished messages removed — it caused visual distraction
+            // and contributed to the perception of UI "jumping" during streaming.
         }
     }
 }
