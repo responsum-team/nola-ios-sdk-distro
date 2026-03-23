@@ -77,7 +77,7 @@ internal extension ResChatSocket {
         let error = UnknownStateError.unknownState(message: errorDescription)
         print("⚠️ [ResChatSocket] onError: \(errorDescription)")
         ParsedResponseLog.shared.logError(name: "onError: \(errorDescription)", error: error)
-        sendUpdateConnectionStateError(error)
+        sendSocketConnectionError(error)
     }
 }
 
@@ -118,11 +118,11 @@ extension ResChatSocket {
         } catch let error as ParsingDataError {
             print("Parsing Error: \(error.localizedDescription)")
             ParsedResponseLog.shared.logReceivedConversationsError(error)
-            sendUpdateConnectionStateError(error)
+            sendDataError(error)
         } catch {
             print("An unexpected error occurred: \(error)")
             ParsedResponseLog.shared.logReceivedConversationsError(error)
-            sendUpdateConnectionStateError(error)
+            sendDataError(error)
         }
     }
     
@@ -138,11 +138,11 @@ extension ResChatSocket {
         } catch let error as ParsingDataError {
             print("Parsing Error: \(error.localizedDescription)")
             ParsedResponseLog.shared.logReceivedStreamMessagesError(error)
-            sendUpdateConnectionStateError(error)
+            sendDataError(error)
         } catch {
             print("An unexpected error occurred: \(error)")
             ParsedResponseLog.shared.logReceivedStreamMessagesError(error)
-            sendUpdateConnectionStateError(error)
+            sendDataError(error)
         }
     }
     
@@ -159,11 +159,11 @@ extension ResChatSocket {
         } catch let error as ParsingDataError {
             print("Parsing Error: \(error.localizedDescription)")
             ParsedResponseLog.shared.logReceivedUpdateHistoryItemsError(error)
-            sendUpdateConnectionStateError(error)
+            sendDataError(error)
         } catch {
             print("An unexpected error occurred: \(error)")
             ParsedResponseLog.shared.logReceivedUpdateHistoryItemsError(error)
-            sendUpdateConnectionStateError(error)
+            sendDataError(error)
         }
         
     }
