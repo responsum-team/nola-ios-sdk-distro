@@ -42,27 +42,12 @@ internal extension ResChatSocket {
             }
         }
 
-        // Fires on each reconnect attempt. The data value counts remaining attempts
-        // (e.g. 10, 9, 8... 1 for 10 configured attempts).
-        // When remaining reaches 1 (last attempt), we wait briefly then check if
-        // the socket is still not connected — if so, transition to .disconnected.
+        // Fires on each reconnect attempt. With unlimited retries (-1), Socket.IO
+        // will keep trying with exponential backoff (1s → 30s) until the server is reachable.
         socket.on(clientEvent: .reconnectAttempt) { [weak self] data, ack in
             guard let self = self else { return }
-            let remaining = data.first as? Int ?? -1
-            print("🔄 [ResChatSocket] Reconnect attempt (remaining: \(remaining)) | status: \(self.socket.status)")
-
-            if remaining <= 1 {
-                // This is the last attempt. Wait for it to complete before deciding.
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [weak self] in
-                    guard let self = self else { return }
-                    if self.socket.status != .connected {
-                        print("🔴 [ResChatSocket] Final reconnect attempt failed — transitioning to disconnected")
-                        Self.socketEventQueue.async {
-                            _ = self.sendNewConnectedState(.disconnected)
-                        }
-                    }
-                }
-            }
+            let attempt = data.first as? Int ?? -1
+            print("🔄 [ResChatSocket] Reconnect attempt \(attempt) | status: \(self.socket.status)")
         }
     }
     
