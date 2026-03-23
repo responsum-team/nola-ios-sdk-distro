@@ -76,7 +76,7 @@ open class ChatViewController: PlatformViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 100
+        tableView.estimatedRowHeight = 300
         tableView.delegate = self
         tableView.backgroundColor = colorProvider.backgroundColor
         AttributedTextCache.shared.clearCache()
@@ -115,11 +115,29 @@ open class ChatViewController: PlatformViewController {
         didSet {
             if oldValue != isSendingEnabled {
                 print("`isSendingEnabled` Value changed from \(oldValue) to \(isSendingEnabled)")
-                setUserActionsEnabled(isSendingEnabled)
+                updateSendingEnabled()
             }
         }
     }
     
+    /// Tracks whether the socket is currently connected.
+    /// When false, sending messages is disabled.
+    internal var isSocketConnected: Bool = false {
+        didSet {
+            guard oldValue != isSocketConnected else { return }
+            print("🔌 [ChatViewController] isSocketConnected changed: \(oldValue) → \(isSocketConnected)")
+            updateSendingEnabled()
+            // Don't call updateDisconnectedIndicator here — it's called explicitly
+            // from handleConnectionStateChange with the correct reconnecting flag.
+        }
+    }
+
+    /// Whether the socket has ever received a connection state change.
+    /// The disconnected indicator is suppressed until this is true,
+    /// so it doesn't flash "No connection" before the first attempt completes.
+    internal var hasReceivedConnectionState: Bool = false
+
+
     internal var currentBotID: String? = nil {
         didSet {
             // Check for transition from nil to String or String to nil
@@ -251,6 +269,57 @@ open class ChatViewController: PlatformViewController {
         return view
     }()
         
+    /// Small icon shown over the input area when the socket is disconnected.
+    internal lazy var disconnectedIndicator: UIView = {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.isHidden = true // hidden by default (assumes connected)
+        container.isUserInteractionEnabled = false
+
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(systemName: "wifi.slash")
+        imageView.tintColor = .systemRed
+        imageView.contentMode = .scaleAspectFit
+        imageView.tag = 100 // tag to find it later
+
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.color = .systemOrange
+        spinner.hidesWhenStopped = true
+        spinner.tag = 101 // tag to find it later
+        spinner.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "No connection"
+        label.font = .systemFont(ofSize: 11, weight: .medium)
+        label.textColor = .systemRed
+        label.tag = 102 // tag to find it later
+
+        container.addSubview(imageView)
+        container.addSubview(spinner)
+        container.addSubview(label)
+
+        NSLayoutConstraint.activate([
+            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            imageView.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 14),
+            imageView.heightAnchor.constraint(equalToConstant: 14),
+
+            spinner.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            spinner.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+            spinner.widthAnchor.constraint(equalToConstant: 14),
+            spinner.heightAnchor.constraint(equalToConstant: 14),
+
+            label.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 4),
+            label.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            label.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+        ])
+
+        return container
+    }()
+
     private lazy var messageInputContainerView: UIView = {
         let aView = UIView()
         aView.translatesAutoresizingMaskIntoConstraints = false
@@ -338,6 +407,10 @@ open class ChatViewController: PlatformViewController {
         setupMessageInputContainer()
         setupKeyboard()
         setupLoadingView()
+
+        // Disable sending on launch until socket connects, but don't show
+        // the disconnected indicator yet — give the socket a chance to connect first.
+        updateSendingEnabled()
         
         setupSpeechRecognizer()
         
@@ -376,16 +449,24 @@ open class ChatViewController: PlatformViewController {
     
     private func setupMessageInputContainer() {
         view.addSubview(messageInputContainerView)
-        
+
         messageInputContainerBottomConstraint = messageInputContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        
+
         NSLayoutConstraint.activate([
             messageInputContainerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             messageInputContainerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             messageInputContainerBottomConstraint!,
             messageInputContainerView.heightAnchor.constraint(equalToConstant: LayoutConstants.messageInputContainerViewHeight)  // Explicit height
         ])
-        
+
+        // Add disconnected indicator above the input bar
+        view.addSubview(disconnectedIndicator)
+        NSLayoutConstraint.activate([
+            disconnectedIndicator.bottomAnchor.constraint(equalTo: messageInputContainerView.topAnchor, constant: -4),
+            disconnectedIndicator.centerXAnchor.constraint(equalTo: messageInputContainerView.centerXAnchor),
+            disconnectedIndicator.heightAnchor.constraint(equalToConstant: 18),
+        ])
+
         setupNoKeyboardTableViewContentInset()
     }
     
@@ -607,6 +688,11 @@ internal extension ChatViewController {
 internal extension ChatViewController {
     
     @objc func sendMessage() {
+        // Block sending if socket is not connected
+        guard isSocketConnected else {
+            print("⚠️ [ChatViewController] sendMessage blocked — socket not connected")
+            return
+        }
         if usesTextView {
             sendTextViewMessage()
         } else {
@@ -655,14 +741,14 @@ public extension ChatViewController {
 
 extension ChatViewController {
     
-    func scrollToBottom() {
+    func scrollToBottom(shouldAnimate: Bool = true) {
         let numberOfRows = tableView.numberOfRows(inSection: 0)
         
         // Ensure there is at least one row to scroll to
         guard numberOfRows > 0 else { return }
         
         let indexPath = IndexPath(row: numberOfRows - 1, section: 0)
-        tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+        tableView.scrollToRow(at: indexPath, at: .bottom, animated: shouldAnimate)
     }
     
     func scrollToTop() {

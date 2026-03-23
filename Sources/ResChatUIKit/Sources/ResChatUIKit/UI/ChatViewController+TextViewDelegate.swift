@@ -30,6 +30,10 @@ extension ChatViewController: UITextViewDelegate {
     
     public func textViewDidEndEditing(_ textView: UITextView) {
         if let text = textView.text, !text.isEmpty, text != placeholderText {
+            guard isSocketConnected else {
+                print("⚠️ [ChatViewController] textView send blocked — socket not connected")
+                return
+            }
             sendUserMessage(text)
             textView.clearPlaceholder()
         } else {

@@ -16,17 +16,26 @@ extension ChatViewController {
     func handleConnectionStateChange(_ state: UIConnectionState) {
         switch state {
         case .connected:
-            break
+            hasReceivedConnectionState = true
+            isSocketConnected = true
+            updateDisconnectedIndicator()
         case .disconnected:
-            break
+            isSocketConnected = false
+            // Only show the indicator if we've previously connected.
+            // The initial .disconnected from CurrentValueSubject replay is ignored.
+            updateDisconnectedIndicator(reconnecting: false)
         case .loading:
             // Show a loading indicator while the connection is being established
             showLoadingIndicator()
         case .loaded:
             // Hide any loading indicators and enable full interaction
             hideLoadingIndicator()
+            updateDisconnectedIndicator()
         case .error(_):
-            showSocketErrorAlert()
+            hasReceivedConnectionState = true
+            isSocketConnected = false
+            // Error = socket is trying to reconnect automatically
+            updateDisconnectedIndicator(reconnecting: true)
         case .loadingMore:
             addLoadingMessage()
         case .loadedMore:
@@ -36,7 +45,7 @@ extension ChatViewController {
 }
 
 extension ChatViewController {
-    
+
     func processHistoryMessages(_ receivedMessages: [UIMessage]) {
         guard let manager = self.messageManager else {
             print("Error: message manager is nil")
@@ -80,16 +89,32 @@ extension ChatViewController {
         
         UILog.shared.logStreamingMessage(streamingMessage)
         
+        let messageCountBefore = manager.uiMessages.count
         manager.processStreamingMessage(streamingMessage)
-        updateUI(animated: false)
+        let messageCountAfter = manager.uiMessages.count
         
+        let isNewRow = messageCountAfter != messageCountBefore
+        
+        if isNewRow {
+            // A new message row was added (first chunk or new message) —
+            // we need a full snapshot apply so the table view inserts the row.
+            UIView.performWithoutAnimation {
+                updateUI(animated: false)
+                tableView.layoutIfNeeded()
+            }
+        } else {
+            // Existing message updated with new text — update the visible cell
+            // directly to avoid the full snapshot rebuild which causes screen flashing.
+            updateStreamingCellInPlace(with: streamingMessage)
+        }
+
         if currentBotID == nil {
             currentBotID = streamingMessage.id
         } else {
             updateBotIDWithMessage(streamingMessage)
         }
-        
-        scrollToBottom()
+
+        scrollToBottom(shouldAnimate: false)
     }
     
     func processUpdatedMessage(_ updatedMessage: UIMessage) {
@@ -116,6 +141,36 @@ private extension ChatViewController {
                 let botID = currentBotID else { return }
         guard botMessage.id == botID else { return }
         currentBotID = nil
+    }
+
+    /// Updates the streaming bot cell directly without rebuilding the snapshot.
+    /// This avoids the full diffable data source apply cycle (remove + insert)
+    /// which causes the screen to flash on every streaming chunk.
+    func updateStreamingCellInPlace(with message: UIMessage) {
+        // Find the visible cell that corresponds to this streaming message
+        for cell in tableView.visibleCells {
+            guard let botCell = cell as? ChatBotMessageCell,
+                  let indexPath = tableView.indexPath(for: cell),
+                  let existingMessage = dataSource.itemIdentifier(for: indexPath),
+                  existingMessage.id == message.id else { continue }
+
+            // Reconfigure the cell with the updated message
+            botCell.configure(with: message)
+
+            // Tell the table view to recalculate this cell's height
+            // without reloading (which would cause a flash).
+            UIView.performWithoutAnimation {
+                tableView.beginUpdates()
+                tableView.endUpdates()
+            }
+            return
+        }
+
+        // Cell not visible — fall back to full snapshot apply
+        UIView.performWithoutAnimation {
+            updateUI(animated: false)
+            tableView.layoutIfNeeded()
+        }
     }
 }
 

@@ -32,6 +32,8 @@ open class ResChatSocket {
         _connectionState.eraseToAnyPublisher()
     }
     
+    private var lastStateWasError: Bool = false
+    
     // MARK: SocketConnectionState -
     
     private func sendNewSocketConnectionState(_ newState: SocketConnectionState) {
@@ -48,6 +50,8 @@ open class ResChatSocket {
             
             // Update the last known state
             lastKnownConnectedState = newState
+            // Clear error dedup flag so next error will be emitted
+            lastStateWasError = false
 
             // Send the state to subscribers
             sendNewSocketConnectionState(newState)
@@ -58,11 +62,15 @@ open class ResChatSocket {
     }
     
     func sendUpdateConnectionStateError(_ error: Error?) {
-        if let socketError = error {
-            sendNewSocketConnectionState(.error(socketError))
-        } else {
-            sendNewSocketConnectionState(.error(UnknownStateError.unknownState(message: "Unknown error")))
+        // Deduplicate: don't emit .error again if we're already in error state
+        guard !lastStateWasError else {
+            print("⚠️ [ResChatSocket] Suppressing duplicate .error state")
+            return
         }
+        lastStateWasError = true
+
+        let socketError = error ?? UnknownStateError.unknownState(message: "Unknown error")
+        sendNewSocketConnectionState(.error(socketError))
     }
     
     private var lastKnownLoadingState: SocketConnectionState = .loaded
@@ -185,6 +193,11 @@ open class ResChatSocket {
             .log(false),
             .compress,
             .path(Self.urlPathString),
+            .reconnects(true),
+            .reconnectAttempts(10),
+            .reconnectWait(1),
+            .reconnectWaitMax(30),
+            .randomizationFactor(0.5) 
         ])
         socket = manager.defaultSocket
     }
