@@ -69,6 +69,12 @@ open class ResChatSocket {
         }
         lastStateWasError = true
 
+        // Reset lastKnownConnectedState so that when Socket.IO reconnects,
+        // the next .connected is recognized as a state change (not suppressed).
+        // Without this, the dedup check in sendNewConnectedState sees
+        // .connected == .connected and swallows the reconnection event.
+        lastKnownConnectedState = .disconnected
+
         let socketError = error ?? UnknownStateError.unknownState(message: "Unknown error")
         sendNewSocketConnectionState(.error(socketError))
     }
@@ -194,7 +200,7 @@ open class ResChatSocket {
             .compress,
             .path(Self.urlPathString),
             .reconnects(true),
-            .reconnectAttempts(10),
+            .reconnectAttempts(-1),   // Unlimited — never give up reconnecting
             .reconnectWait(1),
             .reconnectWaitMax(30),
             .randomizationFactor(0.5) 
