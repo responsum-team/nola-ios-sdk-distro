@@ -42,23 +42,25 @@ internal extension ResChatSocket {
             }
         }
 
-        // Fires when Socket.IO attempts a reconnect. The data contains the attempt number.
-        socket.on(clientEvent: .reconnectAttempt) { [weak self] data, ack in
-            let attempt = data.first as? Int ?? -1
-            print("🔄 [ResChatSocket] Reconnect attempt #\(attempt)")
-        }
-
-        // Fires when Socket.IO has exhausted all reconnection attempts.
-        // Transition from .error → .disconnected so the UI stops showing "Reconnecting…"
-        // and shows "No connection" instead.
+        // Fires on each reconnect attempt. The data value counts remaining attempts
+        // (e.g. 10, 9, 8... 1 for 10 configured attempts).
+        // When remaining reaches 1 (last attempt), we wait briefly then check if
+        // the socket is still not connected — if so, transition to .disconnected.
         socket.on(clientEvent: .reconnectAttempt) { [weak self] data, ack in
             guard let self = self else { return }
-            let attempt = data.first as? Int ?? 0
-            // reconnectAttempts is set to 10 in setupSocket()
-            if attempt >= 10 {
-                print("🔴 [ResChatSocket] Max reconnect attempts reached — giving up")
-                Self.socketEventQueue.async {
-                    _ = self.sendNewConnectedState(.disconnected)
+            let remaining = data.first as? Int ?? -1
+            print("🔄 [ResChatSocket] Reconnect attempt (remaining: \(remaining)) | status: \(self.socket.status)")
+
+            if remaining <= 1 {
+                // This is the last attempt. Wait for it to complete before deciding.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [weak self] in
+                    guard let self = self else { return }
+                    if self.socket.status != .connected {
+                        print("🔴 [ResChatSocket] Final reconnect attempt failed — transitioning to disconnected")
+                        Self.socketEventQueue.async {
+                            _ = self.sendNewConnectedState(.disconnected)
+                        }
+                    }
                 }
             }
         }

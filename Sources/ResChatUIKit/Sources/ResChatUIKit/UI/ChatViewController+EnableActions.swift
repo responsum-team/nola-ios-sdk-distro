@@ -61,10 +61,11 @@ internal extension ChatViewController {
         let label = disconnectedIndicator.viewWithTag(102) as? UILabel
 
         if isSocketConnected {
-            UIView.animate(withDuration: 0.25) {
-                self.disconnectedIndicator.isHidden = true
+            UIView.animate(withDuration: 0.25, animations: {
                 self.disconnectedIndicator.alpha = 0
-            }
+            }, completion: { _ in
+                self.disconnectedIndicator.isHidden = true
+            })
             spinner?.stopAnimating()
         } else {
             if reconnecting {
