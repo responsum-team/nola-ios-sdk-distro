@@ -76,7 +76,7 @@ open class ChatViewController: PlatformViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 100
+        tableView.estimatedRowHeight = 300
         tableView.delegate = self
         tableView.backgroundColor = colorProvider.backgroundColor
         AttributedTextCache.shared.clearCache()

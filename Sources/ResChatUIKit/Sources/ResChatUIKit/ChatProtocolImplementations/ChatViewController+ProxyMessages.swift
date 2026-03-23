@@ -113,8 +113,8 @@ extension ChatViewController {
         } else {
             updateBotIDWithMessage(streamingMessage)
         }
-        
-        scrollToBottom()
+
+        scrollToBottom(shouldAnimate: false)
     }
     
     func processUpdatedMessage(_ updatedMessage: UIMessage) {
