@@ -61,21 +61,29 @@ open class ResChatSocket {
         return false
     }
     
-    func sendUpdateConnectionStateError(_ error: Error?) {
-        // Deduplicate: don't emit .error again if we're already in error state
+    /// Reports a connection-level error (socket disconnect, timeout, server rejection).
+    /// Resets `lastKnownConnectedState` so a subsequent reconnect `.connected` won't be suppressed.
+    func sendSocketConnectionError(_ error: Error?) {
         guard !lastStateWasError else {
             print("⚠️ [ResChatSocket] Suppressing duplicate .error state")
             return
         }
         lastStateWasError = true
 
-        // Reset lastKnownConnectedState so that when Socket.IO reconnects,
-        // the next .connected is recognized as a state change (not suppressed).
-        // Without this, the dedup check in sendNewConnectedState sees
-        // .connected == .connected and swallows the reconnection event.
+        // Reset so the next .connected is recognized as a state change.
         lastKnownConnectedState = .disconnected
 
         let socketError = error ?? UnknownStateError.unknownState(message: "Unknown error")
+        sendNewSocketConnectionState(.error(socketError))
+    }
+
+    /// Reports a data-level error (parsing failure) while the socket remains connected.
+    /// Does NOT reset `lastKnownConnectedState` because the connection is still alive.
+    func sendDataError(_ error: Error?) {
+        let socketError = error ?? UnknownStateError.unknownState(message: "Unknown data error")
+        print("⚠️ [ResChatSocket] Data error (socket still connected): \(socketError.localizedDescription)")
+        // Emit .error so the UI can show a message if needed, but don't
+        // touch lastKnownConnectedState — the socket is still connected.
         sendNewSocketConnectionState(.error(socketError))
     }
     
