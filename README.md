@@ -2,7 +2,7 @@
 
 SDK for embedding the Responsum ChatBot in your iOS apps & macOS apps. Note: macOS SDK in alpha testing.
 
-> **Latest version:** 1.1.7
+> **Latest version:** 1.1.9
 
 ---
 
@@ -136,6 +136,11 @@ struct HOUNavigationBarProvider: NavigationBarProviding {
 ---
 
 ## Changelog
+### v1.1.9
+- Fixed Xcode 26 compatibility issues
+- Bug fixes
+- Minor improvements
+  
 ### v1.1.8
 - Improved handling of message text color through Colors configuration
 - Improved handling dark & light mode through SDK configuration
